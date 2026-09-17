@@ -1,0 +1,350 @@
+{
+  "label": "v7",
+  "baseline": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v7\\fine\\v7-optimized",
+  "time": "2026-09-17T15:03:58+08:00",
+  "registered_from_plan": 57,
+  "registered_from_summary": 57,
+  "registered_from_audit": 57,
+  "counts": {
+    "accepted": 45,
+    "stopped": 10,
+    "rejected": 2
+  },
+  "golden_counts": {
+    "accepted": 45,
+    "stopped": 10,
+    "rejected": 2
+  },
+  "per_rpm": [
+    {
+      "actual": {
+        "rpm": 4500,
+        "accepted": 15,
+        "pressure_min": 97884.0,
+        "pressure_max": 103052.0,
+        "mf_min": 9.0345,
+        "mf_max": 15.991
+      },
+      "expected": {
+        "rpm": 4500,
+        "accepted": 15,
+        "pressure_min": 97884,
+        "pressure_max": 103052,
+        "mf_min": 9.0345,
+        "mf_max": 15.991,
+        "max_accepted_p": 103052,
+        "first_rejected_p": 103107
+      },
+      "diffs": {}
+    },
+    {
+      "actual": {
+        "rpm": 5000,
+        "accepted": 15,
+        "pressure_min": 97075.0,
+        "pressure_max": 103458.0,
+        "mf_min": 10.05,
+        "mf_max": 17.672
+      },
+      "expected": {
+        "rpm": 5000,
+        "accepted": 15,
+        "pressure_min": 97075,
+        "pressure_max": 103458,
+        "mf_min": 10.05,
+        "mf_max": 17.672,
+        "max_accepted_p": 103458,
+        "first_rejected_p": 103525
+      },
+      "diffs": {}
+    },
+    {
+      "actual": {
+        "rpm": 5500,
+        "accepted": 15,
+        "pressure_min": 96183.0,
+        "pressure_max": 103906.0,
+        "mf_min": 10.063,
+        "mf_max": 19.309
+      },
+      "expected": {
+        "rpm": 5500,
+        "accepted": 15,
+        "pressure_min": 96183,
+        "pressure_max": 103906,
+        "mf_min": 10.063,
+        "mf_max": 19.309,
+        "max_accepted_p": 103906,
+        "first_rejected_p": 103987
+      },
+      "diffs": {}
+    }
+  ],
+  "boundary": [
+    {
+      "rpm": 4500,
+      "max_accepted_p": {
+        "actual": 103052.0,
+        "expected": 103052,
+        "ok": true
+      },
+      "first_rejected_p": {
+        "actual": 103107.0,
+        "expected": 103107,
+        "ok": true,
+        "state": "rejected",
+        "reason": "persistent_flow_oscillation"
+      }
+    },
+    {
+      "rpm": 5000,
+      "max_accepted_p": {
+        "actual": 103458.0,
+        "expected": 103458,
+        "ok": true
+      },
+      "first_rejected_p": {
+        "actual": 103525.0,
+        "expected": 103525,
+        "ok": true,
+        "state": "stopped",
+        "reason": "user_stop"
+      }
+    },
+    {
+      "rpm": 5500,
+      "max_accepted_p": {
+        "actual": 103906.0,
+        "expected": 103906,
+        "ok": true
+      },
+      "first_rejected_p": {
+        "actual": 103987.0,
+        "expected": 103987,
+        "ok": true,
+        "state": "rejected",
+        "reason": "persistent_flow_oscillation"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "id": "R-1",
+      "title": "登记点与状态记录一一对应",
+      "criteria": "scan_plan 的每个登记点都必须在 sweep_summary 里有状态；不得有未记录的算例",
+      "measured": "plan=57 summary=57 missing=0 extra=0",
+      "verdict": "PASS",
+      "source": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v7\\fine\\v7-optimized\\scan_plan.csv",
+      "detail": {
+        "missing": [],
+        "extra": []
+      }
+    },
+    {
+      "id": "R-2",
+      "title": "状态计数与基准审计一致",
+      "criteria": "从 sweep_summary.csv 重新统计的 state 计数必须等于 final_delivery_audit.json 的 counts",
+      "measured": "recomputed={'accepted': 45, 'stopped': 10, 'rejected': 2} golden={'accepted': 45, 'stopped': 10, 'rejected': 2}",
+      "verdict": "PASS",
+      "source": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v7\\fine\\v7-optimized\\final_delivery_audit.json",
+      "detail": {}
+    },
+    {
+      "id": "R-2b",
+      "title": "验收总数与交付文档声明一致",
+      "criteria": "CFD-DELIVERY.md 声明各转速各 15 个验收点，合计 45",
+      "measured": "recomputed accepted=45 published=45",
+      "verdict": "PASS",
+      "source": "Ducted-Fan/run/90kg-duct-fan-v7/CFD-DELIVERY.md#各转速验收范围",
+      "detail": {}
+    },
+    {
+      "id": "R-3",
+      "title": "accepted 点满足质量不平衡判据",
+      "criteria": "100*|mdot_in-mdot_out|/|mdot_in| <= 1.0%",
+      "measured": "checked=45 violations=0",
+      "verdict": "PASS",
+      "source": "C-002",
+      "detail": {
+        "violations": []
+      }
+    },
+    {
+      "id": "R-4",
+      "title": "非 accepted 点都有拒绝/停止原因",
+      "criteria": "每个 stopped/rejected 点必须有 reason 字段，不得静默丢弃",
+      "measured": "non_accepted=12 without_reason=0",
+      "verdict": "PASS",
+      "source": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v7\\fine\\v7-optimized\\sweep_summary.csv",
+      "detail": {
+        "without_reason": []
+      }
+    },
+    {
+      "id": "R-5",
+      "title": "上游源文件哈希未变",
+      "criteria": "final_delivery_audit.json 的 source_hashes_unchanged 必须为 true",
+      "measured": "True",
+      "verdict": "PASS",
+      "source": "final_delivery_audit.json#source_hashes_unchanged",
+      "detail": {}
+    },
+    {
+      "id": "R-6",
+      "title": "ICE 原生历史可重开",
+      "criteria": "final_delivery_audit.json 的 native_history_reopen 必须为 true",
+      "measured": "True",
+      "verdict": "PASS",
+      "source": "final_delivery_audit.json#native_history_reopen",
+      "detail": {}
+    },
+    {
+      "id": "R-7",
+      "title": "逐转速验收范围与交付文档一致",
+      "criteria": "各转速的验收点数、背压区间、流量区间必须与 CFD-DELIVERY.md 的表格相符",
+      "measured": "rpm_lines=3 mismatched=0",
+      "verdict": "PASS",
+      "source": "Ducted-Fan/run/90kg-duct-fan-v7/CFD-DELIVERY.md#各转速验收范围",
+      "detail": {
+        "rows": [
+          {
+            "actual": {
+              "rpm": 4500,
+              "accepted": 15,
+              "pressure_min": 97884.0,
+              "pressure_max": 103052.0,
+              "mf_min": 9.0345,
+              "mf_max": 15.991
+            },
+            "expected": {
+              "rpm": 4500,
+              "accepted": 15,
+              "pressure_min": 97884,
+              "pressure_max": 103052,
+              "mf_min": 9.0345,
+              "mf_max": 15.991,
+              "max_accepted_p": 103052,
+              "first_rejected_p": 103107
+            },
+            "diffs": {}
+          },
+          {
+            "actual": {
+              "rpm": 5000,
+              "accepted": 15,
+              "pressure_min": 97075.0,
+              "pressure_max": 103458.0,
+              "mf_min": 10.05,
+              "mf_max": 17.672
+            },
+            "expected": {
+              "rpm": 5000,
+              "accepted": 15,
+              "pressure_min": 97075,
+              "pressure_max": 103458,
+              "mf_min": 10.05,
+              "mf_max": 17.672,
+              "max_accepted_p": 103458,
+              "first_rejected_p": 103525
+            },
+            "diffs": {}
+          },
+          {
+            "actual": {
+              "rpm": 5500,
+              "accepted": 15,
+              "pressure_min": 96183.0,
+              "pressure_max": 103906.0,
+              "mf_min": 10.063,
+              "mf_max": 19.309
+            },
+            "expected": {
+              "rpm": 5500,
+              "accepted": 15,
+              "pressure_min": 96183,
+              "pressure_max": 103906,
+              "mf_min": 10.063,
+              "mf_max": 19.309,
+              "max_accepted_p": 103906,
+              "first_rejected_p": 103987
+            },
+            "diffs": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "R-8",
+      "title": "失速侧边界区间与文档一致",
+      "criteria": "每转速的「已验收最高背压」与「首个未验收背压」（rejected 或 stopped，容差 1 Pa）必须落在文档声明值上",
+      "measured": "rpm_lines=3 mismatched=0",
+      "verdict": "PASS",
+      "source": "Ducted-Fan/run/90kg-duct-fan-v7/CFD-DELIVERY.md#各转速验收范围",
+      "detail": {
+        "rows": [
+          {
+            "rpm": 4500,
+            "max_accepted_p": {
+              "actual": 103052.0,
+              "expected": 103052,
+              "ok": true
+            },
+            "first_rejected_p": {
+              "actual": 103107.0,
+              "expected": 103107,
+              "ok": true,
+              "state": "rejected",
+              "reason": "persistent_flow_oscillation"
+            }
+          },
+          {
+            "rpm": 5000,
+            "max_accepted_p": {
+              "actual": 103458.0,
+              "expected": 103458,
+              "ok": true
+            },
+            "first_rejected_p": {
+              "actual": 103525.0,
+              "expected": 103525,
+              "ok": true,
+              "state": "stopped",
+              "reason": "user_stop"
+            }
+          },
+          {
+            "rpm": 5500,
+            "max_accepted_p": {
+              "actual": 103906.0,
+              "expected": 103906,
+              "ok": true
+            },
+            "first_rejected_p": {
+              "actual": 103987.0,
+              "expected": 103987,
+              "ok": true,
+              "state": "rejected",
+              "reason": "persistent_flow_oscillation"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "R-9",
+      "title": "基准自身审计通过",
+      "criteria": "final_delivery_audit.json 的 passed 必须为 true 且 failures 为空",
+      "measured": "passed=True failures=0",
+      "verdict": "PASS",
+      "source": "final_delivery_audit.json",
+      "detail": {}
+    }
+  ],
+  "summary": {
+    "total": 10,
+    "pass": 10,
+    "warn": 0,
+    "fail": 0
+  },
+  "verdict": "PASS"
+}

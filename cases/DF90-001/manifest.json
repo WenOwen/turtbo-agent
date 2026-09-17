@@ -2,9 +2,110 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-17T14:56:27+08:00",
-  "revision": 0,
-  "requirement_ref": null,
-  "current_stage": "G0",
-  "artifacts": []
+  "updated": "2026-09-17T15:06:17+08:00",
+  "revision": 8,
+  "requirement_ref": {
+    "file": "requirements.yaml",
+    "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
+    "bytes": 3853
+  },
+  "current_stage": "G6",
+  "artifacts": [
+    {
+      "stage": "G0",
+      "kind": "schema",
+      "path": "requirements.yaml",
+      "version": "v1",
+      "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
+      "bytes": 3853,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:02:34+08:00",
+      "note": "环境按 ISA 海平面假设，待用户确认",
+      "provenance": null
+    },
+    {
+      "stage": "G0",
+      "kind": "brief",
+      "path": "00-brief/open_questions.md",
+      "version": "v1",
+      "sha256": "f09eb2c3627a72f8ed5633610d81cac682bc7262b6a8549e5b2afa7db8461eac",
+      "bytes": 1994,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:02:34+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G1",
+      "kind": "brief",
+      "path": "00-brief/design_brief.md",
+      "version": "v1",
+      "sha256": "5ad3fa996275ed725e5ba6765287fdad0645ff5ab1dbe04580732998136216ea",
+      "bytes": 6118,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:02:35+08:00",
+      "note": "带条件 PASS：6100 rpm 设计点超出 EMRAX 188 连续包线，需用户确认任务剖面",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_replay/v7/sweep_summary.csv",
+      "version": "v7",
+      "sha256": "7f10f7c1ec9c93b70f12b4e9bf230d142180fd300df070db51b013fd362fc644",
+      "bytes": 7178,
+      "verdict": "INFO",
+      "ts": "2026-09-17T15:06:03+08:00",
+      "note": "内容逐字节来自基准，未修改",
+      "provenance": null
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_replay/v7/replay_audit.json",
+      "version": "v7",
+      "sha256": "6460630d85d00864a066cb72596bb03200820a60bd389ebf2e33f22c81a8fe24",
+      "bytes": 9896,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:06:03+08:00",
+      "note": "回放审计，只读",
+      "provenance": {
+        "from": "_replay/v7/sweep_summary.csv",
+        "from_sha256": "7f10f7c1ec9c93b70f12b4e9bf230d142180fd300df070db51b013fd362fc644"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_replay/v7/replay_report.md",
+      "version": "v7",
+      "sha256": "13502c722d9323ae937ca75871902a077357e3d96f4d88977a7de729fa3ab204",
+      "bytes": 3209,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:06:04+08:00",
+      "note": "",
+      "provenance": {
+        "from": "_replay/v7/replay_audit.json",
+        "from_sha256": "6460630d85d00864a066cb72596bb03200820a60bd389ebf2e33f22c81a8fe24"
+      }
+    },
+    {
+      "stage": "G6",
+      "kind": "delivery",
+      "path": "06-delivery/v1/dashboard.html",
+      "version": "v1",
+      "sha256": "d9fb6231a005edacc17abd8c7e21ec02920e9c8d98f0698f0d85ba6296af425d",
+      "bytes": 19950,
+      "verdict": "INFO",
+      "ts": "2026-09-17T15:06:04+08:00",
+      "note": "",
+      "provenance": null
+    }
+  ]
 }
