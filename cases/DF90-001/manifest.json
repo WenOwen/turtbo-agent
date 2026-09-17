@@ -2,14 +2,14 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-17T15:10:57+08:00",
-  "revision": 15,
+  "updated": "2026-09-17T15:14:55+08:00",
+  "revision": 17,
   "requirement_ref": {
     "file": "requirements.yaml",
     "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
     "bytes": 3853
   },
-  "current_stage": "G2",
+  "current_stage": "G6",
   "artifacts": [
     {
       "stage": "G0",
@@ -100,10 +100,10 @@
       "kind": "delivery",
       "path": "06-delivery/v1/dashboard.html",
       "version": "v1",
-      "sha256": "d9fb6231a005edacc17abd8c7e21ec02920e9c8d98f0698f0d85ba6296af425d",
-      "bytes": 19950,
-      "verdict": "INFO",
-      "ts": "2026-09-17T15:06:04+08:00",
+      "sha256": "afcde48d9ae41e4cda75b10f25f65c2426f1c4dee5f7241edbd60e6b5d754708",
+      "bytes": 31599,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:14:54+08:00",
       "note": "",
       "provenance": null
     },

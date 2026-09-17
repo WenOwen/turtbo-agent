@@ -378,7 +378,9 @@ def gate_post(case: Path, args) -> Result:
     if not root.is_dir():
         r.add("G6-1", "交付目录存在", "06-delivery/<version>/ 必须存在", "缺失", "SKIP", "gates.md#G6")
         return r
-    tables = [p for p in root.iterdir() if p.suffix.lower() in (".csv", ".xlsx", ".md")]
+    # .html 是看板交付物；.png/.svg 是图；都算交付文件。
+    tables = [p for p in root.iterdir()
+              if p.suffix.lower() in (".csv", ".xlsx", ".md", ".html", ".png", ".svg")]
     r.add("G6-1", "交付文件存在", "交付目录必须有表格/说明文件",
           "files=" + str(len(tables)), "PASS" if tables else "FAIL", "gates.md#G6")
 
