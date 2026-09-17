@@ -2,9 +2,9 @@
   "schema": "turtbo-agent/case-state@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-17T15:10:57+08:00",
-  "revision": 3,
-  "current_stage": "G2",
+  "updated": "2026-09-17T15:15:48+08:00",
+  "revision": 4,
+  "current_stage": "G6",
   "stages": {
     "G0": {
       "name": "需求",
@@ -39,7 +39,7 @@
     "G6": {
       "name": "后处理与交付",
       "status": "pending",
-      "updated": null
+      "updated": "2026-09-17T15:15:48+08:00"
     }
   },
   "blockers": []

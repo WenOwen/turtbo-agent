@@ -2,7 +2,7 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-17T15:14:55+08:00",
+  "updated": "2026-09-17T15:15:48+08:00",
   "revision": 17,
   "requirement_ref": {
     "file": "requirements.yaml",
