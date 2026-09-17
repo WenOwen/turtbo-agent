@@ -84,3 +84,64 @@
 - 结论：INFO
 - 备注：requirements.yaml 是全案溯源根，无上游；_replay/v7/sweep_summary.csv 是外部基准的只读证据快照，上游不在本案例内。两者均属合同允许的例外。
 
+## 2026-09-17T15:10:54+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/流道尺寸表.csv
+- 输入：01-scheme/v1/流道尺寸表.csv  sha256=799369fac0efd5eb  bytes=352
+- 上游：requirements.yaml
+- 产物：01-scheme/v1/流道尺寸表.csv  sha256=799369fac0efd5eb8a9b61921606af0ef63dee9c4c07eeb0f86ddea99112c1af
+- 判据：5 站位；机匣半径恒 0.300（锁定值）；轮毂 0.1035->0.1255
+- 结论：PASS
+
+## 2026-09-17T15:10:54+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/叶片几何参数表.csv
+- 输入：01-scheme/v1/叶片几何参数表.csv  sha256=6d00e19b7dd70d13  bytes=338
+- 上游：01-scheme/v1/流道尺寸表.csv
+- 产物：01-scheme/v1/叶片几何参数表.csv  sha256=6d00e19b7dd70d137e78b99e86886f8ba8ae5682066785fc647a5b553622e67b
+- 判据：2 叶排（R1 转子 9 叶 / S1 静子 11 叶）；与 requirements.rows 一致
+- 结论：PASS
+
+## 2026-09-17T15:10:55+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/通流计算结果表.csv
+- 输入：01-scheme/v1/通流计算结果表.csv  sha256=461c97666be8ce1e  bytes=873
+- 上游：01-scheme/v1/叶片几何参数表.csv
+- 产物：01-scheme/v1/通流计算结果表.csv  sha256=461c97666be8ce1eefcc1dfb9598a1b14985e27b6a01dbd670fed19a751ababa
+- 判据：23 项指标；含效率/功率/扭矩/扩散因子/相对马赫数
+- 结论：PASS
+
+## 2026-09-17T15:10:55+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/benchmark_gate.json
+- 输入：01-scheme/v1/benchmark_gate.json  sha256=e338247f00b948db  bytes=3938
+- 上游：01-scheme/v1/通流计算结果表.csv
+- 产物：01-scheme/v1/benchmark_gate.json  sha256=e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c
+- 判据：PASS 6 / WARN 1 / FAIL 0；效率偏差 -1.37 pts、功率 +1.40%、扭矩 +1.40%、机匣半径偏差 0
+- 结论：PASS
+
+## 2026-09-17T15:10:56+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/benchmark_gate.md
+- 输入：01-scheme/v1/benchmark_gate.md  sha256=a1210064de503141  bytes=1743
+- 上游：01-scheme/v1/benchmark_gate.json
+- 产物：01-scheme/v1/benchmark_gate.md  sha256=a1210064de5031414f018249535f9ee16764c2a36ba069b77a187d52d80a4086
+- 判据：人类可读对标报告，含口径说明
+- 结论：PASS
+
+## 2026-09-17T15:10:56+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/inputs/turbo-flow-attempt3.json
+- 输入：01-scheme/v1/inputs/turbo-flow-attempt3.json  sha256=1f3fb70eaf9fcf70  bytes=2560
+- 上游：requirements.yaml
+- 产物：01-scheme/v1/inputs/turbo-flow-attempt3.json  sha256=1f3fb70eaf9fcf700d389898c60e1611f99e93e62fa8a99397a205c9ba154d2f
+- 判据：适配配置：annulus.strategy=custom + 显式 rows；可复现 attempt-3
+- 结论：PASS
+
+## 2026-09-17T15:10:57+08:00 | G2 1D通流方案 | PASS
+- 动作：turbo-flow 涵道风扇适配 A/B/C 三组验证
+- 实测：attempt-1(constant_mean+auto rows) eta=0.7597 pw=67.72kW 机匣r=0.3486; attempt-2(custom+auto rows) eta=0.7976 pw=64.50kW; attempt-3(custom+显式R1/S1) eta=0.8794 pw=58.50kW 机匣r=0.3000
+- 产物：01-scheme/v1/benchmark_gate.json  sha256=e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c
+- 判据：对标闸门：效率绝对偏差 <=2 pts、功率与扭矩相对偏差 <=5%、机匣半径偏差 <=1e-4 m、叶排数与需求一致、工程约束 0 条不通过
+- 结论：PASS
+- 备注：结论：默认配置不可用（静默改掉锁定直径并自动生成三排默认几何）；必须 custom annulus + 显式 rows。flow_coefficient 按中径定义，桨尖口径需换算。B-7 WARN 归因于输入口径而非求解器缺陷。
+
+## 2026-09-17T15:10:57+08:00 | G2 1D通流方案 | PASS
+- 动作：阶段状态 -> done
+- 判据：三表 schema 通过；质量守恒（进出口 15.09343 一致）；对标闸门 PASS（带 1 条 WARN 且已归因）
+- 结论：PASS
+

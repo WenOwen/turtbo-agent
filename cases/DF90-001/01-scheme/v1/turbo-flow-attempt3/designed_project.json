@@ -1,0 +1,150 @@
+{
+  "schema_version": "1.0",
+  "name": "DF90-001 attempt-3 custom annulus + explicit rotor/stator",
+  "description": "A/B：custom annulus + 显式 R1 转子(9叶,PPT S3 中径值) + S1 静子(11叶)",
+  "fluid": {
+    "name": "dry_air",
+    "gas_constant": 287.05287,
+    "gamma": 1.4,
+    "heat_capacity_model": "temperature_dependent"
+  },
+  "inlet": {
+    "total_pressure_pa": 101325.0,
+    "total_temperature_k": 288.15,
+    "mass_flow_kg_s": 15.09343,
+    "absolute_flow_angle_deg": 0.0,
+    "total_pressure_profile": [],
+    "total_temperature_profile": [],
+    "swirl_profile": []
+  },
+  "shaft": {
+    "rpm": 6100.0
+  },
+  "annulus": {
+    "strategy": "custom",
+    "inlet_hub_radius_m": 0.103457,
+    "inlet_tip_radius_m": 0.3,
+    "length_m": 0.180135,
+    "hub_curve": [
+      {
+        "x": 0.0,
+        "r": 0.103457
+      },
+      {
+        "x": 0.023915,
+        "r": 0.103457
+      },
+      {
+        "x": 0.074194,
+        "r": 0.113681
+      },
+      {
+        "x": 0.098407,
+        "r": 0.11598
+      },
+      {
+        "x": 0.176808,
+        "r": 0.125168
+      },
+      {
+        "x": 0.180135,
+        "r": 0.1255
+      }
+    ],
+    "shroud_curve": [
+      {
+        "x": 0.0,
+        "r": 0.3
+      },
+      {
+        "x": 0.180135,
+        "r": 0.3
+      }
+    ],
+    "inlet_blockage": 0.0,
+    "outlet_blockage": 0.0
+  },
+  "design": {
+    "mass_flow_kg_s": 15.09343,
+    "total_pressure_ratio": 1.041818,
+    "stage_count": 1,
+    "target_efficiency_tt": 0.8931,
+    "flow_coefficient": 0.2581,
+    "loading_coefficient": 0.1041,
+    "reaction": 0.5,
+    "exit_swirl_deg": 0.0,
+    "stage_work_weights": [],
+    "auto_stage_count": false,
+    "stage_reactions": [],
+    "stage_flow_coefficients": []
+  },
+  "rows": [
+    {
+      "id": "R1",
+      "row_type": "rotor",
+      "stage": 1,
+      "x_m": 0.049,
+      "blade_count": 9,
+      "chord_m": 0.09,
+      "axial_chord_m": null,
+      "solidity": 0.639,
+      "solidity_profile": [],
+      "aspect_ratio": 2.0,
+      "metal_angle_in_deg": -68.39216311152622,
+      "metal_angle_out_deg": -61.39359235701906,
+      "metal_angle_in_profile": [],
+      "metal_angle_out_profile": [],
+      "work_profile": [],
+      "blockage": 0.02,
+      "tip_clearance_m": 0.0005,
+      "throat_area_ratio": 0.88,
+      "deviation_base_deg": 2.0,
+      "variable_schedule": [],
+      "bleed_after": null,
+      "loss_model": "lieblein_engineering_v1",
+      "reference_efficiency_tt": null,
+      "reference_incidence_deg": 0.0,
+      "pressure_loss_fraction": null
+    },
+    {
+      "id": "S1",
+      "row_type": "stator",
+      "stage": 1,
+      "x_m": 0.1376,
+      "blade_count": 11,
+      "chord_m": 0.09,
+      "axial_chord_m": null,
+      "solidity": 0.7,
+      "solidity_profile": [],
+      "aspect_ratio": 2.0,
+      "metal_angle_in_deg": 29.805462342330635,
+      "metal_angle_out_deg": -2.186477637244157,
+      "metal_angle_in_profile": [],
+      "metal_angle_out_profile": [],
+      "work_profile": [],
+      "blockage": 0.02,
+      "tip_clearance_m": 0.0005,
+      "throat_area_ratio": 0.88,
+      "deviation_base_deg": 2.0,
+      "variable_schedule": [],
+      "bleed_after": null,
+      "loss_model": "lieblein_engineering_v1",
+      "reference_efficiency_tt": null,
+      "reference_incidence_deg": 0.0,
+      "pressure_loss_fraction": null
+    }
+  ],
+  "vortex_law": "free",
+  "numerics": {
+    "spanwise_points": 17,
+    "streamwise_points": 61,
+    "max_iterations": 120,
+    "mass_tolerance": 0.001,
+    "energy_tolerance": 1e-05,
+    "streamline_tolerance": 1e-05,
+    "relaxation": 0.35,
+    "row_relaxation": 1.0,
+    "momentum_tolerance": 0.001
+  },
+  "metadata": {}
+}

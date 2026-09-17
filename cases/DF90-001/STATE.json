@@ -2,9 +2,9 @@
   "schema": "turtbo-agent/case-state@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-17T15:02:36+08:00",
-  "revision": 2,
-  "current_stage": "G1",
+  "updated": "2026-09-17T15:10:57+08:00",
+  "revision": 3,
+  "current_stage": "G2",
   "stages": {
     "G0": {
       "name": "需求",
@@ -18,8 +18,8 @@
     },
     "G2": {
       "name": "1D通流方案",
-      "status": "pending",
-      "updated": null
+      "status": "done",
+      "updated": "2026-09-17T15:10:57+08:00"
     },
     "G3": {
       "name": "叶片造型",

@@ -2,14 +2,14 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-17T15:06:17+08:00",
-  "revision": 8,
+  "updated": "2026-09-17T15:10:57+08:00",
+  "revision": 15,
   "requirement_ref": {
     "file": "requirements.yaml",
     "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
     "bytes": 3853
   },
-  "current_stage": "G6",
+  "current_stage": "G2",
   "artifacts": [
     {
       "stage": "G0",
@@ -106,6 +106,96 @@
       "ts": "2026-09-17T15:06:04+08:00",
       "note": "",
       "provenance": null
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v1/流道尺寸表.csv",
+      "version": "v1",
+      "sha256": "799369fac0efd5eb8a9b61921606af0ef63dee9c4c07eeb0f86ddea99112c1af",
+      "bytes": 352,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:54+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v1/叶片几何参数表.csv",
+      "version": "v1",
+      "sha256": "6d00e19b7dd70d137e78b99e86886f8ba8ae5682066785fc647a5b553622e67b",
+      "bytes": 338,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:54+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/流道尺寸表.csv",
+        "from_sha256": "799369fac0efd5eb8a9b61921606af0ef63dee9c4c07eeb0f86ddea99112c1af"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v1/通流计算结果表.csv",
+      "version": "v1",
+      "sha256": "461c97666be8ce1eefcc1dfb9598a1b14985e27b6a01dbd670fed19a751ababa",
+      "bytes": 873,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:55+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/叶片几何参数表.csv",
+        "from_sha256": "6d00e19b7dd70d137e78b99e86886f8ba8ae5682066785fc647a5b553622e67b"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "other",
+      "path": "01-scheme/v1/benchmark_gate.json",
+      "version": "v1",
+      "sha256": "e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c",
+      "bytes": 3938,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:55+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/通流计算结果表.csv",
+        "from_sha256": "461c97666be8ce1eefcc1dfb9598a1b14985e27b6a01dbd670fed19a751ababa"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "other",
+      "path": "01-scheme/v1/benchmark_gate.md",
+      "version": "v1",
+      "sha256": "a1210064de5031414f018249535f9ee16764c2a36ba069b77a187d52d80a4086",
+      "bytes": 1743,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:56+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/benchmark_gate.json",
+        "from_sha256": "e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "other",
+      "path": "01-scheme/v1/inputs/turbo-flow-attempt3.json",
+      "version": "v1",
+      "sha256": "1f3fb70eaf9fcf700d389898c60e1611f99e93e62fa8a99397a205c9ba154d2f",
+      "bytes": 2560,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:56+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
     }
   ]
 }
