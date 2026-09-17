@@ -1,0 +1,48 @@
+# ── NUMECA / CFD 大文件：只登记 sha256 与路径，不入库 ──────────────
+*.cgns
+*.adf
+*.res
+*.mf
+*.xmf
+*.iec
+*.iec.bak
+*.iec.before-*
+*.run
+*.std
+*.err.log
+*.steering
+*.geom
+
+# ── 保留的文本型工程文件（体积小、可 diff） ─────────────────────
+!*.trb
+!*.bcs
+!*.config
+!*.igg
+!*.qualityReport
+!*.geomTurbo
+!*.xmt_txt
+!*.manifest.json
+!*_audit.json
+
+# ── Python ────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# ── 临时与运行产物 ────────────────────────────────────────
+tmp/
+*.tmp
+*.zip
+_dashboard-build/
+
+# ── 编辑器 / 系统 ─────────────────────────────────────────
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+~$*

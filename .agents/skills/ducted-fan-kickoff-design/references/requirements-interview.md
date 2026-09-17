@@ -1,0 +1,182 @@
+# G0 需求问答清单（11 项）
+
+> **用法**：不要念问卷。按下面的顺序问，能一次问清就一次问清；
+> 用户答不上来的项，给默认值**并明确标注"这是假设，不是需求"**，写进 `open_questions.md`。
+>
+> **铁律**：用户没说过的约束，不得写成既定事实。
+
+---
+
+## 第 1 组：性能目标（必问，4 项）
+
+### Q1 推力
+
+> **问**："这台风扇要出多大推力？静推力还是巡航推力？单位是 kgf 还是 N？"
+
+| 项 | 说明 |
+|---|---|
+| 字段 | `thrust.value` / `thrust.unit` / `thrust.condition` |
+| 单位 | kgf → N：`× 9.80665` |
+| 条件 | 静推（`V_∞=0`）还是带前进速度 |
+| 陷阱 | 客户口中的"90 公斤"可能是**整机净推力**，也可能是**台架测的轴向力**——两者不是一个量（见 C-004）。**必须问清口径。** |
+
+**追问话术**（当用户只给一个数）：
+"这个数是整机净推力，还是台架上测的轴向力？两者差一个控制体口径，结果会差几十牛。"
+
+### Q2 环境条件
+
+> **问**："在什么环境下工作？海平面标准大气还是高原？"
+
+| 项 | 默认（**标注为假设**） |
+|---|---|
+| `p_∞` | 101325 Pa（ISA 海平面） |
+| `T_∞` | 288.15 K |
+| `V_∞` | 0 m/s（静推） |
+
+### Q3 桨盘直径 / 涵道外径
+
+> **问**："桨盘直径有硬约束吗？是结构给的，还是可以自己定？"
+
+这条**几乎总是硬约束**：它来自机架、涵道壳体、运输尺寸。
+若用户说"你定"，则它变成 G2 的**设计变量**，需在 G1 给出选择依据（盘载荷 `T/A` 的工程区间）。
+
+### Q4 转速上限
+
+> **问**："转速有上限吗？是电机限制、减速箱限制，还是桨尖马赫数限制？"
+
+| 约束来源 | 后果 |
+|---|---|
+| 电机 KV / 最大转速 | 硬约束，直接定转速 |
+| 桨尖马赫数 | 软约束，通常要求 `M_tip ≤ 0.7`（民用）/ `≤ 0.85`（军用），**需向用户确认适用值** |
+| 减速比 | 决定输出轴转速 |
+
+**必算**：`M_tip = ω·R_tip / a`，其中 `a = sqrt(γRT)`。用 ISA 海平面 `a = 340.3 m/s`。
+
+---
+
+## 第 2 组：动力与结构（必问，3 项）
+
+### Q5 电机
+
+> **问**："用哪个电机？有 datasheet 吗？"
+
+若用户提供了 datasheet（如 `EMRAX_188_datasheet`、`DS-215参数`），提取：
+额定功率 / 峰值功率 / 最高转速 / 效率 / 质量。
+
+**关键交叉检查**：G2 算出的**轴功率**必须 ≤ 电机峰值功率；否则方案不成立，
+必须回头改转速或直径。这是 G1→G2 之间最常见的"看起来能算，实际装不上"。
+
+### Q6 叶排数
+
+> **问**："单转子，还是转子+静子？要不要进口导叶（IGV）？"
+
+| 配置 | 适用 |
+|---|---|
+| 单转子 | 最低成本/最低重量，出口有旋流，效率低 |
+| 转子 + 静子 | 最常见；静子回收旋流 |
+| IGV + 转子 + 静子 | 需要预旋调节时 |
+
+**默认（标注为假设）**：转子 + 静子。
+
+### Q7 轴向长度 / 结构约束
+
+> **问**："轴向总长有限制吗？涵道有没有扩张段/收缩段的要求？"
+
+---
+
+## 第 3 组：材料与工艺（必问，2 项）
+
+### Q8 材料
+
+> **问**："叶片什么材料？注塑、复材还是金属？"
+
+影响：许用应力（结构，不在本链范围）、**表面粗糙度（影响损失相关式）**、最小可制造厚度。
+
+### Q9 制造工艺约束
+
+> **问**："前尾缘半径有最小限制吗？弦长有最小值吗？"
+
+注塑件通常要求前缘半径 ≥ 0.3–0.5 mm。这条会**直接回到 G3 的几何闸门**。
+
+---
+
+## 第 4 组：交付（必问，2 项）
+
+### Q10 交付格式
+
+> **问**："最终要交什么？Excel 三表？PPT？还是只要 CFD 结果文件？"
+
+### Q11 验收口径
+
+> **问**："什么情况下你认为这版方案算通过？"
+
+必须逼出一个**可判定**的回答。若用户说"差不多就行"，则本案例的验收判据由你提出、
+经用户确认后写入 `requirements.yaml` 的 `acceptance` 段，并标注"由设计方提出，用户确认"。
+
+---
+
+## 输出：`requirements.yaml`
+
+```yaml
+schema: turtbo-agent/ducted-fan-requirements@1
+case_id: DF90-001
+created: 2026-09-17T15:00:00+08:00
+created_by: agent+user
+
+thrust:
+  value: 90.0
+  unit: kgf
+  value_n: 882.60          # 换算值，供程序使用
+  condition: static        # static | cruise
+  definition: control_volume   # control_volume | wall_axial_force  <- 必填，见 C-004
+  source: user             # user | derived | assumed
+
+environment:
+  p_inf_pa: 101325.0
+  t_inf_k: 288.15
+  v_inf_m_s: 0.0
+  source: assumed          # 用户未指定，按 ISA 海平面假设
+
+geometry:
+  tip_diameter_m: null     # 待 G2 定
+  tip_diameter_constraint: null
+  source: open
+
+shaft:
+  rpm_max: null
+  rpm_design: null
+  constraint_source: null
+  tip_mach_limit: null
+  source: open
+
+motor:
+  model: null
+  rated_power_w: null
+  peak_power_w: null
+  rpm_max: null
+  datasheet: null
+  source: open
+
+rows:
+  count: 2
+  configuration: rotor_stator
+  source: assumed
+
+materials: {}
+
+manufacturing:
+  min_le_radius_m: null
+  min_chord_m: null
+
+delivery:
+  format: [xlsx, markdown]
+  artifacts: []
+
+acceptance:
+  criteria: []
+  confirmed_by_user: false
+
+open_questions: []          # 与 00-brief/open_questions.md 同步
+```
+
+**校验**：`null` 是合法的，但每一项为 `null` 的字段都必须在 `open_questions.md` 里有一条对应条目。
