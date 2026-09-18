@@ -69,3 +69,6 @@ desktop.ini
 
 # 几何可视化是派生文件，随时可从 .geomTurbo 重算
 cases/**/_view/
+
+# 子 agent / 脚本把工作目录解析失败时，会在仓库里落一个字面量目录
+undefined/
