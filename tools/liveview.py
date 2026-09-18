@@ -282,6 +282,110 @@ def infer_activity(state, manifest, newest, procs, log_age):
 
 
 # ── 组装状态 ───────────────────────────────────────────────────────────────
+STAGE_ORDER = [("G0", "需求"), ("G1", "设计大纲"), ("G2", "1D/通流方案"), ("G3", "叶片造型"),
+               ("G4", "网格"), ("G5", "求解"), ("G6", "后处理与交付")]
+
+_scan_cache = {"ts": 0.0, "key": None, "value": None}
+_scan_lock = threading.Lock()
+
+
+def scan_recent_cached(roots, limit=8, max_age=2.0):
+    """scan_recent 要遍历上万个文件，多个客户端轮询时加个短缓存。"""
+    key = tuple(str(r) for r in roots) + (limit,)
+    with _scan_lock:
+        if _scan_cache["key"] == key and time.time() - _scan_cache["ts"] < max_age:
+            return _scan_cache["value"]
+    value = scan_recent(roots, limit=limit)
+    with _scan_lock:
+        _scan_cache.update({"ts": time.time(), "key": key, "value": value})
+    return value
+
+
+def list_cases():
+    """列出工作区 cases/ 下所有登记过的案例（有新到旧）。"""
+    cases_dir = ROOT / "cases"
+    out = []
+    if not cases_dir.is_dir():
+        return out
+    for d in cases_dir.iterdir():
+        mp = d / "manifest.json"
+        if not d.is_dir() or not mp.is_file():
+            continue
+        man = read_json_safe(mp) or {}
+        sp = d / "STATE.json"
+        try:
+            mtime = mp.stat().st_mtime
+        except Exception:
+            mtime = 0
+        out.append({
+            "id": man.get("case_id") or d.name,
+            "dir": str(d),
+            "current_stage": man.get("current_stage"),
+            "revision": man.get("revision"),
+            "artifact_count": len(man.get("artifacts", []) or []),
+            "mtime": mtime,
+            "has_state": sp.is_file(),
+        })
+    out.sort(key=lambda x: x["mtime"], reverse=True)
+    return out
+
+
+def parse_log(text):
+    """把 LOG.md 解析成结构化条目。格式由 case_ledger._append_log 固定。"""
+    entries = []
+    cur = None
+    for line in text.splitlines():
+        m = re.match(r"^##\s+(\S+)\s+\|\s+(.+?)\s+\|\s+(\S+)\s*$", line)
+        if m:
+            if cur:
+                entries.append(cur)
+            label = m.group(2).strip()
+            g = re.match(r"^(G\d)\s*(.*)$", label)
+            cur = {
+                "ts": m.group(1),
+                "stage": g.group(1) if g else "",
+                "stage_name": (g.group(2) if g else label),
+                "verdict": m.group(3),
+                "fields": [],
+            }
+            continue
+        if cur is None:
+            continue
+        m2 = re.match(r"^-\s*([^：:]+)[：:]\s*(.*)$", line)
+        if m2:
+            cur["fields"].append({"k": m2.group(1).strip(), "v": m2.group(2).strip()})
+    if cur:
+        entries.append(cur)
+    return entries
+
+
+def trim_artifact(a):
+    prov = a.get("provenance") or {}
+    return {
+        "kind": a.get("kind"), "path": a.get("path"), "version": a.get("version"),
+        "verdict": a.get("verdict", "INFO"), "bytes": a.get("bytes"),
+        "sha256": (a.get("sha256") or "")[:16], "ts": a.get("ts"),
+        "note": a.get("note") or "", "from": prov.get("from") or "",
+    }
+
+
+def build_stage_detail(state, manifest, log_entries):
+    """每个阶段一个包：状态 + 产物 + 过程记录。点时间线就能看。"""
+    arts = manifest.get("artifacts", []) or []
+    detail = {}
+    for sid, default_name in STAGE_ORDER:
+        st = (state.get("stages") or {}).get(sid) or {}
+        detail[sid] = {
+            "id": sid,
+            "name": st.get("name") or default_name,
+            "status": st.get("status", "pending"),
+            "updated": st.get("updated"),
+            "artifacts": [trim_artifact(a) for a in arts if a.get("stage") == sid],
+            "log": [e for e in log_entries if e.get("stage") == sid],
+        }
+    return detail
+
+
 class Aggregator:
     def __init__(self, case_dir, extra_roots):
         self.case_dir = Path(case_dir)
@@ -305,7 +409,7 @@ class Aggregator:
     def build(self):
         state = read_json_safe(self.case_dir / "STATE.json") or {}
         manifest = read_json_safe(self.case_dir / "manifest.json") or {}
-        recent, newest = scan_recent(self.roots)
+        recent, newest = scan_recent_cached(self.roots)
         procs = sample_processes()
 
         log_path = self.case_dir / "LOG.md"
@@ -338,13 +442,35 @@ class Aggregator:
             "log_age_sec": log_age,
             "log_tail": log_tail,
             "rules": parse_contracts(),
+            "cases": list_cases(),
+            "stage_detail": build_stage_detail(state, manifest, parse_log(read_text_safe(log_path))),
         }
 
 
 # ── HTTP ───────────────────────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
-    aggregator = None
     ui_bytes = b""
+    extra_roots = []
+    default_case = None
+    _agg_cache = {}
+    _agg_lock = threading.Lock()
+
+    @classmethod
+    def aggregator_for(cls, case_id):
+        """按案例 id 取聚合器。找不到就退回默认案例。"""
+        cases = {c["id"]: c for c in list_cases()}
+        target = None
+        if case_id and case_id in cases:
+            target = Path(cases[case_id]["dir"])
+        if target is None:
+            target = cls.default_case
+        key = str(target)
+        with cls._agg_lock:
+            agg = cls._agg_cache.get(key)
+            if agg is None:
+                agg = Aggregator(target, cls.extra_roots)
+                cls._agg_cache[key] = agg
+        return agg
 
     def log_message(self, fmt, *args):
         pass
@@ -361,12 +487,25 @@ class Handler(BaseHTTPRequestHandler):
             pass
 
     def do_GET(self):
-        path = self.path.split("?")[0]
+        from urllib.parse import urlparse, parse_qs
+        parsed = urlparse(self.path)
+        path = parsed.path
+        qs = parse_qs(parsed.query)
+        case_id = (qs.get("case") or [None])[0]
+
         if path in ("/", "/index.html"):
             self._send(200, self.ui_bytes, "text/html; charset=utf-8")
+        elif path == "/api/cases":
+            try:
+                payload = json.dumps({"cases": list_cases()}, ensure_ascii=False).encode("utf-8")
+                self._send(200, payload, "application/json; charset=utf-8")
+            except Exception as exc:
+                self._send(500, json.dumps({"error": repr(exc)}).encode("utf-8"),
+                           "application/json; charset=utf-8")
         elif path == "/api/state":
             try:
-                payload = json.dumps(self.aggregator.build(), ensure_ascii=False).encode("utf-8")
+                agg = self.aggregator_for(case_id)
+                payload = json.dumps(agg.build(), ensure_ascii=False).encode("utf-8")
                 self._send(200, payload, "application/json; charset=utf-8")
             except Exception as exc:
                 err = json.dumps({"error": repr(exc)}, ensure_ascii=False).encode("utf-8")
@@ -419,8 +558,10 @@ def main(argv=None):
     case_dir = pick_case(args.case)
     extra = args.watch if args.watch is not None else [str(p) for p in DEFAULT_EXTRA_ROOTS if p.exists()]
 
-    Handler.aggregator = Aggregator(case_dir, extra)
+    Handler.default_case = case_dir
+    Handler.extra_roots = extra
     Handler.ui_bytes = UI.read_bytes()
+    print("  案例数  : " + str(len(list_cases())) + "（可用 ?case=<id> 切换）")
 
     port = pick_port(args.port)
     url = "http://127.0.0.1:" + str(port) + "/"

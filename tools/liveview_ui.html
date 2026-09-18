@@ -64,6 +64,26 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   border-left:2px solid #3d4753;padding-left:11px}
 .rwhy b{color:var(--warn);font-weight:600}
 .rsrc{font-size:11.5px;color:var(--dim2);margin-top:8px;font-family:ui-monospace,Consolas,monospace}
+.casesel{background:var(--panel2);color:var(--fg);border:1px solid var(--line);border-radius:7px;
+  padding:6px 11px;font-size:13px;font-family:inherit;cursor:pointer;min-width:210px}
+.casesel:focus{outline:none;border-color:var(--run)}
+.st{cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.st:hover{border-color:#3d4753}
+.st.sel{border-color:var(--run);box-shadow:0 0 0 2px rgba(88,166,255,.22)}
+.st.sel .g::after{content:" · 已选中";color:var(--run);font-weight:400}
+.sdlabel{font-size:12px;color:var(--dim2);margin:16px 0 8px;font-weight:600}
+.sdlabel:first-child{margin-top:0}
+.logent{border-left:2px solid #3d4753;padding:9px 0 9px 13px;margin-bottom:10px}
+.logent.pass{border-left-color:#238636}
+.logent.warn{border-left-color:#9e6a03}
+.logent.fail{border-left-color:#a32020}
+.lehead{display:flex;gap:10px;align-items:center;margin-bottom:6px;flex-wrap:wrap}
+.lets{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:var(--dim2)}
+.leact{font-size:13px}
+.lefields{display:grid;grid-template-columns:78px 1fr;gap:3px 12px;font-size:12px;margin:0}
+.lefields dt{color:var(--dim2)}
+.lefields dd{margin:0;color:#c9d1d9;word-break:break-word}
+.hint{font-size:12px;color:var(--dim2);margin-top:10px}
 </style>
 </head>
 <body>
@@ -75,6 +95,9 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
       <div class="sub" id="reqline">正在连接本地服务</div>
     </div>
     <div style="text-align:right">
+      <div style="margin-bottom:7px">
+        <select id="casesel" class="casesel" onchange="selectCase(this.value)"></select>
+      </div>
       <div class="clock"><span id="livedot" class="dot dead"></span><span id="livetxt">等待连接</span></div>
       <div class="clock" id="clock"></div>
     </div>
@@ -85,9 +108,11 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   </div>
 
   <div class="card">
-    <h2>阶段时间线（G0 → G6）</h2>
+    <h2>阶段时间线（G0 → G6）· 点任意一格看该阶段的产物与过程记录</h2>
     <div class="tl" id="timeline"></div>
   </div>
+
+  <div id="stagedetail"></div>
 
   <div class="card">
     <h2>现在在做什么</h2>
@@ -132,6 +157,9 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
 
 <script>
 var lastOk = 0;
+var currentCase = null;
+var selectedStage = null;
+var lastData = null;
 
 function el(id){ return document.getElementById(id); }
 
@@ -177,23 +205,117 @@ var STAGE_TITLE = {G0:"需求",G1:"设计大纲",G2:"1D 通流方案",G3:"叶片
 var STAGE_CLASS = {done:"done", in_progress:"run", blocked:"blocked", pending:"pending"};
 var STAGE_TEXT  = {done:"已完成", in_progress:"进行中", blocked:"阻塞", pending:"未开始"};
 
+var STAGE_ORDER = ["G0","G1","G2","G3","G4","G5","G6"];
+
 function renderTimeline(stages, current){
-  var order = ["G0","G1","G2","G3","G4","G5","G6"];
   var html = "";
-  for (var i=0;i<order.length;i++){
-    var g = order[i];
+  for (var i=0;i<STAGE_ORDER.length;i++){
+    var g = STAGE_ORDER[i];
     var st = (stages && stages[g]) ? stages[g] : {};
     var status = st.status || "pending";
     var cls = STAGE_CLASS[status] || "pending";
     var txt = STAGE_TEXT[status] || status;
-    html += '<div class="st ' + cls + '">'
+    html += '<div class="st ' + cls + (g === selectedStage ? ' sel' : '') + '"'
+         +  ' onclick="selectStage(&quot;' + g + '&quot;)" title="点击查看该阶段的产物与过程记录">'
          +  '<div class="g">' + g + '</div>'
          +  '<div class="n">' + esc(STAGE_TITLE[g]) + '</div>'
          +  '<span class="s">' + esc(txt) + '</span>'
-         +  (i < order.length-1 ? '<span class="arrow">›</span>' : '')
+         +  (i < STAGE_ORDER.length-1 ? '<span class="arrow">›</span>' : '')
          +  '</div>';
   }
   setHTML("timeline", html);
+}
+
+function vcls(v){
+  v = String(v || "INFO").toUpperCase();
+  if (v === "PASS") return "pass";
+  if (v === "FAIL" || v === "BLOCKED") return "fail";
+  if (v === "WARN") return "warn";
+  return "";
+}
+
+function renderStageDetail(detail, sel){
+  var d = detail && detail[sel];
+  if (!d){ setHTML("stagedetail", ""); return; }
+  var h = '<div class="card">'
+        + '<h2>阶段 ' + esc(d.id) + ' ' + esc(d.name) + ' · '
+        + esc(STAGE_TEXT[d.status] || d.status)
+        + (d.updated ? ' · 更新于 ' + esc(d.updated) : '') + '</h2>';
+
+  h += '<div class="sdlabel">产物（' + d.artifacts.length + '）</div>';
+  if (d.artifacts.length){
+    h += '<table><thead><tr><th>结论</th><th>版本</th><th>路径</th><th>体积</th>'
+       + '<th>sha256</th><th>上游</th></tr></thead><tbody>';
+    for (var i=0;i<d.artifacts.length;i++){
+      var a = d.artifacts[i];
+      h += '<tr><td><span class="v v-' + esc(a.verdict) + '">' + esc(a.verdict) + '</span></td>'
+         + '<td class="mono">' + esc(a.version) + '</td>'
+         + '<td class="mono" title="' + esc(a.path) + '">' + esc(a.path) + '</td>'
+         + '<td class="mono">' + esc(fmtBytes(a.bytes)) + '</td>'
+         + '<td class="mono">' + esc(a.sha256) + '</td>'
+         + '<td class="mono">' + esc(a.from || "—") + '</td></tr>';
+      if (a.note){
+        h += '<tr><td></td><td colspan="5" style="color:var(--dim);font-size:12px">备注：'
+           + esc(a.note) + '</td></tr>';
+      }
+    }
+    h += '</tbody></table>';
+  } else {
+    h += '<div class="placeholder">该阶段暂无登记产物</div>';
+  }
+
+  h += '<div class="sdlabel">过程记录（' + d.log.length + ' 条）</div>';
+  if (d.log.length){
+    for (var j=0;j<d.log.length;j++){
+      var e = d.log[j];
+      var act = "";
+      var fields = "";
+      for (var k=0;k<e.fields.length;k++){
+        var f = e.fields[k];
+        if (f.k === "动作"){ act = f.v; continue; }
+        fields += '<dt>' + esc(f.k) + '</dt><dd>' + esc(f.v) + '</dd>';
+      }
+      h += '<div class="logent ' + vcls(e.verdict) + '">'
+         + '<div class="lehead"><span class="lets">' + esc(e.ts) + '</span>'
+         + '<span class="v v-' + esc(e.verdict) + '">' + esc(e.verdict) + '</span>'
+         + '<span class="leact">' + esc(act) + '</span></div>'
+         + (fields ? '<dl class="lefields">' + fields + '</dl>' : '')
+         + '</div>';
+    }
+  } else {
+    h += '<div class="placeholder">该阶段暂无过程记录</div>';
+  }
+
+  h += '<div class="hint">提示：日志为只追加，这里是该阶段的全部历史条目。</div></div>';
+  setHTML("stagedetail", h);
+}
+
+function selectStage(g){
+  selectedStage = g;
+  if (lastData) renderTimeline(lastData.stages, lastData.current_stage);
+  if (lastData) renderStageDetail(lastData.stage_detail, selectedStage);
+}
+
+function selectCase(v){
+  currentCase = v;
+  selectedStage = null;
+  tick();
+}
+
+function renderCaseSelector(list, active){
+  if (!list || !list.length) return;
+  var sig = list.map(function(c){ return c.id + c.revision; }).join("|") + "#" + active;
+  var sel = el("casesel");
+  if (sel.__sig === sig) return;
+  sel.__sig = sig;
+  var h = "";
+  for (var i=0;i<list.length;i++){
+    var c = list[i];
+    var label = c.id + "　·　" + (c.current_stage || "—") + "　·　" + c.artifact_count + " 产物";
+    h += '<option value="' + esc(c.id) + '"' + (c.id === active ? ' selected' : '') + '>'
+       + esc(label) + '</option>';
+  }
+  sel.innerHTML = h;
 }
 
 function renderKV(pairs){
@@ -257,11 +379,27 @@ function apply(s){
   el("livetxt").textContent = "实时连接中";
   lastOk = Date.now();
 
+  lastData = s;
+  currentCase = s.case_id || currentCase;
+
   el("title").textContent = (s.case_id || "未命名案例") + " · 涵道风扇气动设计";
   el("reqline").textContent = s.requirement_line || "";
   el("clock").textContent = "服务器时间 " + (s.server_time || "");
 
+  renderCaseSelector(s.cases, s.case_id);
+
+  // 首次载入时默认选中"正在进行的阶段"，没有就选最新阶段
+  if (!selectedStage){
+    var pick = null;
+    for (var i=0;i<STAGE_ORDER.length;i++){
+      var st = (s.stages || {})[STAGE_ORDER[i]];
+      if (st && st.status === "in_progress"){ pick = STAGE_ORDER[i]; break; }
+    }
+    selectedStage = pick || s.current_stage || "G0";
+  }
+
   renderTimeline(s.stages, s.current_stage);
+  renderStageDetail(s.stage_detail, selectedStage);
 
   el("nowline").textContent = s.activity || "—";
   el("nowsub").textContent = s.activity_detail || "";
@@ -301,7 +439,8 @@ function fail(msg){
 }
 
 function tick(){
-  fetch("/api/state", {cache:"no-store"})
+  var url = "/api/state" + (currentCase ? ("?case=" + encodeURIComponent(currentCase)) : "");
+  fetch(url, {cache:"no-store"})
     .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(apply)
     .catch(function(e){ fail(String(e)); });
