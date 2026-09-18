@@ -44,11 +44,110 @@ EXIT_VERIFY = 4
 EXIT_INTERNAL = 5
 
 LF = chr(10)
+BT = chr(96)
+FENCE = BT * 3
 
-MASS_ERROR_LIMIT_PCT = 1.0
-RANGE_LIMIT_PCT = 0.2
-SKEW_MIN_DEG = 10.0
-EXPANSION_MAX = 5.0
+# ── 判据的唯一真源：合同文件 ────────────────────────────────────────────
+# 阈值、绑定关系、判据文字全部从这里读，本文件**不另写一份**。
+# 原因：同一个规则曾经写在两处（合同 + 代码），结果改了代码忘改合同，
+# 合同里留下一条会误导下游的错判据 —— C-011 就是这么来的。
+ROOT = Path(__file__).resolve().parent.parent
+CONTRACTS = (ROOT / ".agents" / "skills" / "ducted-fan-aero-design"
+             / "references" / "ducted-fan-contracts.md")
+
+# 没有合同可依据的纯过程判据（文件存在性之类）。显式列出来，不假装它们有合同。
+BUILTIN_CHECK_IDS = {
+    "G0-1", "G0-2", "G0-3", "G0-5",
+    "G1-1", "G1-2", "G1-3", "G1-4",
+    "G4-1", "G4-2", "G4-3", "G4-4",
+    "G5-1", "G5-2", "G5-4",
+    "G6-1",
+}
+
+
+def _parse_scalar(v):
+    v = v.strip().strip('"').strip("'")
+    if v.lower() in ("true", "false"):
+        return v.lower() == "true"
+    try:
+        return int(v)
+    except ValueError:
+        pass
+    try:
+        return float(v)
+    except ValueError:
+        pass
+    if "|" in v:
+        return [x.strip() for x in v.split("|") if x.strip()]
+    return v
+
+
+def load_contract_specs(path=None):
+    """解析合同文件里的 机读 块。返回 (entries, specs)。
+
+    entries: {C-00N: {title, gate, check, also_check, params}}
+    specs:   {check_id: {contract, title, gate, params}}
+    """
+    path = Path(path) if path else CONTRACTS
+    if not path.is_file():
+        raise RuntimeError(
+            "合同文件不存在：" + str(path) + LF
+            + "判据的真源缺失，拒绝用内置默认值继续 —— 那正是产生漂移的原因。")
+    text = path.read_text(encoding="utf-8")
+    block_re = re.compile(r"\*\*机读\*\*[^\n]*\n+" + FENCE + r"yaml\n(.*?)" + FENCE, re.S)
+    entries, specs = {}, {}
+    heads = list(re.finditer(r"^## (C-\d+)\s+([^\n]*)$", text, re.M))
+    for i, m in enumerate(heads):
+        cid, title = m.group(1), m.group(2).strip()
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
+        body = text[m.end():end]
+        e = {"title": title, "gate": None, "check": None, "also_check": None, "params": {}}
+        mm = block_re.search(body)
+        if mm:
+            kv = {}
+            for line in mm.group(1).splitlines():
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                k, _, v = line.partition(":")
+                if k.strip():
+                    kv[k.strip()] = _parse_scalar(v)
+            e["gate"] = kv.pop("gate", None)
+            e["check"] = kv.pop("check", None)
+            e["also_check"] = kv.pop("also_check", None)
+            e["params"] = kv
+            for chk in (e["check"], e["also_check"]):
+                if chk:
+                    specs[chk] = {"contract": cid, "title": title,
+                                  "gate": e["gate"], "params": e["params"]}
+        entries[cid] = e
+    return entries, specs
+
+
+_CACHE = {}
+
+
+def contract_specs():
+    if "specs" not in _CACHE:
+        entries, specs = load_contract_specs()
+        _CACHE["entries"] = entries
+        _CACHE["specs"] = specs
+    return _CACHE["entries"], _CACHE["specs"]
+
+
+def param(check_id, key, default=None):
+    """从合同取阈值。取不到就用 default —— 但 audit 会把这个缺口列出来。"""
+    _, specs = contract_specs()
+    return (specs.get(check_id) or {}).get("params", {}).get(key, default)
+
+
+def criteria_of(check_id, fallback=""):
+    """判据文字也来自合同，避免两处措辞不一致。"""
+    _, specs = contract_specs()
+    spec = specs.get(check_id)
+    if not spec:
+        return fallback
+    return "见合同 " + spec["contract"] + "「" + spec["title"] + "」"
 
 MANDATORY_REQUIREMENT_PATHS = [
     ("thrust.value", "推力目标"),
@@ -60,11 +159,15 @@ MANDATORY_REQUIREMENT_PATHS = [
 
 
 class Result:
+    # 所有实际跑过的 check id 都记在这里，供 --audit 与合同比对
+    SEEN = set()
+
     def __init__(self, gate):
         self.gate = gate
         self.items = []
 
     def add(self, cid, title, criteria, measured, verdict, source, detail=None):
+        Result.SEEN.add(cid)
         self.items.append({
             "id": cid, "title": title, "criteria": criteria,
             "measured": measured, "verdict": verdict, "source": source,
@@ -172,8 +275,13 @@ def gate_requirements(case: Path, args) -> Result:
           "gates.md#G0")
 
     definition = flat.get("thrust.definition")
-    r.add("G0-4", "推力口径已声明", "thrust.definition 必须是 control_volume 或 wall_axial_force",
-          "definition=" + str(definition), "PASS" if definition in ("control_volume", "wall_axial_force") else "FAIL",
+    allowed = param("G0-4", "allowed_definition", ["control_volume", "wall_axial_force"])
+    if not isinstance(allowed, list):
+        allowed = [allowed]
+    r.add("G0-4", "推力口径已声明",
+          criteria_of("G0-4") + "　允许 " + "/".join(str(a) for a in allowed),
+          "definition=" + str(definition),
+          "PASS" if definition in allowed else "FAIL",
           "ducted-fan-contracts.md#C-004")
 
     # 未决项覆盖率：source 为 open/assumed 的字段必须出现在 open_questions.md
@@ -245,6 +353,23 @@ def gate_brief(case: Path, args) -> Result:
 # ── G4 网格 ────────────────────────────────────────────────────────────────
 MESH_SUFFIXES = [".trb", ".igg", ".cgns", ".bcs", ".config", ".info", ".qualityReport"]
 
+def external_index(case):
+    """读 _external/*.json 里"只索引不复制"的文件清单（相对路径）。"""
+    out = []
+    d = Path(case) / "_external"
+    if d.is_dir():
+        for j in sorted(d.glob("*.json")):
+            try:
+                data = json.loads(j.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            for f in (data.get("files") or []):
+                rel = f.get("rel") or f.get("path") or ""
+                if rel:
+                    out.append(str(rel).replace("\\", "/"))
+    return out
+
+
 def gate_mesh(case: Path, args) -> Result:
     r = Result("G4")
     root = case / "03-mesh" / args.version
@@ -269,9 +394,21 @@ def gate_mesh(case: Path, args) -> Result:
     r.add("G4-1", "网格文件存在", "至少一套同名的网格文件",
           "stem=" + stem + " suffixes=" + ",".join(sorted(files)), "PASS", "gates.md#G4")
 
-    missing = [s for s in (".trb", ".igg", ".cgns", ".qualityReport") if s not in files]
-    r.add("G4-2", "关键文件齐全", ".trb/.igg/.cgns/.qualityReport 必须齐全",
-          "missing=" + str(missing), "PASS" if not missing else "FAIL", "gates.md#G4")
+    # 大二进制（.cgns 等）按账本合同"只索引不复制"放在 _external/，不算缺失。
+    ext = external_index(case)
+    required = (".trb", ".igg", ".cgns", ".qualityReport")
+    missing, external_ok = [], []
+    for s in required:
+        if s in files:
+            continue
+        if any(name.endswith(stem + s) for name in ext):
+            external_ok.append(s)
+            continue
+        missing.append(s)
+    r.add("G4-2", "关键文件齐全",
+          ".trb/.igg/.cgns/.qualityReport 必须齐全；大二进制可在 _external 索引中",
+          "missing=" + str(missing) + "　外部索引满足=" + str(external_ok),
+          "PASS" if not missing else "FAIL", "gates.md#G4")
 
     qr = files.get(".qualityReport")
     if qr and qr.is_file():
@@ -279,11 +416,15 @@ def gate_mesh(case: Path, args) -> Result:
         r.add("G4-3", "质量报告非空", ".qualityReport 必须存在且非空",
               "%d bytes" % qr.stat().st_size, "PASS" if qr.stat().st_size > 0 else "FAIL",
               "gates.md#G4")
-        # 负单元
+        # 负单元。AutoGrid 的质量报告可能写成陈述句 "No Negative Cell"，
+        # 也可能写成 "Negative cells: 3" —— 两种都要认，否则会误判成 SKIP。
         neg = None
-        m = re.search(r"(negative|Negative|NEGATIVE)[^0-9\-]{0,20}(-?\d+)", qtext)
-        if m:
-            neg = int(m.group(2))
+        if re.search(r"no\s+negative\s+cell", qtext, re.I):
+            neg = 0
+        else:
+            m = re.search(r"(negative)[^0-9\-]{0,24}(-?\d+)", qtext, re.I)
+            if m:
+                neg = int(m.group(2))
         r.add("G4-4", "负单元 = 0", "网格不得有负体积单元",
               "reported=%s" % ("未在 qualityReport 中找到" if neg is None else neg),
               "PASS" if neg == 0 else ("SKIP" if neg is None else "FAIL"),
@@ -292,15 +433,36 @@ def gate_mesh(case: Path, args) -> Result:
         r.add("G4-3", "质量报告非空", ".qualityReport 必须存在", "缺失", "FAIL", "gates.md#G4")
 
     # 块签名（若有 mesh_audit.json）
-    audit = root / "mesh_audit.json"
-    if audit.is_file():
-        data = json.loads(audit.read_text(encoding="utf-8"))
-        blocks = data.get("blocks") or data.get("block_signature") or {}
-        r.add("G4-5", "块签名已记录", "mesh_audit.json 必须含块签名",
-              "keys=" + str(list(data.keys())[:8]), "PASS" if blocks else "WARN", "C-007")
+    # 块签名审计文件的实际命名随工具而变（mesh_audit.json / <stem>.audit.json），
+    # 所以按后缀找，不要写死文件名 —— 否则检查在但永远不触发（实测踩过）。
+    SIG_KEYS = ("blocks", "block_signature", "block_signatures",
+                "grid_blocks", "block_dims", "block_table")
+    audits = sorted(root.glob("*.audit.json")) + sorted(root.glob("mesh_audit.json"))
+    audits = [a for a in dict.fromkeys(audits) if a.is_file()]
+    if audits:
+        found_sig = None
+        for a in audits:
+            try:
+                data = json.loads(a.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            blocks = next((data.get(k) for k in SIG_KEYS if data.get(k)), None)
+            if blocks:
+                found_sig = (a.name, data)
+                break
+        if found_sig:
+            r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
+                  found_sig[0] + "　keys=" + str(list(found_sig[1].keys())[:6]),
+                  "PASS", "C-007")
+        else:
+            r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
+                  "找到 " + str([a.name for a in audits])
+                  + "，但没有块签名字段（查过 " + "/".join(SIG_KEYS) + "）。"
+                  + "C-007 要求记录块数 + 每块 IMAX/JMAX/KMAX —— 需在网格审计里补上",
+                  "WARN", "C-007")
     else:
-        r.add("G4-5", "块签名已记录", "mesh_audit.json 记录块数/块名/IMAX-JMAX-KMAX",
-              "mesh_audit.json 缺失", "SKIP", "C-007")
+        r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
+              root.name + " 下无 *.audit.json", "SKIP", "C-007")
     return r
 
 
@@ -329,13 +491,15 @@ def gate_solve(case: Path, args) -> Result:
         return r
 
     accepted = [x for x in rows if x["state"] == "accepted"]
+    limit = param("G5-3", "mass_error_limit_pct", 1.0)      # 阈值来自 C-002
     violations = []
     for row in accepted:
         me = numeric(row.get("mass_error_pct"))
-        if me is None or me > MASS_ERROR_LIMIT_PCT:
+        if me is None or me > limit:
             violations.append({"case": row["case"], "mass_error_pct": row.get("mass_error_pct")})
     r.add("G5-3", "验收点满足质量不平衡判据",
-          "100*|mdot_in-mdot_out|/|mdot_in| <= %.1f%%" % MASS_ERROR_LIMIT_PCT,
+          criteria_of("G5-3", "100*|mdot_in-mdot_out|/|mdot_in| <= %.1f%%" % limit)
+          + "　阈值 " + str(limit) + "%",
           "accepted=%d violations=%d" % (len(accepted), len(violations)),
           "PASS" if not violations else "FAIL", "C-002", {"violations": violations})
 
@@ -384,15 +548,23 @@ def gate_post(case: Path, args) -> Result:
     r.add("G6-1", "交付文件存在", "交付目录必须有表格/说明文件",
           "files=" + str(len(tables)), "PASS" if tables else "FAIL", "gates.md#G6")
 
+    banned = param("G6-2", "banned", [])            # 禁用字段来自 C-003
+    if not isinstance(banned, list):
+        banned = [banned]
+    check_drive = bool(param("G6-2", "banned_drive_prefix", True))
+    drive_re = re.compile(r"[A-Za-z]:[\\/]")
     dirty = []
     for p in tables:
         if p.suffix.lower() != ".csv":
             continue
         text = p.read_text(encoding="utf-8", errors="replace")
-        for token in DELIVERY_BANNED:
-            if token in text:
+        for token in banned:
+            if token and token in text:
                 dirty.append({"file": p.name, "token": token})
-    r.add("G6-2", "交付表无禁用字段", "不得含路径/版本号/质量状态字段",
+        if check_drive and drive_re.search(text):
+            dirty.append({"file": p.name, "token": "（磁盘绝对路径）"})
+    r.add("G6-2", "交付表无禁用字段",
+          criteria_of("G6-2") + "　禁用 " + str(len(banned)) + " 个字段 + 磁盘路径",
           "dirty=%d" % len(dirty), "PASS" if not dirty else "FAIL", "C-003", {"dirty": dirty})
 
     thrust_files = [p for p in root.glob("*.csv") if "thrust" in p.name.lower() or "推力" in p.name]
@@ -401,6 +573,67 @@ def gate_post(case: Path, args) -> Result:
           "candidates=" + str([p.name for p in thrust_files]),
           "SKIP", "C-004")
     return r
+
+
+def cmd_audit(args):
+    """判据一致性自检：合同 ↔ 代码，两边对不上就报错。
+
+    这个检查的存在理由：曾经同一个规则写在两处，改了代码忘改合同，
+    合同里留下一条错判据（C-011）。有了它，这类漏改会立刻暴露。
+    """
+    entries, specs = contract_specs()
+
+    # 静态扫源码取"实际实现了哪些检查" —— 不能靠跑一遍收集：
+    # 闸门在数据缺失时会提前 return，那些检查就没跑，会被误报成"没实现"。
+    src = Path(__file__).read_text(encoding="utf-8")
+    used = set(re.findall(r'r\.add\(\s*"(G\d+-\d+)"', src))
+    bound = set(specs.keys())
+    problems = []
+
+    for cid in sorted(bound - used):
+        problems.append({"kind": "合同声明了检查，代码里没有实现",
+                         "check": cid, "contract": specs[cid]["contract"]})
+    for cid in sorted(used - bound - BUILTIN_CHECK_IDS):
+        problems.append({"kind": "代码实现了检查，但既无合同也未登记为过程判据",
+                         "check": cid, "contract": ""})
+    for cid in sorted(BUILTIN_CHECK_IDS & bound):
+        problems.append({"kind": "既登记为过程判据、又有合同绑定，二者冲突",
+                         "check": cid, "contract": specs[cid]["contract"]})
+    for cid, e in sorted(entries.items()):
+        if e["gate"] and not e["check"]:
+            problems.append({"kind": "合同写了 gate 却没写 check",
+                             "check": cid, "contract": cid})
+        if e["check"] and e["gate"] and not e["check"].startswith(e["gate"] + "-"):
+            problems.append({"kind": "合同声明的 gate 与 check 编号不匹配",
+                             "check": e["check"], "contract": cid})
+
+    payload = {
+        "ok": not problems,
+        "contracts_total": len(entries),
+        "contracts_with_check": len({s["contract"] for s in specs.values()}),
+        "checks_from_contract": len(bound),
+        "checks_builtin": len(BUILTIN_CHECK_IDS),
+        "checks_implemented": len(used),
+        "checks_without_contract": sorted(used - bound - BUILTIN_CHECK_IDS),
+        "problems": problems,
+    }
+    if args.json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        print("判据一致性自检")
+        print("  合同条目      : %d（其中 %d 条带机读块）"
+              % (payload["contracts_total"], payload["contracts_with_check"]))
+        print("  合同绑定检查  : %d 项" % payload["checks_from_contract"])
+        print("  过程判据      : %d 项（无合同，显式登记）" % payload["checks_builtin"])
+        print("  实际实现      : %d 项" % payload["checks_implemented"])
+        print()
+        if not problems:
+            print("  ✓ 合同与代码一致，无漂移")
+        else:
+            print("  ✗ 发现 %d 处不一致：" % len(problems))
+            for pb in problems:
+                print("    - [%s] %s %s" % (pb["kind"], pb["check"], pb["contract"]))
+    return EXIT_OK if not problems else EXIT_VERIFY
 
 
 GATES = {
@@ -431,7 +664,7 @@ def render(result: Result) -> str:
 
 def main(argv=None):
     p = argparse.ArgumentParser(prog="gate_check.py", description="阶段闸门判定")
-    p.add_argument("gate", choices=list(GATES.keys()) + ["all"])
+    p.add_argument("gate", choices=list(GATES.keys()) + ["all", "audit"])
     p.add_argument("--case", required=True)
     p.add_argument("--version", default="v1")
     p.add_argument("--summary", default=None)
@@ -443,6 +676,9 @@ def main(argv=None):
     if not case.is_dir():
         print("PRECONDITION: 案例目录不存在 " + str(case), file=sys.stderr)
         return EXIT_PRECONDITION
+
+    if args.gate == "audit":
+        return cmd_audit(args)
 
     names = list(GATES.keys()) if args.gate == "all" else [args.gate]
     results = [GATES[name](case, args) for name in names]

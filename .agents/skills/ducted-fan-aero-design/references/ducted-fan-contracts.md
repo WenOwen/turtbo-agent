@@ -2,6 +2,15 @@
 
 > 每条都带 **来源** 与 **适用边界**。**适用边界为空或写"通用"的条目一律视为不合格。**
 > 判据缺失来源时，闸门必须报错而不是放行。
+>
+> **可机检的条目带"机读"块 —— 那是闸门判据的唯一真源。**
+> `tools/gate_check.py` 从这里读阈值、允许值和绑定关系，代码里**不另写一份**。
+> 改了合同就是改了判据，不存在两处不一致。
+> 一致性自检：`python tools/gate_check.py audit --case <案例ID>`
+> 它会报出"合同声明了但代码没实现""代码实现了但没合同""gate 与 check 编号不匹配"。
+>
+> 没有机读块的条目是**人判规则**（如 C-005 落后角符号、C-009 y+ 判据），
+> 闸门检查不了，靠 agent 读 skill 时遵守。
 
 ---
 
@@ -50,6 +59,15 @@ XMF 的 `Torque` 若来自 `allwalls` 选择，包含机匣与静子壁面，**�
 **续算依赖必须用与最终验收相同的合同**。不得仅因 RMS/MAX 未达经验值就跳过后续背压点，
 否则会人为截断堵塞端或失速侧包络。
 
+**机读**（闸门判据的唯一真源；`gate_check.py` 从这里读阈值，不另写一份）：
+
+```yaml
+gate: G5
+check: G5-3
+mass_error_limit_pct: 1.0
+range_limit_pct: 0.2
+```
+
 **来源**：`memory.md#2026-07-27`（用户纠正）｜复核入口 `D-post/postprocess.py`
 **适用边界**：**0.2% 与 1% 是当前项目的暂定工程合同，不得无条件泛化。** 换机器/换网格族时必须重新标定并在 LOG.md 注明。
 
@@ -70,6 +88,15 @@ XMF 的 `Torque` 若来自 `allwalls` 选择，包含机匣与静子壁面，**�
 仅部分工况缺失时才保留该指标并以 `—` 表示缺值。
 
 **收敛与完整性检查仍必须在程序内部执行**，发现问题在任务反馈里说明，但**不占用参数表字段**。
+
+**机读**（闸门判据的唯一真源；`gate_check.py` 从这里读阈值，不另写一份）：
+
+```yaml
+gate: G6
+check: G6-2
+banned: CFD质量状态 | 质量状态 | 警告 | sha256
+banned_drive_prefix: true
+```
 
 **来源**：`memory.md#2026-08-04`（用户纠正）×2
 **适用边界**：所有对外交付表。内部审计另存 `*_audit.json`，两者不混。
@@ -100,6 +127,17 @@ T = ṁ_out · Vx_out + (p_out − p_∞) · A_out
 
 **禁止**：把 XMF 壁面"轴向推力"当整机净推力。它只积分转子叶片与转子轮毂。
 交付表中的参数名统一为 **「轴向推力（动量+压力）」**。
+
+**机读**（闸门判据的唯一真源；`gate_check.py` 从这里读阈值，不另写一份）：
+
+```yaml
+gate: G0
+check: G0-4
+also_check: G6-3
+allowed_definition: control_volume | wall_axial_force
+default_definition: control_volume
+closure_tol_rel: 0.000001
+```
 
 **来源**：`memory.md#2026-08-04`（用户纠正）
 **适用边界**：截断涵道控制域内的静推估算。**不得**声称为完整外流场/完整涵道的直接壁面积分净推力。
@@ -186,6 +224,13 @@ FINE/Turbo 要的 Reynolds 参考量**不得**保留 GUI 默认（`1 m`、`10 m/
   归属 `<root>/<project>_<name>/`，主运行文件为 `<project>_<name>.run`。
   **禁止**把多个工况平铺进共享 `computations/`。
 
+**机读**（闸门判据的唯一真源；`gate_check.py` 从这里读阈值，不另写一份）：
+
+```yaml
+gate: G4
+check: G4-5
+```
+
 **来源**：`numeca-fine-solver/SKILL.md` 强制原则 12–15
 **适用边界**：NUMECA FINE/ICE 16.1。其它版本需重新确认。
 
@@ -269,6 +314,15 @@ C-003 要求交付表干净，但**不等于**审计信息可以不存。收敛�
 
 **反例（错法）**：把两个字段串成一个 `stopped/persistent_flow_oscillation` ——
 这个组合在 v7 数据里**从未出现**。
+
+**机读**（闸门判据的唯一真源；`gate_check.py` 从这里读阈值，不另写一份）：
+
+```yaml
+gate: G5
+check: G5-5
+attributed_states: rejected | stopped
+unattributed_marker: unknown
+```
 
 **来源**：`cases/DF90-001/memory.md#2026-09-17`（回放审计 R-8 首次报 FAIL 时发现）
 **适用边界**：凡交付物用自然语言描述"边界"而非直接给状态码的场合；

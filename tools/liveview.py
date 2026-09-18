@@ -594,6 +594,7 @@ ACTIONS = {
     "verify":     ("校验案例产物与哈希", ""),
     "preflight":  ("环境预检", ""),
     "replay":     ("回放审计 v7 黄金基准", ""),
+    "audit":      ("判据一致性自检（合同 ↔ 代码）", ""),
 }
 
 
@@ -616,6 +617,8 @@ def run_action(case_id, action, params):
         cmd = [sys.executable, str(HERE / "case_ledger.py"), "verify", "--case", str(case_dir)]
     elif action == "preflight":
         cmd = [sys.executable, str(HERE / "preflight.py"), "all"]
+    elif action == "audit":
+        cmd = [sys.executable, str(HERE / "gate_check.py"), "audit", "--case", str(case_dir)]
     elif action == "replay":
         baseline = ROOT.parent / "Ducted-Fan" / "run" / "90kg-duct-fan-v7" / "fine" / "v7-optimized"
         if not baseline.is_dir():
