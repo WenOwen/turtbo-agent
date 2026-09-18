@@ -40,6 +40,12 @@ tmp/
 *.zip
 _dashboard-build/
 
+# 看守心跳：每几秒写一次，是运行状态不是审计信息，不入库。
+# state.json 已经不再写时间戳了（见 case_watch.write_json_if_changed），
+# 心跳单独放这里，避免每 3 秒把工作区弄脏。
+cases/**/_watch/heartbeat.json
+cases/**/*.before-restore
+
 # ── 编辑器 / 系统 ─────────────────────────────────────────
 .vscode/
 .idea/

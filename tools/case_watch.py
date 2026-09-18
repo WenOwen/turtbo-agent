@@ -130,6 +130,33 @@ def write_json_atomic(path, payload):
     os.replace(tmp, path)
 
 
+def write_json_if_changed(path, payload):
+    """序列化后逐字节比对，一样就不写。见 write_text_if_changed 的理由。"""
+    text = json.dumps(payload, ensure_ascii=False, indent=2) + LF
+    return write_text_if_changed(path, text)
+
+
+def write_text_if_changed(path, text):
+    """内容没变就一个字节都不写。
+
+    为什么要有这个：看守每 tick 都会重建 HANDOFF.md、每 tick 都刷新 state.json，
+    里面只有时间戳在动。结果是 —— 光是把工具跑起来，就会把工作区弄脏，
+    每天几百次无意义的 mtime 变化，也让 git status 永远不干净。
+    内容不变就不落盘，谁都没损失。
+    """
+    path = Path(path)
+    if path.is_file():
+        try:
+            if path.read_bytes() == text.encode("utf-8"):
+                return False
+        except Exception:
+            pass
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(text, encoding="utf-8", newline="")
+    os.replace(tmp, path)
+    return True
+
+
 def sha256_bytes(data):
     return hashlib.sha256(data).hexdigest()
 
@@ -327,6 +354,7 @@ def tick(case_dir, verbose=False):
     cur = scan(case_dir)
     prev = read_json_safe(wp["snapshot"], None)
     state = read_json_safe(wp["state"], {}) or {}
+    prev_state = dict(state)
 
     log_text = read_text_safe(case_dir / "LOG.md")
     log_entries = parse_log(log_text)
@@ -413,12 +441,17 @@ def tick(case_dir, verbose=False):
             h = sha256_file(p)
             if h:
                 hashes[ch["path"]] = h
-    state.update({"initialized": True, "last_tick": now_iso(),
-                  "last_tick_epoch": time.time(), "files": len(cur),
+    # last_tick 不进 state.json —— 它是运行状态不是审计信息，落在这里
+    # 会让这个入库的文件每 3 秒变一次。心跳单独写 _watch/heartbeat.json。
+    state.update({"initialized": True, "files": len(cur),
                   "total_changes": int(state.get("total_changes", 0)) + len(records),
                   "hashes": hashes})
-    write_json_atomic(wp["snapshot"], cur)
-    write_json_atomic(wp["state"], state)
+    write_json_if_changed(wp["snapshot"], cur)
+    # state.json 只在"有变更记录"或"监视文件数变了"时才落盘 ——
+    # 它进 git，每 3 秒刷一次 mtime 会把工作区永远弄脏。
+    if records or prev_state.get("files") != len(cur):
+        write_json_if_changed(wp["state"], state)
+    write_heartbeat(case_dir)
 
     build_handoff(case_dir, records, cur)
     if verbose and records:
@@ -464,8 +497,19 @@ def build_handoff(case_dir, new_records=None, snapshot=None):
     L = []
     L.append("# " + case_id + " 交接简报")
     L.append("")
+    # 生成时间不参与"内容变了没"的判断：正文一样就沿用旧时间戳，
+    # 否则每 tick 都会重写一遍，看守自己把自己的 mtime 刷个没完。
+    stamp_path = case_dir / HANDOFF_NAME
+    old = ""
+    if stamp_path.is_file():
+        try:
+            old = stamp_path.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            old = ""
+    old_stamp = re.search(r"生成于 (\S+)", old)
     L.append("> **自动生成，勿手改。** 由 tools/case_watch.py 维护。" + LF
-             + "> 生成于 " + now_iso() + "　·　当前阶段 **" + str(manifest.get("current_stage"))
+             + "> 生成于 " + (old_stamp.group(1) if old_stamp else now_iso())
+             + "　·　当前阶段 **" + str(manifest.get("current_stage"))
              + "**　·　revision " + str(manifest.get("revision")) + LF
              + "> **新会话请先读完本文件再动手。**")
     L.append("")
@@ -588,9 +632,12 @@ def build_handoff(case_dir, new_records=None, snapshot=None):
     L.append("变更流明细：_watch/changes.jsonl　·　历史内容：_watch/history/<sha256>")
 
     text = LF.join(L) + LF
-    tmp = wp["handoff"].with_name(wp["handoff"].name + ".tmp")
-    tmp.write_text(text, encoding="utf-8", newline="")
-    os.replace(tmp, wp["handoff"])
+    # 正文与上一版逐字相同 -> 沿用旧文件（含旧时间戳），不落盘。
+    if old and re.sub(r"生成于 \S+", "", old) == re.sub(r"生成于 \S+", "", text):
+        return old
+    # 正文确实变了 -> 换成当前时间戳再写。
+    text = re.sub(r"生成于 \S+", "生成于 " + now_iso(), text, count=1)
+    write_text_if_changed(wp["handoff"], text)
     return text
 
 
@@ -617,10 +664,28 @@ def restore(case_dir, rel, digest):
     return {"ok": True, "path": rel, "bytes": len(raw), "sha256": got}
 
 
+def read_heartbeat(case_dir):
+    """看守的心跳：最后一次跑是什么时候。
+
+    单独一个小文件，而不是塞进 state.json —— state.json 是要进 git 的，
+    每 3 秒改一次会把工作区永远弄脏。心跳文件由 .gitignore 排除。
+    """
+    return read_json_safe(Path(case_dir).resolve() / WATCH_DIRNAME / "heartbeat.json", {}) or {}
+
+
+def write_heartbeat(case_dir):
+    p = Path(case_dir).resolve() / WATCH_DIRNAME / "heartbeat.json"
+    try:
+        write_json_atomic(p, {"last_tick": now_iso(), "last_tick_epoch": time.time()})
+    except Exception:
+        pass
+
+
 def status(case_dir):
     case_dir = Path(case_dir).resolve()
     wp = watch_paths(case_dir)
     st = read_json_safe(wp["state"], {}) or {}
+    st = dict(st, **read_heartbeat(case_dir))
     changes = read_changes(case_dir)
     unlogged = [c for c in changes if c.get("attribution") == "none"]
     hist = 0
