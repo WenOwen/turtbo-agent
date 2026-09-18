@@ -84,6 +84,29 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
 .lefields dt{color:var(--dim2)}
 .lefields dd{margin:0;color:#c9d1d9;word-break:break-word}
 .hint{font-size:12px;color:var(--dim2);margin-top:10px}
+.btnrow{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.bgroup{font-size:12px;color:var(--dim2);margin-right:2px}
+.bsep{width:1px;height:19px;background:var(--line);margin:0 5px}
+.btn{background:#21313f;color:#cae0f5;border:1px solid #2f4a63;
+  border-radius:6px;padding:5px 13px;font-size:12.5px;font-family:inherit;cursor:pointer}
+.btn:hover{background:#294056;border-color:#3d6690}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--dim);border-color:var(--line)}
+.btn.ghost:hover{color:var(--fg);border-color:#3d4753;background:#1b222b}
+.btn.small{padding:2px 9px;font-size:11.5px}
+.minisel{background:var(--panel2);color:var(--fg);border:1px solid var(--line);
+  border-radius:6px;padding:5px 9px;font-size:12.5px;font-family:inherit;cursor:pointer}
+.con{max-height:340px;margin-top:12px}
+.edmeta{font-size:12px;color:var(--dim);font-family:ui-monospace,Consolas,monospace;margin-bottom:9px}
+#ed-text{width:100%;min-height:420px;background:#0a0d11;color:#d7dce2;border:1px solid var(--line);
+  border-radius:8px;padding:13px;font:12.5px/1.65 ui-monospace,Consolas,monospace;resize:vertical}
+#ed-text:focus{outline:none;border-color:var(--run)}
+.edstatus{font-size:12.5px;margin-left:4px}
+.edstatus.ok{color:var(--ok)}
+.edstatus.bad{color:var(--bad)}
+.pathlink{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
+  text-underline-offset:3px}
+.pathlink:hover{color:var(--run)}
 </style>
 </head>
 <body>
@@ -113,6 +136,48 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   </div>
 
   <div id="stagedetail"></div>
+
+  <div class="card" id="console-card">
+    <h2>操作台 · 人工操控</h2>
+    <div class="btnrow">
+      <span class="bgroup">跑闸门</span>
+      <select id="gatesel" class="minisel">
+        <option value="G0">G0 需求</option>
+        <option value="G1">G1 设计大纲</option>
+        <option value="G2">G2 1D通流方案</option>
+        <option value="G3">G3 叶片造型</option>
+        <option value="G4">G4 网格</option>
+        <option value="G5">G5 求解</option>
+        <option value="G6">G6 后处理与交付</option>
+      </select>
+      <button class="btn" onclick="runAction('gate')">执行</button>
+      <span class="bsep"></span>
+      <button class="btn" onclick="runAction('verify')">校验案例</button>
+      <button class="btn" onclick="runAction('preflight')">环境预检</button>
+      <button class="btn" onclick="runAction('replay')">回放审计 v7</button>
+      <span class="bsep"></span>
+      <button class="btn ghost" onclick="clearConsole()">清屏</button>
+    </div>
+    <p class="hint">所有操作都通过 <span class="mono">tools/</span> 下的同一套工具执行，
+      并自动向 <span class="mono">LOG.md</span> 追加一条 <b>操作者 = human(web-ui)</b> 的记录。
+      界面和 agent 共用同一条审计链。</p>
+    <pre id="console" class="con">（尚无输出）</pre>
+  </div>
+
+  <div class="card" id="editor-card" style="display:none">
+    <h2><span id="ed-title">文件</span>
+      <button class="btn ghost small" style="float:right" onclick="closeFile()">关闭</button>
+    </h2>
+    <div class="edmeta" id="ed-meta"></div>
+    <textarea id="ed-text" spellcheck="false"></textarea>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="btn" onclick="saveFile()">保存</button>
+      <button class="btn ghost" onclick="reloadFile()">放弃改动并重载</button>
+      <span id="ed-status" class="edstatus"></span>
+    </div>
+    <p class="hint">保存前会校验 sha256：如果文件在此期间被 agent 或另一个窗口改过，
+      会拒绝写入并要求你重新载入 —— 不会静默覆盖别人的改动。</p>
+  </div>
 
   <div class="card">
     <h2>现在在做什么</h2>
@@ -250,7 +315,8 @@ function renderStageDetail(detail, sel){
       var a = d.artifacts[i];
       h += '<tr><td><span class="v v-' + esc(a.verdict) + '">' + esc(a.verdict) + '</span></td>'
          + '<td class="mono">' + esc(a.version) + '</td>'
-         + '<td class="mono" title="' + esc(a.path) + '">' + esc(a.path) + '</td>'
+         + '<td class="mono"><span class="pathlink" title="点击查看/编辑：' + esc(a.path)
+         + '" onclick="openFile(&quot;' + esc(a.path) + '&quot;)">' + esc(a.path) + '</span></td>'
          + '<td class="mono">' + esc(fmtBytes(a.bytes)) + '</td>'
          + '<td class="mono">' + esc(a.sha256) + '</td>'
          + '<td class="mono">' + esc(a.from || "—") + '</td></tr>';
@@ -288,6 +354,92 @@ function renderStageDetail(detail, sel){
 
   h += '<div class="hint">提示：日志为只追加，这里是该阶段的全部历史条目。</div></div>';
   setHTML("stagedetail", h);
+}
+
+// ── 操作台 ────────────────────────────────────────────────────────────
+function conWrite(text){
+  var c = el("console");
+  if (c.textContent === "（尚无输出）") c.textContent = "";
+  c.textContent += text + "\n";
+  c.scrollTop = c.scrollHeight;
+}
+
+function clearConsole(){ el("console").textContent = "（尚无输出）"; }
+
+function runAction(action){
+  var params = {};
+  if (action === "gate") params.gate = el("gatesel").value;
+  conWrite("▶ " + action + (params.gate ? (" " + params.gate) : "") + "  …");
+  fetch("/api/run", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({case: currentCase, action: action, params: params})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(j){
+    if (j.error){ conWrite("✗ " + j.error); return; }
+    conWrite("$ " + j.command);
+    if (j.stdout) conWrite(j.stdout.replace(/\s+$/, ""));
+    if (j.stderr) conWrite("[stderr] " + j.stderr.replace(/\s+$/, ""));
+    conWrite((j.ok ? "✓ 退出码 " : "✗ 退出码 ") + j.exit + "　用时 " + j.elapsed + "s");
+    conWrite("");
+    tick();
+  })
+  .catch(function(e){ conWrite("✗ " + e); });
+}
+
+// ── 文件编辑器 ────────────────────────────────────────────────────────
+var edState = {path: null, sha256: null};
+
+function openFile(path){
+  fetch("/api/file?path=" + encodeURIComponent(path), {cache:"no-store"})
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if (j.error){ alert("打不开：" + j.error); return; }
+      edState.path = j.path;
+      edState.sha256 = j.sha256;
+      el("editor-card").style.display = "block";
+      el("ed-title").textContent = j.path;
+      el("ed-meta").textContent = "sha256 " + j.sha256.substring(0,16)
+        + "　·　" + fmtBytes(j.bytes) + "　·　" + (j.editable ? "可编辑" : "只读");
+      el("ed-text").value = j.content;
+      el("ed-status").textContent = "";
+      el("ed-status").className = "edstatus";
+      el("editor-card").scrollIntoView({behavior:"smooth", block:"start"});
+    })
+    .catch(function(e){ alert("打不开：" + e); });
+}
+
+function reloadFile(){ if (edState.path) openFile(edState.path); }
+function closeFile(){ el("editor-card").style.display = "none"; edState.path = null; }
+
+function saveFile(){
+  if (!edState.path) return;
+  var st = el("ed-status");
+  st.className = "edstatus";
+  st.textContent = "保存中…";
+  fetch("/api/file", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({path: edState.path, content: el("ed-text").value,
+                          expected_sha256: edState.sha256, case: currentCase})
+  })
+  .then(function(r){ return r.json().then(function(j){ return {status: r.status, body: j}; }); })
+  .then(function(res){
+    var j = res.body;
+    if (j.error){
+      st.className = "edstatus bad";
+      st.textContent = "✗ " + j.error;
+      return;
+    }
+    edState.sha256 = j.sha256;
+    st.className = "edstatus ok";
+    st.textContent = j.unchanged ? "内容未变，无需保存"
+      : ("✓ 已保存　sha256 " + j.sha256.substring(0,16) + "　" + fmtBytes(j.bytes));
+    conWrite("✎ 已保存 " + edState.path + "  sha256 " + j.sha256.substring(0,16));
+    tick();
+  })
+  .catch(function(e){ st.className = "edstatus bad"; st.textContent = "✗ " + e; });
 }
 
 function selectStage(g){

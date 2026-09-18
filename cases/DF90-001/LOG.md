@@ -309,3 +309,17 @@
 - 结论：WARN
 - 备注：10 个大二进制 (355.5MB) 按只索引不复制登记在 _external/v8-large-binaries.json。根因：电机几何包络未进 requirements.yaml，G2 无法表达该约束，只能在 G3 手工满足。已把该字段补进 requirements-interview.md Q5。
 
+## 2026-09-18T23:54:08+08:00 | G0 需求 | INFO
+- 动作：界面写操作能力自检
+- 操作者：human(web-ui)
+- 判据：操作者字段可写入且可被解析
+- 结论：INFO
+
+## 2026-09-18T23:55:29+08:00 | G0 需求 | PASS
+- 动作：界面执行动作：校验案例产物与哈希
+- 操作者：human(web-ui)
+- 实测：exit=0  用时 0.1s
+- 判据：命令退出码为 0
+- 结论：PASS
+- 备注：校验 26 个产物：全部通过 /   ! 8 个产物缺 provenance（建议补 --from）
+

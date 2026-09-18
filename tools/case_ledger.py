@@ -322,6 +322,7 @@ def cmd_add(args):
             criteria=args.criteria or "（未提供判据，仅登记）",
             note=args.note or "",
             extra={
+                "操作者": getattr(args, "actor", "agent"),
                 "输入": rel_posix + "  sha256=" + digest[:16] + "  bytes=" + str(size),
                 "上游": (entry["provenance"] or {}).get("from") or "无",
                 "产物": rel_posix + "  sha256=" + digest,
@@ -345,7 +346,7 @@ def cmd_log(args):
     if args.verdict not in VERDICTS:
         die(EXIT_USAGE, "未知结论 " + args.verdict, args.json)
 
-    extra = {}
+    extra = {"操作者": getattr(args, "actor", "agent")}
     if args.command:
         extra["命令"] = args.command
     if args.measured:
@@ -410,6 +411,7 @@ def cmd_stage(args):
             verdict="PASS" if args.status == "done" else "BLOCKED",
             criteria=args.criteria or "（阶段状态变更）",
             note=args.reason or "",
+            extra={"操作者": getattr(args, "actor", "agent")},
         )
 
     payload = {"ok": True, "stage": args.stage, "status": args.status}
@@ -526,6 +528,7 @@ def build_parser():
     a.add_argument("--criteria", default=None)
     a.add_argument("--note", default=None)
     a.add_argument("--no-hash", action="store_true")
+    a.add_argument("--actor", default="agent", help="操作者标识：agent / human(web-ui)")
     a.add_argument("--no-log", dest="log", action="store_false", default=True)
     a.add_argument("--force", action="store_true")
     a.add_argument("--json", action="store_true")
@@ -541,6 +544,7 @@ def build_parser():
     lo.add_argument("--measured", default=None)
     lo.add_argument("--artifact", default=None)
     lo.add_argument("--note", default=None)
+    lo.add_argument("--actor", default="agent", help="操作者标识：agent / human(web-ui)")
     lo.add_argument("--no-hash", action="store_true")
     lo.add_argument("--json", action="store_true")
     lo.set_defaults(func=cmd_log)
@@ -551,6 +555,7 @@ def build_parser():
     s.add_argument("--status", required=True, choices=["pending", "in_progress", "done", "blocked"])
     s.add_argument("--reason", default=None)
     s.add_argument("--criteria", default=None)
+    s.add_argument("--actor", default="agent", help="操作者标识：agent / human(web-ui)")
     s.add_argument("--json", action="store_true")
     s.set_defaults(func=cmd_stage)
 

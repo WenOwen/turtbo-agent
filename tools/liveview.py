@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import hashlib
 import json
 import os
 import re
@@ -447,6 +448,182 @@ class Aggregator:
         }
 
 
+# ── 写能力（人工操控） ─────────────────────────────────────────────────────
+# 原则：界面上的任何写操作，都走与 agent 完全相同的工具路径，
+#       只在日志里多记一个 - 操作者：human(web-ui)。
+#       这样审计链不会因为"是人点的"而断掉。
+
+MAX_EDIT_BYTES = 2 * 1024 * 1024
+WRITE_DENY_PARTS = {".git", "_memfix", "node_modules", "__pycache__", ".venv"}
+TEXT_SUFFIXES = {".md", ".json", ".yaml", ".yml", ".csv", ".txt", ".py", ".ps1", ".cmd", ".html",
+                 ".trb", ".bcs", ".config", ".info", ".qualityReport", ".geomTurbo", ".log", ".std"}
+
+
+class ApiError(Exception):
+    def __init__(self, message, status=400):
+        super().__init__(message)
+        self.status = status
+
+
+def resolve_in_root(rel):
+    """把相对路径解析成 ROOT 内的绝对路径；越界、目录、黑名单一律拒绝。"""
+    if not rel or not isinstance(rel, str):
+        raise ApiError("缺少路径")
+    candidate = (ROOT / rel.replace("\\", "/")).resolve()
+    try:
+        candidate.relative_to(ROOT)
+    except ValueError:
+        raise ApiError("路径越界，只允许工作区内的文件", 403)
+    for part in candidate.relative_to(ROOT).parts:
+        if part in WRITE_DENY_PARTS:
+            raise ApiError("该目录不允许通过界面修改：" + part, 403)
+    return candidate
+
+
+def read_file_payload(rel):
+    p = resolve_in_root(rel)
+    if not p.is_file():
+        raise ApiError("文件不存在：" + rel, 404)
+    size = p.stat().st_size
+    if size > MAX_EDIT_BYTES:
+        raise ApiError("文件过大，界面不提供查看（%.1f MB）" % (size / 1048576), 413)
+    raw = p.read_bytes()
+    try:
+        text = raw.decode("utf-8")
+        editable = True
+    except UnicodeDecodeError:
+        raise ApiError("二进制文件，界面不提供查看", 415)
+    if p.suffix.lower() not in TEXT_SUFFIXES and p.suffix:
+        editable = True   # 仍允许编辑，但下面会提示
+    return {"path": rel.replace("\\", "/"), "bytes": size,
+            "sha256": hashlib.sha256(raw).hexdigest(), "content": text,
+            "editable": editable, "mtime": p.stat().st_mtime}
+
+
+def write_file_payload(rel, content, expected_sha256, case=None):
+    """乐观锁：调用方必须带回它读到的 sha256。不一致就拒绝，防止覆盖别人的改动。"""
+    p = resolve_in_root(rel)
+    if not p.is_file():
+        raise ApiError("文件不存在：" + rel, 404)
+    old_raw = p.read_bytes()
+    old_sha = hashlib.sha256(old_raw).hexdigest()
+    if expected_sha256 and expected_sha256 != old_sha:
+        raise ApiError("文件已被其他操作改动（可能是 agent 或另一个窗口）。"
+                       "请重新载入后再改。当前 sha256=" + old_sha[:16], 409)
+    if content is None:
+        raise ApiError("缺少 content")
+    data = content.encode("utf-8")
+    if len(data) > MAX_EDIT_BYTES:
+        raise ApiError("内容过大", 413)
+    if data == old_raw:
+        return {"ok": True, "unchanged": True, "sha256": old_sha, "bytes": len(data)}
+
+    tmp = p.with_name(p.name + ".ui-tmp")
+    tmp.write_bytes(data)
+    os.replace(tmp, p)
+    new_sha = hashlib.sha256(data).hexdigest()
+
+    if case:
+        log_via_ledger(case, stage=guess_stage(rel), action="界面编辑文件 " + rel,
+                       verdict="INFO",
+                       criteria="内容变更已确认；写回前 sha256 与读取时一致（乐观锁通过）",
+                       measured="sha256 " + old_sha[:16] + " -> " + new_sha[:16]
+                                + "；%d -> %d bytes" % (len(old_raw), len(data)),
+                       note="操作者通过实时工作台直接编辑")
+    return {"ok": True, "sha256": new_sha, "bytes": len(data), "old_sha256": old_sha}
+
+
+def guess_stage(rel):
+    """从路径猜阶段，用于把界面写操作记到正确的阶段下。"""
+    rel = rel.replace("\\", "/")
+    for prefix, stage in STAGE_DIR.items():
+        if rel.startswith(prefix + "/") or rel.startswith("cases/") and ("/" + prefix + "/") in rel:
+            return stage
+    for prefix, stage in STAGE_DIR.items():
+        if ("/" + prefix + "/") in ("/" + rel):
+            return stage
+    return "G0"
+
+
+def log_via_ledger(case, stage, action, verdict, criteria, measured=None, note=None):
+    """通过 case_ledger 写日志 —— 界面与 agent 共用同一套审计格式。"""
+    case_dir = Path(case) if Path(case).is_absolute() else (ROOT / case)
+    args = [sys.executable, str(HERE / "case_ledger.py"), "log",
+            "--case", str(case_dir), "--stage", stage, "--action", action,
+            "--verdict", verdict, "--criteria", criteria, "--actor", "human(web-ui)"]
+    if measured:
+        args += ["--measured", measured]
+    if note:
+        args += ["--note", note]
+    return subprocess.run(args, capture_output=True, text=True, encoding="utf-8",
+                          timeout=60, cwd=str(ROOT))
+
+
+def case_dir_of(case_id):
+    for c in list_cases():
+        if c["id"] == case_id:
+            return Path(c["dir"])
+    return None
+
+
+# 界面可触发的动作白名单。名字 -> (说明, 参数说明)
+ACTIONS = {
+    "gate":       ("跑阶段闸门", "gate=G0..G6 对应的子命令名"),
+    "verify":     ("校验案例产物与哈希", ""),
+    "preflight":  ("环境预检", ""),
+    "replay":     ("回放审计 v7 黄金基准", ""),
+}
+
+
+def run_action(case_id, action, params):
+    if action not in ACTIONS:
+        raise ApiError("未授权的动作：" + str(action), 403)
+    case_dir = case_dir_of(case_id)
+    if action != "preflight" and case_dir is None:
+        raise ApiError("案例不存在：" + str(case_id), 404)
+
+    if action == "gate":
+        gate = (params or {}).get("gate")
+        GATE_MAP = {"G0": "requirements", "G1": "brief", "G2": "scheme", "G3": "geometry",
+                    "G4": "mesh", "G5": "solve", "G6": "post"}
+        if gate not in GATE_MAP:
+            raise ApiError("闸门参数必须是 G0..G6", 400)
+        cmd = [sys.executable, str(HERE / "gate_check.py"), GATE_MAP[gate],
+               "--case", str(case_dir), "--no-log"]
+    elif action == "verify":
+        cmd = [sys.executable, str(HERE / "case_ledger.py"), "verify", "--case", str(case_dir)]
+    elif action == "preflight":
+        cmd = [sys.executable, str(HERE / "preflight.py"), "all"]
+    elif action == "replay":
+        baseline = ROOT.parent / "Ducted-Fan" / "run" / "90kg-duct-fan-v7" / "fine" / "v7-optimized"
+        if not baseline.is_dir():
+            raise ApiError("找不到基准目录：" + str(baseline), 404)
+        cmd = [sys.executable, str(HERE / "replay_audit.py"), "--baseline", str(baseline),
+               "--case", str(case_dir), "--label", "v7"]
+
+    started = time.time()
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8",
+                              errors="replace", timeout=900, cwd=str(ROOT))
+        out, err, code = proc.stdout or "", proc.stderr or "", proc.returncode
+    except subprocess.TimeoutExpired:
+        out, err, code = "", "命令超时（900 秒）", -1
+    elapsed = time.time() - started
+
+    if case_dir is not None:
+        head = (out or err or "").strip().splitlines()
+        summary = " / ".join(head[:3])[:300] if head else ("exit=%d" % code)
+        log_via_ledger(case_dir, stage="G0",
+                       action="界面执行动作：" + ACTIONS[action][0],
+                       verdict="PASS" if code == 0 else "FAIL",
+                       criteria="命令退出码为 0",
+                       measured="exit=%d  用时 %.1fs" % (code, elapsed),
+                       note=summary)
+    return {"ok": code == 0, "exit": code, "elapsed": round(elapsed, 1),
+            "stdout": out[-20000:], "stderr": err[-8000:],
+            "command": " ".join(cmd[1:])}
+
+
 # ── HTTP ───────────────────────────────────────────────────────────────────
 class Handler(BaseHTTPRequestHandler):
     ui_bytes = b""
@@ -510,10 +687,63 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as exc:
                 err = json.dumps({"error": repr(exc)}, ensure_ascii=False).encode("utf-8")
                 self._send(500, err, "application/json; charset=utf-8")
+        elif path == "/api/file":
+            try:
+                payload = json.dumps(read_file_payload((qs.get("path") or [""])[0]),
+                                     ensure_ascii=False).encode("utf-8")
+                self._send(200, payload, "application/json; charset=utf-8")
+            except ApiError as exc:
+                self._send(exc.status, json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8"),
+                           "application/json; charset=utf-8")
+            except Exception as exc:
+                self._send(500, json.dumps({"error": repr(exc)}).encode("utf-8"),
+                           "application/json; charset=utf-8")
+        elif path == "/api/actions":
+            payload = json.dumps({"actions": [{"id": k, "label": v[0], "params": v[1]}
+                                              for k, v in ACTIONS.items()]},
+                                 ensure_ascii=False).encode("utf-8")
+            self._send(200, payload, "application/json; charset=utf-8")
         elif path == "/api/ping":
             self._send(200, b"ok", "text/plain; charset=utf-8")
         else:
             self._send(404, b"not found", "text/plain; charset=utf-8")
+
+    def _read_json_body(self):
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            length = 0
+        if length <= 0 or length > MAX_EDIT_BYTES + 65536:
+            raise ApiError("请求体缺失或过大", 413)
+        raw = self.rfile.read(length)
+        try:
+            return json.loads(raw.decode("utf-8"))
+        except Exception:
+            raise ApiError("请求体不是合法 JSON", 400)
+
+    def do_POST(self):
+        from urllib.parse import urlparse
+        path = urlparse(self.path).path
+        try:
+            body = self._read_json_body()
+            if path == "/api/file":
+                result = write_file_payload(body.get("path"), body.get("content"),
+                                            body.get("expected_sha256"), body.get("case"))
+                self._send(200, json.dumps(result, ensure_ascii=False).encode("utf-8"),
+                           "application/json; charset=utf-8")
+            elif path == "/api/run":
+                result = run_action(body.get("case"), body.get("action"), body.get("params") or {})
+                self._send(200, json.dumps(result, ensure_ascii=False).encode("utf-8"),
+                           "application/json; charset=utf-8")
+            else:
+                self._send(404, json.dumps({"error": "unknown endpoint"}).encode("utf-8"),
+                           "application/json; charset=utf-8")
+        except ApiError as exc:
+            self._send(exc.status, json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8"),
+                       "application/json; charset=utf-8")
+        except Exception as exc:
+            self._send(500, json.dumps({"error": repr(exc)}, ensure_ascii=False).encode("utf-8"),
+                       "application/json; charset=utf-8")
 
 
 def pick_port(preferred):
@@ -573,6 +803,7 @@ def main(argv=None):
     print("  监视    : " + "；".join([str(case_dir)] + extra))
     print("  地址    : " + url)
     print("  合同    : " + str(len(parse_contracts())) + " 条（含人话解释）")
+    print("  可写    : 是（人工操作走 case_ledger，日志记 操作者=human(web-ui)）")
     print("  停止    : 按 Ctrl+C")
     print("=" * 62)
 
