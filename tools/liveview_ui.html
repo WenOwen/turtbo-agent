@@ -164,6 +164,14 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
     <pre id="console" class="con">（尚无输出）</pre>
   </div>
 
+  <div class="card">
+    <h2>变更流（文件看守）· <span id="watchsum" style="color:var(--dim2);font-weight:400"></span></h2>
+    <div id="watchlist"></div>
+    <p class="hint">看守只看磁盘，不问是谁写的 —— AutoBlade 手改、agent 直接写、界面保存，一视同仁。
+      日志里有对应条目的会归因到操作者；没有的如实标 <b>unknown</b>。
+      <b>unknown 不代表出错，代表"有人说都没说就改了东西"</b>，接手前值得看一眼。</p>
+  </div>
+
   <div class="card" id="editor-card" style="display:none">
     <h2><span id="ed-title">文件</span>
       <button class="btn ghost small" style="float:right" onclick="closeFile()">关闭</button>
@@ -503,6 +511,45 @@ function renderRecent(list){
   setHTML("recent", html);
 }
 
+function renderWatch(w, changes){
+  if (!w){ setHTML("watchlist", '<span class="placeholder">看守未启动</span>'); return; }
+  el("watchsum").textContent = "监视 " + w.watched_files + " 个文件　·　累计变更 "
+    + w.total_changes + " 条　·　历史库 " + w.history_blobs + " 份内容";
+
+  var unlogged = (changes || []).filter(function(c){ return c.attribution === "none"; });
+  var h = "";
+  if (unlogged.length){
+    h += '<div class="warnbox" style="margin-bottom:12px">'
+       + '<b>⚠ 未登记的改动 ' + unlogged.length + ' 条</b>　'
+       + '这些文件变了，但 LOG.md 里没有对应条目。接手前请确认它们是什么。</div>';
+  }
+  if (!changes || !changes.length){
+    h += '<span class="placeholder">基线建立后尚无变更记录</span>';
+  } else {
+    h += '<table><thead><tr><th>时间</th><th>改动</th><th>文件</th><th>大小变化</th>'
+       + '<th>归因</th><th>谁</th></tr></thead><tbody>';
+    for (var i=0;i<changes.length;i++){
+      var c = changes[i];
+      var unk = c.attribution === "none";
+      var when = String(c.file_mtime || c.ts || "").substring(5,19).replace("T"," ");
+      h += '<tr' + (unk ? ' style="background:#2a1f12"' : '') + '>'
+         + '<td class="mono">' + esc(when) + '</td>'
+         + '<td class="mono">' + esc(c.kind) + '</td>'
+         + '<td class="mono" title="' + esc(c.path) + '">' + esc(c.path) + '</td>'
+         + '<td class="mono">' + esc(c.size_before) + ' → ' + esc(c.size) + '</td>'
+         + '<td>' + (unk ? '<span class="v v-WARN">unknown</span>'
+                         : '<span class="v v-PASS">' + esc(c.attribution) + '</span>') + '</td>'
+         + '<td>' + esc(c.actor) + '</td></tr>';
+      if (unk && c.note){
+        h += '<tr style="background:#2a1f12"><td></td><td colspan="5" style="color:var(--dim);font-size:12px">'
+           + esc(c.note) + '</td></tr>';
+      }
+    }
+    h += '</tbody></table>';
+  }
+  setHTML("watchlist", h);
+}
+
 function renderRules(list){
   if (!list || !list.length){
     el("rules").innerHTML = '<span class="placeholder">没有解析到合同条目</span>';
@@ -581,6 +628,7 @@ function apply(s){
   }
 
   renderRules(s.rules);
+  renderWatch(s.watch, s.watch_changes);
 }
 
 function fail(msg){

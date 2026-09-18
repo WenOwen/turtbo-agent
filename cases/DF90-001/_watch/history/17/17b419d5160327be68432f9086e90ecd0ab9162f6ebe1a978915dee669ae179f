@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DF90-001 · 设计案例看板</title><style>
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+     background:#f6f7f9;color:#1a1d21}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:16px;margin:32px 0 12px;padding-bottom:6px;border-bottom:1px solid #e3e6ea}
+.sub{color:#6b7280;font-size:13px;margin-bottom:20px}
+.card{background:#fff;border:1px solid #e3e6ea;border-radius:8px;padding:16px 18px;margin-bottom:14px}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:13px}
+.kv dt{color:#6b7280}
+.kv dd{margin:0;font-family:ui-monospace,Consolas,monospace;word-break:break-all}
+.tl{display:flex;gap:6px;flex-wrap:wrap}
+.st{flex:1 1 130px;border:1px solid #e3e6ea;border-radius:6px;padding:10px 12px;background:#fff}
+.st .id{font-weight:700;font-size:12px;color:#6b7280}
+.st .nm{font-size:13px;margin-top:2px}
+.st .bd{display:inline-block;margin-top:8px;font-size:11px;padding:2px 8px;border-radius:99px}
+.s-done{background:#e7f6ec;color:#17703a;border-color:#bfe6cd}
+.s-in_progress{background:#e8f0fe;color:#1a56b8;border-color:#c3d7fb}
+.s-blocked{background:#fdecec;color:#a32020;border-color:#f6c9c9}
+.s-pending{background:#f3f4f6;color:#6b7280}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid #eef0f3;vertical-align:top}
+th{background:#fafbfc;color:#6b7280;font-weight:600;font-size:12px}
+td.mono,th.mono{font-family:ui-monospace,Consolas,monospace;font-size:11.5px}
+.v{font-weight:700;font-size:11px;padding:1px 7px;border-radius:99px;white-space:nowrap}
+.v-PASS{background:#e7f6ec;color:#17703a}
+.v-WARN{background:#fff6e5;color:#8a5a00}
+.v-FAIL{background:#fdecec;color:#a32020}
+.v-SKIP{background:#f3f4f6;color:#6b7280}
+.v-INFO{background:#eef2ff;color:#3730a3}
+.v-BLOCKED{background:#fdecec;color:#a32020}
+pre{background:#0f1115;color:#d7dce2;padding:14px;border-radius:6px;overflow-x:auto;
+    font:12px/1.6 ui-monospace,Consolas,monospace;max-height:460px}
+.note{font-size:12.5px;color:#6b7280;margin:8px 0 0}
+.bar{height:8px;background:#eef0f3;border-radius:99px;overflow:hidden;margin-top:6px}
+.bar>i{display:block;height:100%;background:#17703a}
+.warnbox{background:#fff8e6;border:1px solid #f0dca8;border-radius:6px;padding:12px 14px;font-size:13px}
+svg{max-width:100%;height:auto}
+.legend{font-size:12px;color:#6b7280;margin-top:6px}
+</style></head><body><div class='wrap'><h1>DF90-001 · 涵道风扇气动设计案例看板</h1><div class='sub'>生成于 2026-09-18T22:19:31+08:00　·　单文件自包含，无外部依赖</div><div class='card'><dl class='kv'><dt>当前阶段</dt><dd>G6</dd><dt>manifest revision</dt><dd>19</dd><dt>产物数</dt><dd>13</dd><dt>需求基线</dt><dd>requirements.yaml</dd><dt>需求 sha256</dt><dd>76749d8bbef054a096235800aab48bb1</dd><dt>阻塞项</dt><dd>0</dd></dl></div><h2>阶段时间线</h2><div class='tl'><div class="st"><div class="id">G0</div><div class="nm">需求</div><span class="bd s-done">done</span></div><div class="st"><div class="id">G1</div><div class="nm">设计大纲</div><span class="bd s-done">done</span></div><div class="st"><div class="id">G2</div><div class="nm">1D/通流方案</div><span class="bd s-done">done</span></div><div class="st"><div class="id">G3</div><div class="nm">叶片造型</div><span class="bd s-pending">pending</span></div><div class="st"><div class="id">G4</div><div class="nm">网格</div><span class="bd s-pending">pending</span></div><div class="st"><div class="id">G5</div><div class="nm">求解</div><span class="bd s-pending">pending</span></div><div class="st"><div class="id">G6</div><div class="nm">后处理与交付</div><span class="bd s-pending">pending</span></div></div><h2>产物与溯源链</h2><div class='card'><table><thead><tr><th>阶段</th><th>类型</th><th>路径</th><th>版本</th><th>结论</th><th>sha256</th><th>上游</th><th>时间</th></tr></thead><tbody><tr><td class='mono'>G0</td><td>schema</td><td class='mono'>requirements.yaml</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>76749d8bbef054a0</td><td class='mono'>—</td><td class='mono'>2026-09-17T15:02:34+08:00</td></tr><tr><td class='mono'>G0</td><td>brief</td><td class='mono'>00-brief/open_questions.md</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>f09eb2c3627a72f8</td><td class='mono'>requirements.yaml</td><td class='mono'>2026-09-17T15:02:34+08:00</td></tr><tr><td class='mono'>G1</td><td>brief</td><td class='mono'>00-brief/design_brief.md</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>5ad3fa996275ed72</td><td class='mono'>requirements.yaml</td><td class='mono'>2026-09-17T15:02:35+08:00</td></tr><tr><td class='mono'>G2</td><td>scheme</td><td class='mono'>01-scheme/v1/流道尺寸表.csv</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>799369fac0efd5eb</td><td class='mono'>requirements.yaml</td><td class='mono'>2026-09-17T15:10:54+08:00</td></tr><tr><td class='mono'>G2</td><td>scheme</td><td class='mono'>01-scheme/v1/叶片几何参数表.csv</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>6d00e19b7dd70d13</td><td class='mono'>01-scheme/v1/流道尺寸表.csv</td><td class='mono'>2026-09-17T15:10:54+08:00</td></tr><tr><td class='mono'>G2</td><td>scheme</td><td class='mono'>01-scheme/v1/通流计算结果表.csv</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>461c97666be8ce1e</td><td class='mono'>01-scheme/v1/叶片几何参数表.csv</td><td class='mono'>2026-09-17T15:10:55+08:00</td></tr><tr><td class='mono'>G2</td><td>other</td><td class='mono'>01-scheme/v1/benchmark_gate.json</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>e338247f00b948db</td><td class='mono'>01-scheme/v1/通流计算结果表.csv</td><td class='mono'>2026-09-17T15:10:55+08:00</td></tr><tr><td class='mono'>G2</td><td>other</td><td class='mono'>01-scheme/v1/benchmark_gate.md</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>a1210064de503141</td><td class='mono'>01-scheme/v1/benchmark_gate.json</td><td class='mono'>2026-09-17T15:10:56+08:00</td></tr><tr><td class='mono'>G2</td><td>other</td><td class='mono'>01-scheme/v1/inputs/turbo-flow-attempt3.json</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>1f3fb70eaf9fcf70</td><td class='mono'>requirements.yaml</td><td class='mono'>2026-09-17T15:10:56+08:00</td></tr><tr><td class='mono'>G5</td><td>other</td><td class='mono'>_replay/v7/sweep_summary.csv</td><td class='mono'>v7</td><td><span class="v v-INFO">INFO</span></td><td class='mono'>7f10f7c1ec9c93b7</td><td class='mono'>—</td><td class='mono'>2026-09-17T15:06:03+08:00</td></tr><tr><td class='mono'>G5</td><td>other</td><td class='mono'>_replay/v7/replay_audit.json</td><td class='mono'>v7</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>6460630d85d00864</td><td class='mono'>_replay/v7/sweep_summary.csv</td><td class='mono'>2026-09-17T15:06:03+08:00</td></tr><tr><td class='mono'>G5</td><td>other</td><td class='mono'>_replay/v7/replay_report.md</td><td class='mono'>v7</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>13502c722d9323ae</td><td class='mono'>_replay/v7/replay_audit.json</td><td class='mono'>2026-09-17T15:06:04+08:00</td></tr><tr><td class='mono'>G6</td><td>delivery</td><td class='mono'>06-delivery/v1/dashboard.html</td><td class='mono'>v1</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>b609c4f08aec1307</td><td class='mono'>—</td><td class='mono'>2026-09-18T22:19:20+08:00</td></tr></tbody></table></div><div class="card"><h2 style="margin-top:0">总压比 – 进口质量流量</h2><svg viewBox="0 0 1040 340" xmlns="http://www.w3.org/2000/svg"><rect width="1040" height="340" fill="#fff"/><line x1="62" y1="26.0" x2="1018" y2="26.0" stroke="#eef0f3"/><text x="54" y="29.0" font-size="10" fill="#9aa1ab" text-anchor="end">1.045</text><line x1="62" y1="79.6" x2="1018" y2="79.6" stroke="#eef0f3"/><text x="54" y="82.6" font-size="10" fill="#9aa1ab" text-anchor="end">1.031</text><line x1="62" y1="133.2" x2="1018" y2="133.2" stroke="#eef0f3"/><text x="54" y="136.2" font-size="10" fill="#9aa1ab" text-anchor="end">1.018</text><line x1="62" y1="186.8" x2="1018" y2="186.8" stroke="#eef0f3"/><text x="54" y="189.8" font-size="10" fill="#9aa1ab" text-anchor="end">1.005</text><line x1="62" y1="240.4" x2="1018" y2="240.4" stroke="#eef0f3"/><text x="54" y="243.4" font-size="10" fill="#9aa1ab" text-anchor="end">0.992</text><line x1="62" y1="294.0" x2="1018" y2="294.0" stroke="#eef0f3"/><text x="54" y="297.0" font-size="10" fill="#9aa1ab" text-anchor="end">0.9789</text><text x="62.0" y="310" font-size="10" fill="#9aa1ab" text-anchor="middle">6.974</text><text x="253.2" y="310" font-size="10" fill="#9aa1ab" text-anchor="middle">9.581</text><text x="444.4" y="310" font-size="10" fill="#9aa1ab" text-anchor="middle">12.19</text><text x="635.6" y="310" font-size="10" fill="#9aa1ab" text-anchor="middle">14.79</text><text x="826.8" y="310" font-size="10" fill="#9aa1ab" text-anchor="middle">17.4</text><text x="1018.0" y="310" font-size="10" fill="#9aa1ab" text-anchor="middle">20.01</text><text x="540.0" y="332" font-size="11" fill="#6b7280" text-anchor="middle">mdot_in (kg/s)</text><text x="14" y="170.0" font-size="11" fill="#6b7280" transform="rotate(-90 14 170.0)" text-anchor="middle">pressure ratio</text><text x="62" y="17" font-size="12" fill="#1a1d21" font-weight="600">accepted = 蓝；其余 = 灰（悬停查看工况名）</text><circle cx="540.6" cy="151.1" r="3.2" fill="#1a56b8"><title>n05000_p101325 | accepted</title></circle><circle cx="440.0" cy="161.7" r="3.2" fill="#1a56b8"><title>n04500_p101325 | accepted</title></circle><circle cx="641.3" cy="138.8" r="3.2" fill="#1a56b8"><title>n05500_p101325 | accepted</title></circle><circle cx="560.6" cy="157.2" r="3.2" fill="#1a56b8"><title>n05000_p101107 | accepted</title></circle><circle cx="590.0" cy="166.6" r="3.2" fill="#1a56b8"><title>n05000_p100771 | accepted</title></circle><circle cx="619.6" cy="176.0" r="3.2" fill="#1a56b8"><title>n05000_p100435 | accepted</title></circle><circle cx="676.3" cy="194.0" r="3.2" fill="#1a56b8"><title>n05000_p099763 | accepted</title></circle><circle cx="726.3" cy="212.1" r="3.2" fill="#1a56b8"><title>n05000_p099091 | accepted</title></circle><circle cx="491.2" cy="136.0" r="3.2" fill="#1a56b8"><title>n05000_p101846 | accepted</title></circle><circle cx="428.3" cy="118.4" r="3.2" fill="#1a56b8"><title>n05000_p102450 | accepted</title></circle><circle cx="366.3" cy="102.1" r="3.2" fill="#1a56b8"><title>n05000_p102988 | accepted</title></circle><circle cx="325.8" cy="93.1" r="3.2" fill="#1a56b8"><title>n05000_p103257 | accepted</title></circle><circle cx="202.2" cy="73.9" r="3.2" fill="#c0c4cc"><title>n05000_p103525 | stopped</title></circle><circle cx="458.4" cy="167.0" r="3.2" fill="#1a56b8"><title>n04500_p101148 | accepted</title></circle><circle cx="485.7" cy="174.4" r="3.2" fill="#1a56b8"><title>n04500_p100876 | accepted</title></circle><circle cx="512.3" cy="182.1" r="3.2" fill="#1a56b8"><title>n04500_p100604 | accepted</title></circle><circle cx="564.7" cy="196.8" r="3.2" fill="#1a56b8"><title>n04500_p100060 | accepted</title></circle><circle cx="611.7" cy="211.1" r="3.2" fill="#1a56b8"><title>n04500_p099516 | accepted</title></circle><circle cx="394.7" cy="149.9" r="3.2" fill="#1a56b8"><title>n04500_p101747 | accepted</title></circle><circle cx="337.3" cy="135.6" r="3.2" fill="#1a56b8"><title>n04500_p102237 | accepted</title></circle><circle cx="281.0" cy="122.5" r="3.2" fill="#1a56b8"><title>n04500_p102672 | accepted</title></circle><circle cx="245.2" cy="115.1" r="3.2" fill="#1a56b8"><title>n04500_p102890 | accepted</title></circle><circle cx="113.2" cy="95.1" r="3.2" fill="#c0c4cc"><title>n04500_p103107 | rejected</title></circle><circle cx="662.8" cy="146.2" r="3.2" fill="#1a56b8"><title>n05500_p101061 | accepted</title></circle><circle cx="694.3" cy="157.6" r="3.2" fill="#1a56b8"><title>n05500_p100654 | accepted</title></circle><circle cx="726.6" cy="169.1" r="3.2" fill="#1a56b8"><title>n05500_p100248 | accepted</title></circle><circle cx="786.3" cy="191.1" r="3.2" fill="#1a56b8"><title>n05500_p099435 | accepted</title></circle><circle cx="840.0" cy="213.2" r="3.2" fill="#1a56b8"><title>n05500_p098622 | accepted</title></circle><circle cx="588.2" cy="120.5" r="3.2" fill="#1a56b8"><title>n05500_p101955 | accepted</title></circle><circle cx="519.9" cy="99.2" r="3.2" fill="#1a56b8"><title>n05500_p102687 | accepted</title></circle><circle cx="452.5" cy="79.6" r="3.2" fill="#1a56b8"><title>n05500_p103337 | accepted</title></circle><circle cx="406.7" cy="68.2" r="3.2" fill="#1a56b8"><title>n05500_p103662 | accepted</title></circle><circle cx="269.8" cy="44.5" r="3.2" fill="#c0c4cc"><title>n05500_p103987 | rejected</title></circle><circle cx="771.2" cy="229.8" r="3.2" fill="#1a56b8"><title>n05000_p098419 | accepted</title></circle><circle cx="810.1" cy="246.5" r="3.2" fill="#1a56b8"><title>n05000_p097747 | accepted</title></circle><circle cx="846.7" cy="263.3" r="3.2" fill="#1a56b8"><title>n05000_p097075 | accepted</title></circle><circle cx="300.7" cy="87.8" r="3.2" fill="#1a56b8"><title>n05000_p103391 | accepted</title></circle><circle cx="287.6" cy="84.9" r="3.2" fill="#1a56b8"><title>n05000_p103458 | accepted</title></circle><circle cx="653.1" cy="225.6" r="3.2" fill="#1a56b8"><title>n04500_p098972 | accepted</title></circle><circle cx="690.1" cy="239.6" r="3.2" fill="#1a56b8"><title>n04500_p098428 | accepted</title></circle><circle cx="723.4" cy="252.6" r="3.2" fill="#1a56b8"><title>n04500_p097884 | accepted</title></circle><circle cx="223.9" cy="111.1" r="3.2" fill="#1a56b8"><title>n04500_p102998 | accepted</title></circle><circle cx="213.1" cy="109.4" r="3.2" fill="#1a56b8"><title>n04500_p103052 | accepted</title></circle><circle cx="886.8" cy="234.1" r="3.2" fill="#1a56b8"><title>n05500_p097809 | accepted</title></circle><circle cx="928.6" cy="254.9" r="3.2" fill="#1a56b8"><title>n05500_p096996 | accepted</title></circle><circle cx="966.8" cy="275.5" r="3.2" fill="#1a56b8"><title>n05500_p096183 | accepted</title></circle><circle cx="375.6" cy="61.2" r="3.2" fill="#1a56b8"><title>n05500_p103824 | accepted</title></circle><circle cx="288.6" cy="46.5" r="3.2" fill="#1a56b8"><title>n05500_p103906 | accepted</title></circle></svg><p class="legend">数据源：<span class="mono">D:\Project\Research\turtbo-agent\cases\DF90-001\_replay\v7\sweep_summary.csv</span>　蓝点 45 / 总 48</p></div><div class="card"><h2 style="margin-top:0">回放审计：v7</h2><p class='note'>基准：<span class='mono'>D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v7\fine\v7-optimized</span>　时间：2026-09-17T15:03:58+08:00　结论：<span class="v v-PASS">PASS</span>　(PASS 10 / WARN 0 / FAIL 0)</p><table><thead><tr><th>id</th><th>检查</th><th>判据</th><th>实测</th><th>结论</th><th>来源</th></tr></thead><tbody><tr><td class='mono'>R-1</td><td>登记点与状态记录一一对应</td><td>scan_plan 的每个登记点都必须在 sweep_summary 里有状态；不得有未记录的算例</td><td class='mono'>plan=57 summary=57 missing=0 extra=0</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v7\fine\v7-optimized\scan_plan.csv</td></tr><tr><td class='mono'>R-2</td><td>状态计数与基准审计一致</td><td>从 sweep_summary.csv 重新统计的 state 计数必须等于 final_delivery_audit.json 的 counts</td><td class='mono'>recomputed={&#x27;accepted&#x27;: 45, &#x27;stopped&#x27;: 10, &#x27;rejected&#x27;: 2} golden={&#x27;accepted&#x27;: 45, &#x27;stopped&#x27;: 10, &#x27;rejected&#x27;: 2}</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v7\fine\v7-optimized\final_delivery_audit.json</td></tr><tr><td class='mono'>R-2b</td><td>验收总数与交付文档声明一致</td><td>CFD-DELIVERY.md 声明各转速各 15 个验收点，合计 45</td><td class='mono'>recomputed accepted=45 published=45</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>Ducted-Fan/run/90kg-duct-fan-v7/CFD-DELIVERY.md#各转速验收范围</td></tr><tr><td class='mono'>R-3</td><td>accepted 点满足质量不平衡判据</td><td>100*|mdot_in-mdot_out|/|mdot_in| &lt;= 1.0%</td><td class='mono'>checked=45 violations=0</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>C-002</td></tr><tr><td class='mono'>R-4</td><td>非 accepted 点都有拒绝/停止原因</td><td>每个 stopped/rejected 点必须有 reason 字段，不得静默丢弃</td><td class='mono'>non_accepted=12 without_reason=0</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v7\fine\v7-optimized\sweep_summary.csv</td></tr><tr><td class='mono'>R-5</td><td>上游源文件哈希未变</td><td>final_delivery_audit.json 的 source_hashes_unchanged 必须为 true</td><td class='mono'>True</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>final_delivery_audit.json#source_hashes_unchanged</td></tr><tr><td class='mono'>R-6</td><td>ICE 原生历史可重开</td><td>final_delivery_audit.json 的 native_history_reopen 必须为 true</td><td class='mono'>True</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>final_delivery_audit.json#native_history_reopen</td></tr><tr><td class='mono'>R-7</td><td>逐转速验收范围与交付文档一致</td><td>各转速的验收点数、背压区间、流量区间必须与 CFD-DELIVERY.md 的表格相符</td><td class='mono'>rpm_lines=3 mismatched=0</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>Ducted-Fan/run/90kg-duct-fan-v7/CFD-DELIVERY.md#各转速验收范围</td></tr><tr><td class='mono'>R-8</td><td>失速侧边界区间与文档一致</td><td>每转速的「已验收最高背压」与「首个未验收背压」（rejected 或 stopped，容差 1 Pa）必须落在文档声明值上</td><td class='mono'>rpm_lines=3 mismatched=0</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>Ducted-Fan/run/90kg-duct-fan-v7/CFD-DELIVERY.md#各转速验收范围</td></tr><tr><td class='mono'>R-9</td><td>基准自身审计通过</td><td>final_delivery_audit.json 的 passed 必须为 true 且 failures 为空</td><td class='mono'>passed=True failures=0</td><td><span class="v v-PASS">PASS</span></td><td class='mono'>final_delivery_audit.json</td></tr></tbody></table></div><h2>案例经验（memory.md）</h2><pre># 案例经验记录 | DF90-001
+
+&gt; 条目格式见 .agents/skills/turbomachinery-case-ledger/SKILL.md。
+&gt; 满足晋升三条件之一时，改写为可执行判据进入 skill 的 references/contracts.md。
+
+## 2026-09-17 | 交付文档的&quot;首个振荡背压&quot;有两种状态口径，审计脚本不能只匹配 rejected
+
+- 来源：实测发现（回放审计 v7 时 R-8 首次报 FAIL）
+- 现象：CFD-DELIVERY.md 的「已验收最高背压 / 首个振荡背压」表在 4500、5500 rpm 对应
+  rejected/persistent_flow_oscillation，但 5000 rpm 的 103525 Pa 在 sweep_summary.csv 里是
+  stopped/user_stop（README-CFD.md 记载该点在持续振荡时由用户要求正常保存停止，
+  末 3000 步流量 8.540–8.893 kg/s、各 500 步窗口相对极差约 4.04%、振幅不衰减）。
+- 合同：审计「振荡侧边界」时，判据必须是**「高于最高验收背压的第一个未验收点」**，
+  而不是只匹配 state == &quot;rejected&quot;；同时必须保留该点的 state 与 reason，以便区分
+  「机器按策略自动拒绝」与「人干预停止」。
+- 证据：cases/DF90-001/_replay/v7/replay_audit.json#R-8；
+  Ducted-Fan/run/90kg-duct-fan-v7/fine/v7-optimized/sweep_summary.csv
+- 适用边界：凡交付物用自然语言描述「边界」而非直接给状态码的场合。
+  **不得据此认为两个状态等价**——rejected 是策略判定，stopped 是人为干预，审计语义不同。
+- 晋升状态：待晋升 -&gt; ducted-fan-aero-design/references/gates.md#G5
+## 2026-09-17 | turbo-flow 默认配置会静默改掉被需求锁死的桨盘直径
+
+- 来源：实测发现（G2 对标 A/B 三组）
+- 现象：用 turbo-flow 跑涵道风扇工况时，若 annulus.strategy 保持默认的 constant_mean，
+  工具按「总状态定尺寸」重算整个流道——输入机匣半径 0.300 m 被改成 0.3486 m，
+  轮毂半径 0.103457 被改成 0.0495。这直接违反 requirements.yaml 里锁定的 D=0.600 m。
+- 合同：给 turbo-flow 的 annulus 必须显式用 strategy=custom 并给出 hub_curve/shroud_curve
+  （两条曲线都须从 x=0 覆盖到 x&gt;=length_m，且 x 单调递增）。
+- 证据：cases/DF90-001/01-scheme/v1/benchmark_gate.json；attempt-1 与 attempt-3 的 result.json
+- 适用边界：任何「需求锁定了几何尺寸」而一维工具自带尺寸估算逻辑的场合。
+  这是一个**通用陷阱**：工具不会报错，只会给出一个看起来合理的错误答案。
+- 晋升状态：已晋升 -&gt; ducted-fan-1d-scheme/SKILL.md#两条硬要求A
+
+## 2026-09-17 | turbo-flow 留空 rows 会自动生成三排默认几何
+
+- 来源：实测发现
+- 现象：rows: [] + stage_count=1 时，工具自动生成 IGV + R1 + OGV 三排，
+  叶片数 36/34/37、弦长 0.04/0.045/0.045、稠度 1.15/1.2/1.3 全是默认值。
+  与需求「转子 + 静子两排」不符，且 OGV 扩散因子 0.978（限值 0.6）、de Haller 0.377（限值 0.72）。
+- 合同：rows 必须显式给出，不能用自动生成；x_m 必须落在 [0, annulus.length_m] 内。
+- 证据：attempt-1/attempt-2 的 metadata.generated_rows 与 constraints
+- 适用边界：任何「工具能自动补全缺失拓扑」的场合。**自动补全出的默认值不是设计值。**
+- 晋升状态：已晋升 -&gt; ducted-fan-1d-scheme/SKILL.md#两条硬要求B
+
+## 2026-09-17 | flow_coefficient 的桨尖口径与中径口径差 1.49 倍
+
+- 来源：实测发现（B-7 WARN 归因）
+- 现象：按桨尖定义算出的 phi_tip = Va/U_tip = 0.2581 输入后，
+  工具报告的 flow_coefficient_target 是 0.3864。比值 1.4971 ≈ r_tip/r_mean = 0.300/0.2017 = 1.4871。
+- 合同：给 turbo-flow 的 flow_coefficient 必须用中径口径；
+  换算 phi_mean = phi_tip * (r_tip / r_mean)。
+- 证据：cases/DF90-001/01-scheme/v1/turbo-flow-attempt3/result.json#constraints
+- 适用边界：**无量纲系数必须先确认定义半径**（桨尖 / 中径 / 轮毂）。
+  这类差异不会被求解器当成错误，只会让可行性判据误报。
+- 晋升状态：已晋升 -&gt; ducted-fan-1d-scheme/SKILL.md#口径陷阱C
+</pre><h2>工程日志（LOG.md 末尾）</h2><pre># 工程日志 | DF90-001
+
+&gt; 只追加，不复写。每条含 时间 / 阶段 / 动作 / 输入哈希 / 实测 / 判据 / 结论 / 产物。
+&gt; 由 tools/case_ledger.py 或 tools/gate_check.py 自动写入。
+
+## 2026-09-17T14:56:27+08:00 | 案例创建 | DF90-001
+- 命令行：case_ledger.py new --case-id DF90-001
+- 结论：案例骨架已建立，当前阶段 G0
+
+## 2026-09-17T15:02:34+08:00 | G0 需求 | PASS
+- 动作：登记产物 requirements.yaml
+- 输入：requirements.yaml  sha256=76749d8bbef054a0  bytes=3853
+- 上游：无
+- 产物：requirements.yaml  sha256=76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1
+- 判据：11 项问答完成 6 项；推力口径/直径/电机/叶排/交付/首轮点已验证；未决项全部落在 open_questions.md
+- 结论：PASS
+- 备注：环境按 ISA 海平面假设，待用户确认
+
+## 2026-09-17T15:02:34+08:00 | G0 需求 | PASS
+- 动作：登记产物 00-brief/open_questions.md
+- 输入：00-brief/open_questions.md  sha256=f09eb2c3627a72f8  bytes=1994
+- 上游：requirements.yaml
+- 产物：00-brief/open_questions.md  sha256=f09eb2c3627a72f8ed5633610d81cac682bc7262b6a8549e5b2afa7db8461eac
+- 判据：每个 source=open/assumed 字段都有对应条目
+- 结论：PASS
+
+## 2026-09-17T15:02:35+08:00 | G0 需求 | PASS
+- 动作：阶段状态 -&gt; done
+- 判据：四项必填齐全且带单位；未决项已落盘
+- 结论：PASS
+
+## 2026-09-17T15:02:35+08:00 | G1 设计大纲 | PASS
+- 动作：登记产物 00-brief/design_brief.md
+- 输入：00-brief/design_brief.md  sha256=5ad3fa996275ed72  bytes=6118
+- 上游：requirements.yaml
+- 产物：00-brief/design_brief.md  sha256=5ad3fa996275ed725e5ba6765287fdad0645ff5ab1dbe04580732998136216ea
+- 判据：量纲正确；盘载荷 3.12 kPa、v_i 35.70 m/s 落在常见区间；FM 反推 0.668；动力包线已交叉检查
+- 结论：PASS
+- 备注：带条件 PASS：6100 rpm 设计点超出 EMRAX 188 连续包线，需用户确认任务剖面
+
+## 2026-09-17T15:02:36+08:00 | G1 设计大纲 | PASS
+- 动作：阶段状态 -&gt; done
+- 判据：设计变量与约束分开；未做确定性性能预测
+- 结论：PASS
+
+## 2026-09-17T15:06:03+08:00 | G5 求解 | INFO
+- 动作：登记产物 _replay/v7/sweep_summary.csv
+- 输入：_replay/v7/sweep_summary.csv  sha256=7f10f7c1ec9c93b7  bytes=7178
+- 上游：无
+- 产物：_replay/v7/sweep_summary.csv  sha256=7f10f7c1ec9c93b70f12b4e9bf230d142180fd300df070db51b013fd362fc644
+- 判据：只读证据快照，源：Ducted-Fan/run/90kg-duct-fan-v7/fine/v7-optimized/sweep_summary.csv
+- 结论：INFO
+- 备注：内容逐字节来自基准，未修改
+
+## 2026-09-17T15:06:03+08:00 | G5 求解 | PASS
+- 动作：登记产物 _replay/v7/replay_audit.json
+- 输入：_replay/v7/replay_audit.json  sha256=6460630d85d00864  bytes=9896
+- 上游：_replay/v7/sweep_summary.csv
+- 产物：_replay/v7/replay_audit.json  sha256=6460630d85d00864a066cb72596bb03200820a60bd389ebf2e33f22c81a8fe24
+- 判据：10 项检查全 PASS；复现 45/10/2 与逐转速范围
+- 结论：PASS
+- 备注：回放审计，只读
+
+## 2026-09-17T15:06:04+08:00 | G5 求解 | PASS
+- 动作：登记产物 _replay/v7/replay_report.md
+- 输入：_replay/v7/replay_report.md  sha256=13502c722d9323ae  bytes=3209
+- 上游：_replay/v7/replay_audit.json
+- 产物：_replay/v7/replay_report.md  sha256=13502c722d9323ae937ca75871902a077357e3d96f4d88977a7de729fa3ab204
+- 判据：人类可读报告
+- 结论：PASS
+
+## 2026-09-17T15:06:04+08:00 | G6 后处理与交付 | INFO
+- 动作：登记产物 06-delivery/v1/dashboard.html
+- 输入：06-delivery/v1/dashboard.html  sha256=d9fb6231a005edac  bytes=19950
+- 上游：无
+- 产物：06-delivery/v1/dashboard.html  sha256=d9fb6231a005edacc17abd8c7e21ec02920e9c8d98f0698f0d85ba6296af425d
+- 判据：单文件自包含，无外部依赖
+- 结论：INFO
+
+## 2026-09-17T15:06:17+08:00 | G0 需求 | INFO
+- 动作：provenance 例外说明
+- 实测：2 个缺失：requirements.yaml 与 _replay/v7/sweep_summary.csv
+- 判据：G2 之后产物应带 provenance.from；缺失必须说明理由
+- 结论：INFO
+- 备注：requirements.yaml 是全案溯源根，无上游；_replay/v7/sweep_summary.csv 是外部基准的只读证据快照，上游不在本案例内。两者均属合同允许的例外。
+
+## 2026-09-17T15:10:54+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/流道尺寸表.csv
+- 输入：01-scheme/v1/流道尺寸表.csv  sha256=799369fac0efd5eb  bytes=352
+- 上游：requirements.yaml
+- 产物：01-scheme/v1/流道尺寸表.csv  sha256=799369fac0efd5eb8a9b61921606af0ef63dee9c4c07eeb0f86ddea99112c1af
+- 判据：5 站位；机匣半径恒 0.300（锁定值）；轮毂 0.1035-&gt;0.1255
+- 结论：PASS
+
+## 2026-09-17T15:10:54+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/叶片几何参数表.csv
+- 输入：01-scheme/v1/叶片几何参数表.csv  sha256=6d00e19b7dd70d13  bytes=338
+- 上游：01-scheme/v1/流道尺寸表.csv
+- 产物：01-scheme/v1/叶片几何参数表.csv  sha256=6d00e19b7dd70d137e78b99e86886f8ba8ae5682066785fc647a5b553622e67b
+- 判据：2 叶排（R1 转子 9 叶 / S1 静子 11 叶）；与 requirements.rows 一致
+- 结论：PASS
+
+## 2026-09-17T15:10:55+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/通流计算结果表.csv
+- 输入：01-scheme/v1/通流计算结果表.csv  sha256=461c97666be8ce1e  bytes=873
+- 上游：01-scheme/v1/叶片几何参数表.csv
+- 产物：01-scheme/v1/通流计算结果表.csv  sha256=461c97666be8ce1eefcc1dfb9598a1b14985e27b6a01dbd670fed19a751ababa
+- 判据：23 项指标；含效率/功率/扭矩/扩散因子/相对马赫数
+- 结论：PASS
+
+## 2026-09-17T15:10:55+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/benchmark_gate.json
+- 输入：01-scheme/v1/benchmark_gate.json  sha256=e338247f00b948db  bytes=3938
+- 上游：01-scheme/v1/通流计算结果表.csv
+- 产物：01-scheme/v1/benchmark_gate.json  sha256=e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c
+- 判据：PASS 6 / WARN 1 / FAIL 0；效率偏差 -1.37 pts、功率 +1.40%、扭矩 +1.40%、机匣半径偏差 0
+- 结论：PASS
+
+## 2026-09-17T15:10:56+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/benchmark_gate.md
+- 输入：01-scheme/v1/benchmark_gate.md  sha256=a1210064de503141  bytes=1743
+- 上游：01-scheme/v1/benchmark_gate.json
+- 产物：01-scheme/v1/benchmark_gate.md  sha256=a1210064de5031414f018249535f9ee16764c2a36ba069b77a187d52d80a4086
+- 判据：人类可读对标报告，含口径说明
+- 结论：PASS
+
+## 2026-09-17T15:10:56+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v1/inputs/turbo-flow-attempt3.json
+- 输入：01-scheme/v1/inputs/turbo-flow-attempt3.json  sha256=1f3fb70eaf9fcf70  bytes=2560
+- 上游：requirements.yaml
+- 产物：01-scheme/v1/inputs/turbo-flow-attempt3.json  sha256=1f3fb70eaf9fcf700d389898c60e1611f99e93e62fa8a99397a205c9ba154d2f
+- 判据：适配配置：annulus.strategy=custom + 显式 rows；可复现 attempt-3
+- 结论：PASS
+
+## 2026-09-17T15:10:57+08:00 | G2 1D通流方案 | PASS
+- 动作：turbo-flow 涵道风扇适配 A/B/C 三组验证
+- 实测：attempt-1(constant_mean+auto rows) eta=0.7597 pw=67.72kW 机匣r=0.3486; attempt-2(custom+auto rows) eta=0.7976 pw=64.50kW; attempt-3(custom+显式R1/S1) eta=0.8794 pw=58.50kW 机匣r=0.3000
+- 产物：01-scheme/v1/benchmark_gate.json  sha256=e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c
+- 判据：对标闸门：效率绝对偏差 &lt;=2 pts、功率与扭矩相对偏差 &lt;=5%、机匣半径偏差 &lt;=1e-4 m、叶排数与需求一致、工程约束 0 条不通过
+- 结论：PASS
+- 备注：结论：默认配置不可用（静默改掉锁定直径并自动生成三排默认几何）；必须 custom annulus + 显式 rows。flow_coefficient 按中径定义，桨尖口径需换算。B-7 WARN 归因于输入口径而非求解器缺陷。
+
+## 2026-09-17T15:10:57+08:00 | G2 1D通流方案 | PASS
+- 动作：阶段状态 -&gt; done
+- 判据：三表 schema 通过；质量守恒（进出口 15.09343 一致）；对标闸门 PASS（带 1 条 WARN 且已归因）
+- 结论：PASS
+
+## 2026-09-17T15:14:55+08:00 | G6 后处理与交付 | PASS
+- 动作：看板重建并原地换版（同版本，无下游引用）
+- 实测：dashboard.html 19950 -&gt; 31599 bytes
+- 判据：内容变更后必须重登记，否则 verify 会报哈希不符
+- 结论：PASS
+- 备注：G6 闸门原先漏认 .html 交付物，已修正 gate_check.py 的交付文件类型集合。
+
+## 2026-09-18T22:19:20+08:00 | G0 需求 | INFO
+- 动作：skill 改名：ducted-fan-kickoff-design -&gt; ducted-fan-aero-design
+- 实测：目录 1 处、文件引用 9 个、中文措辞 6 处、frontmatter name 1 处，全部更新；残留引用扫描 0 条
+- 判据：用户澄清「启动设计」为「气动设计」笔误；kickoff 是误译，正名为 aerodynamic
+- 结论：INFO
+- 备注：已运行的 turbo-flow attempt-1 输入与其 result.json/designed_project.json 保留原描述字符串，作为历史运行记录不复写（符合本合同「只追加、不复写」）。看板已重生成并原地换版。
+
+</pre><p class='note'>本页由 <span class='mono'>tools/build_dashboard.py</span> 生成，数据全部来自案例目录磁盘文件。</p></div></body></html>

@@ -1,0 +1,59 @@
+{
+  "schema": "numeca-autogrid-run/v1",
+  "created_utc": "2026-09-18T14:04:07.198304+00:00",
+  "config": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\automation\\mesh_job.json",
+  "config_sha256": "e72a660ee847a1ce2d819e04de5eba4514e8fb0844a34d698ac05a956391cb4f",
+  "inputs": {
+    "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\autoblade\\R1_13span\\R1.geomTurbo": "32abbbf639c150adf47a66db20d083ff347728a46f948a0fe473b06ab695a0d4",
+    "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\autoblade\\R2_13span\\R2.geomTurbo": "ce0768ab5b2e04ffb06add624cdfc3800fb0c7e071f95786149ee774e5257dd8"
+  },
+  "template_trb": null,
+  "command": [
+    "D:\\NUMECA_SOFTWARE\\fine161\\bin64\\iggx86_64.exe",
+    "-autogrid5",
+    "-batch",
+    "-script",
+    "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.autogrid_job.py",
+    "-print"
+  ],
+  "autogrid_returncode": 0,
+  "sentinel_ok": true,
+  "audit_returncode": 0,
+  "artifacts": {
+    ".trb": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.trb",
+      "exists": true,
+      "size": 36027
+    },
+    ".igg": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.igg",
+      "exists": true,
+      "size": 469083
+    },
+    ".cgns": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.cgns",
+      "exists": true,
+      "size": 53006336
+    },
+    ".bcs": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.bcs",
+      "exists": true,
+      "size": 15967
+    },
+    ".config": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.config",
+      "exists": true,
+      "size": 13326
+    },
+    ".qualityReport": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.qualityReport",
+      "exists": true,
+      "size": 4473
+    },
+    ".geomTurbo": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.geomTurbo",
+      "exists": true,
+      "size": 353832
+    }
+  }
+}

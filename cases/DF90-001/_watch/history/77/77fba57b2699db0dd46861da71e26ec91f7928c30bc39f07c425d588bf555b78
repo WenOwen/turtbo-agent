@@ -1,0 +1,186 @@
+{
+ "hub_points": [
+  [
+   0.0,
+   0.094
+  ],
+  [
+   0.02,
+   0.094
+  ],
+  [
+   0.05,
+   0.094
+  ],
+  [
+   0.08,
+   0.094
+  ],
+  [
+   0.164,
+   0.094
+  ],
+  [
+   0.188,
+   0.09418071366222275
+  ],
+  [
+   0.212,
+   0.09566068389216603
+  ],
+  [
+   0.234,
+   0.10007825620653663
+  ],
+  [
+   0.262,
+   0.10926099884080952
+  ],
+  [
+   0.3,
+   0.125167
+  ]
+ ],
+ "spans13": [
+  0.0,
+  0.017037086855465844,
+  0.06698729810778065,
+  0.1464466094067262,
+  0.24999999999999994,
+  0.37059047744873963,
+  0.49999999999999994,
+  0.6294095225512604,
+  0.7499999999999999,
+  0.8535533905932737,
+  0.9330127018922194,
+  0.9829629131445341,
+  1.0
+ ],
+ "lean_beta_deg": 1.5,
+ "sweep_beta_deg": 1.0,
+ "rows": {
+  "R1": {
+   "sections": 13,
+   "hub_points": 100,
+   "motor_window_r_min_mm": 93.999381329405,
+   "motor_window_r_max_mm": 93.9999982017773,
+   "motor_window_diameter_min_mm": 187.99876265881,
+   "hub_monotone": false,
+   "hub_worst_backstep_um": -0.07402800170086543,
+   "min_shroud_clearance_mm": 174.833,
+   "area_inlet_m2": 0.25498422613596194,
+   "area_outlet_m2": 0.23352470450157595,
+   "area_ratio_out_in": 0.9158398071928441,
+   "area_monotone_decreasing": false,
+   "area_max_increase_m2": 4.372223988413637e-08,
+   "hub_tip_ratio_inlet": 0.31333333333333335,
+   "hub_tip_ratio_outlet": 0.41722333333333333,
+   "v7_area_ratio_out_in": 0.9374068501867154,
+   "section_table": [
+    {
+     "span": 0.0,
+     "v7_stagger_deg": -42.19521187068127,
+     "v8_stagger_deg": -42.141634174795634,
+     "v7_axial_chord_mm": 73.53709194330682,
+     "v8_axial_chord_mm": 73.65915434531752
+    },
+    {
+     "span": 0.24999999999999994,
+     "v7_stagger_deg": -56.476329284367615,
+     "v8_stagger_deg": -56.46322136716254,
+     "v7_axial_chord_mm": 52.07664700951728,
+     "v8_axial_chord_mm": 52.121327950741964
+    },
+    {
+     "span": 0.49999999999999994,
+     "v7_stagger_deg": -65.96020516927533,
+     "v8_stagger_deg": -65.95504205542552,
+     "v7_axial_chord_mm": 36.36404213156625,
+     "v8_axial_chord_mm": 36.37696221142861
+    },
+    {
+     "span": 0.7499999999999999,
+     "v7_stagger_deg": -70.15106427477058,
+     "v8_stagger_deg": -70.15012305939739,
+     "v7_axial_chord_mm": 28.58664646953099,
+     "v8_axial_chord_mm": 28.589123931457898
+    },
+    {
+     "span": 1.0,
+     "v7_stagger_deg": -73.80926975963861,
+     "v8_stagger_deg": -73.80926975963858,
+     "v7_axial_chord_mm": 22.046258730839313,
+     "v8_axial_chord_mm": 22.04625873083936
+    }
+   ]
+  },
+  "R2": {
+   "sections": 13,
+   "hub_points": 100,
+   "motor_window_r_min_mm": 93.999381329405,
+   "motor_window_r_max_mm": 93.9999982017773,
+   "motor_window_diameter_min_mm": 187.99876265881,
+   "hub_monotone": false,
+   "hub_worst_backstep_um": -0.07402800170086543,
+   "min_shroud_clearance_mm": 174.833,
+   "area_inlet_m2": 0.25498422613596194,
+   "area_outlet_m2": 0.23352470450157595,
+   "area_ratio_out_in": 0.9158398071928441,
+   "area_monotone_decreasing": false,
+   "area_max_increase_m2": 4.372223988413637e-08,
+   "hub_tip_ratio_inlet": 0.31333333333333335,
+   "hub_tip_ratio_outlet": 0.41722333333333333,
+   "v7_area_ratio_out_in": 0.9374068501867154,
+   "section_table": [
+    {
+     "span": 0.0,
+     "v7_stagger_deg": 17.873578625313666,
+     "v8_stagger_deg": 18.449494043005473,
+     "v7_axial_chord_mm": 77.54470118606596,
+     "v8_axial_chord_mm": 76.51793250310143
+    },
+    {
+     "span": 0.24999999999999994,
+     "v7_stagger_deg": 10.479886474434217,
+     "v8_stagger_deg": 10.706734006119211,
+     "v7_axial_chord_mm": 81.07671500582973,
+     "v8_axial_chord_mm": 80.47364131075707
+    },
+    {
+     "span": 0.49999999999999994,
+     "v7_stagger_deg": 6.428565229516003,
+     "v8_stagger_deg": 6.512194595674673,
+     "v7_axial_chord_mm": 81.00640814232243,
+     "v8_axial_chord_mm": 80.74372065711651
+    },
+    {
+     "span": 0.7499999999999999,
+     "v7_stagger_deg": 5.945093765330527,
+     "v8_stagger_deg": 5.9734172149807945,
+     "v7_axial_chord_mm": 82.12856797739978,
+     "v8_axial_chord_mm": 82.06119905031304
+    },
+    {
+     "span": 1.0,
+     "v7_stagger_deg": 7.10073535036816,
+     "v8_stagger_deg": 7.100735350368151,
+     "v7_axial_chord_mm": 88.88670615492464,
+     "v8_axial_chord_mm": 88.88670615492472
+    }
+   ]
+  }
+ },
+ "p4_p5_distance_mm": 84.0,
+ "p4_p5_diameter_mm": 188.0,
+ "reopen_ok": true,
+ "files": [
+  "autoblade\\R1_13span\\R1.abp",
+  "autoblade\\R1_13span\\R1.geomTurbo",
+  "autoblade\\R1_13span\\R1.par",
+  "autoblade\\R1_13span\\R1\\model616c.abm",
+  "autoblade\\R2_13span\\R2.abp",
+  "autoblade\\R2_13span\\R2.geomTurbo",
+  "autoblade\\R2_13span\\R2.par",
+  "autoblade\\R2_13span\\R2\\model616c.abm"
+ ]
+}

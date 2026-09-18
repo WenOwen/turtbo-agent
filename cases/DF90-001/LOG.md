@@ -323,3 +323,51 @@
 - 结论：PASS
 - 备注：校验 26 个产物：全部通过 /   ! 8 个产物缺 provenance（建议补 --from）
 
+## 2026-09-19T00:10:23+08:00 | G0 需求 | PASS
+- 动作：界面执行动作：校验案例产物与哈希
+- 操作者：human(web-ui)
+- 实测：exit=0  用时 0.1s
+- 判据：命令退出码为 0
+- 结论：PASS
+- 备注：校验 26 个产物：全部通过 /   ! 8 个产物缺 provenance（建议补 --from）
+
+## 2026-09-19T00:10:27+08:00 | G0 需求 | PASS
+- 动作：界面执行动作：校验案例产物与哈希
+- 操作者：human(web-ui)
+- 实测：exit=0  用时 0.1s
+- 判据：命令退出码为 0
+- 结论：PASS
+- 备注：校验 26 个产物：全部通过 /   ! 8 个产物缺 provenance（建议补 --from）
+
+## 2026-09-19T00:10:32+08:00 | G0 需求 | PASS
+- 动作：界面执行动作：校验案例产物与哈希
+- 操作者：human(web-ui)
+- 实测：exit=0  用时 0.1s
+- 判据：命令退出码为 0
+- 结论：PASS
+- 备注：校验 26 个产物：全部通过 /   ! 8 个产物缺 provenance（建议补 --from）
+
+## 2026-09-19T00:10:43+08:00 | G0 需求 | PASS
+- 动作：界面执行动作：环境预检
+- 操作者：human(web-ui)
+- 实测：exit=0  用时 0.4s
+- 判据：命令退出码为 0
+- 结论：PASS
+- 备注：环境预检：通过 /   v P-1 projectRoot === cwd  [cwd=D:\Project\Research\turtbo-agent  projectRoot=D:\Project\Research\turtbo-agent] /   v P-2 工作路径纯 ASCII  [D:\Project\Research\turtbo-agent]
+
+## 2026-09-19T00:20:07+08:00 | G1 设计大纲 | INFO
+- 动作：界面编辑文件 cases/DF90-001/00-brief/open_questions.md
+- 操作者：human(web-ui)
+- 实测：sha256 7ea71c6697bcc94f -> eea2984d1e7ba8b8；2076 -> 2043 bytes
+- 判据：内容变更已确认；写回前 sha256 与读取时一致（乐观锁通过）
+- 结论：INFO
+- 备注：操作者通过实时工作台直接编辑
+
+## 2026-09-19T00:20:50+08:00 | G1 设计大纲 | INFO
+- 动作：界面编辑文件 cases/DF90-001/00-brief/open_questions.md
+- 操作者：human(web-ui)
+- 实测：sha256 eea2984d1e7ba8b8 -> 5dfcb6684188ccf2；2043 -> 2037 bytes
+- 判据：内容变更已确认；写回前 sha256 与读取时一致（乐观锁通过）
+- 结论：INFO
+- 备注：操作者通过实时工作台直接编辑
+

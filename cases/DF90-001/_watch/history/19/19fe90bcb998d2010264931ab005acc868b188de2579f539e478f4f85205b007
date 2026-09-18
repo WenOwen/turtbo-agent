@@ -1,0 +1,2298 @@
+{
+ "R1": {
+  "source": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v7\\autoblade\\R1_5span\\R1.par",
+  "endwalls": {
+   "scalars": {
+    "APPLY_USER_NB_DISCRETE_POINTS": "+0",
+    "USER_NB_DISCRETE_POINTS": "100",
+    "HUB_CURVE_TYPE": "SPLINE_N",
+    "SHROUD_CURVE_TYPE": "SPLINE_N"
+   },
+   "hub": {
+    "scalars": {
+     "NAME": "HUB_CURVE",
+     "PARAMETRIZATION": "+0",
+     "CURVE_TYPE": "+2",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "points": [
+     [
+      "0",
+      "0.103457"
+     ],
+     [
+      "0.075",
+      "0.106629"
+     ],
+     [
+      "0.15",
+      "0.113553"
+     ],
+     [
+      "0.225",
+      "0.121737"
+     ],
+     [
+      "0.3",
+      "0.125167"
+     ]
+    ]
+   },
+   "shroud": {
+    "scalars": {
+     "NAME": "TIP_CURVE",
+     "PARAMETRIZATION": "+0",
+     "CURVE_TYPE": "+2",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "points": [
+     [
+      "0",
+      "0.3"
+     ],
+     [
+      "0.3",
+      "0.3"
+     ]
+    ]
+   }
+  },
+  "stream_surfaces": {
+   "scalars": {
+    "STREAM_SURFACE_TYPE": "LINEAR_INTERPOL",
+    "ROUNDED_TIP_TOPOLOGY": "NO",
+    "CASCADE_TOPOLOGY": "+0",
+    "CONICAL_SCALE_FACTOR": "1.2",
+    "AXIAL_DIRECTION": "+0",
+    "RADIAL_DIRECTION": "+0",
+    "S_INLET_HUB": "0",
+    "S_INLET_SHROUD": "0",
+    "S_OUTLET_HUB": "1",
+    "S_OUTLET_SHROUD": "1",
+    "ROUNDED_TIP_CLAMP_TYPE": "VECTOR",
+    "ROUNDED_TIP_PLANAR_CLAMP_FACTOR": "0.1",
+    "ROUNDED_TIP_MAIN_CLAMP_FACTOR": "0.2",
+    "ROUNDED_TIP_SECONDARY_CLAMP_FACTOR": "0.02",
+    "ROUNDED_TIP_NB_IMPRINTS": "+0"
+   },
+   "reference_traces": {
+    "REF_TRACE_HUB_Z": {
+     "value": "0",
+     "expression": "\"0\""
+    },
+    "REF_TRACE_TIP_Z": {
+     "value": "0.0239148216728",
+     "expression": "\"0.0239148216728\""
+    },
+    "REF_TRACE_HUB_R": {
+     "value": "0.103457149981",
+     "expression": "\"0.103457149981\""
+    },
+    "REF_TRACE_TIP_R": {
+     "value": "0.3",
+     "expression": "\"0.3\""
+    },
+    "REF_TRACE_HUB_ALPHA": {
+     "value": "42.2971697337",
+     "expression": "\"42.2971697337\""
+    },
+    "REF_TRACE_TIP_ALPHA": {
+     "value": "74.2925301803",
+     "expression": "\"74.2925301803\""
+    }
+   },
+   "primary_span": {
+    "S1_SPAN": {
+     "value": "0",
+     "expression": null
+    },
+    "S2_SPAN": {
+     "value": "0.25",
+     "expression": null
+    },
+    "S3_SPAN": {
+     "value": "0.5",
+     "expression": null
+    },
+    "S4_SPAN": {
+     "value": "0.75",
+     "expression": null
+    },
+    "S5_SPAN": {
+     "value": "1",
+     "expression": null
+    }
+   },
+   "rounded_tip": {
+    "TIP_SPAN": {
+     "value": "1.01",
+     "expression": null
+    }
+   }
+  },
+  "stacking_point": {
+   "STACKING_POINT": "GRAVITY_CENTER",
+   "CAMBER_POSITION": "0.4",
+   "CHORD_POSITION": "0.4"
+  },
+  "meridional_stacking": {
+   "scalars": {
+    "MERIDIONAL_LOCATION_TYPE": "SWEEP_LAW"
+   },
+   "sweep_law": {
+    "STACKING_PLANE": "SPAN_Z",
+    "REFERENCE_POINT": "HUB",
+    "REFERENCE_LENGTH": "DM",
+    "SWEEP_LAW_TYPE": "BEZIER_BETA"
+   },
+   "sweep_locations": {
+    "Z_STACKING_SWEEP": {
+     "value": "0.05",
+     "expression": "\"0.05\""
+    },
+    "R_STACKING_SWEEP": {
+     "value": "0.108568948809",
+     "expression": "\"0.108568948809\""
+    }
+   },
+   "dz_prim": {
+    "S1_DZ_PRIM": {
+     "value": "0.0739664339189",
+     "expression": "\"0.0739664339189\""
+    },
+    "S2_DZ_PRIM": {
+     "value": "0.0522815086836",
+     "expression": "\"0.0522815086836\""
+    },
+    "S3_DZ_PRIM": {
+     "value": "0.0363163322742",
+     "expression": "\"0.0363163322742\""
+    },
+    "S4_DZ_PRIM": {
+     "value": "0.0283463943823",
+     "expression": "\"0.0283463943823\""
+    },
+    "S5_DZ_PRIM": {
+     "value": "0.021658076211",
+     "expression": "\"0.021658076211\""
+    }
+   },
+   "dr_prim": {
+    "S1_DR_PRIM": {
+     "value": "0.0739664339189",
+     "expression": "\"0.0739664339189\""
+    },
+    "S2_DR_PRIM": {
+     "value": "0.0522815086836",
+     "expression": "\"0.0522815086836\""
+    },
+    "S3_DR_PRIM": {
+     "value": "0.0363163322742",
+     "expression": "\"0.0363163322742\""
+    },
+    "S4_DR_PRIM": {
+     "value": "0.0283463943823",
+     "expression": "\"0.0283463943823\""
+    },
+    "S5_DR_PRIM": {
+     "value": "0.021658076211",
+     "expression": "\"0.021658076211\""
+    }
+   },
+   "dm_prim": {
+    "S1_DM_PRIM": {
+     "value": "0.0739664339189",
+     "expression": "\"0.0739664339189\""
+    },
+    "S2_DM_PRIM": {
+     "value": "0.0522815086836",
+     "expression": "\"0.0522815086836\""
+    },
+    "S3_DM_PRIM": {
+     "value": "0.0363163322742",
+     "expression": "\"0.0363163322742\""
+    },
+    "S4_DM_PRIM": {
+     "value": "0.0283463943823",
+     "expression": "\"0.0283463943823\""
+    },
+    "S5_DM_PRIM": {
+     "value": "0.021658076211",
+     "expression": "\"0.021658076211\""
+    }
+   },
+   "sweep_curve": {
+    "tag": "PARAM_CURVE_2D",
+    "scalars": {
+     "NAME": "sweep_curve_line",
+     "PARAMETRIZATION": "+6",
+     "CURVE_TYPE": "+3",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "params": {
+     "SWEEP_BETA": {
+      "value": "0",
+      "expression": "\"0.000000\""
+     }
+    }
+   },
+   "edge_traces": {
+    "LE_HUB_COORDINATE_TYPE": "Z",
+    "LE_TIP_COORDINATE_TYPE": "Z",
+    "TE_HUB_COORDINATE_TYPE": "Z",
+    "TE_TIP_COORDINATE_TYPE": "Z",
+    "LEADING_EDGE_TYPE": "BEZIER_BETA",
+    "TRAILING_EDGE_TYPE": "BEZIER_BETA"
+   },
+   "edge_locations": {
+    "Z_LE_HUB": {
+     "value": "0",
+     "expression": "\"0\""
+    },
+    "Z_LE_SHROUD": {
+     "value": "0.0239148216728",
+     "expression": "\"0.0239148216728\""
+    },
+    "Z_TE_HUB": {
+     "value": "0.0741936244295",
+     "expression": "\"0.0741936244295\""
+    },
+    "Z_TE_SHROUD": {
+     "value": "0.0461255317345",
+     "expression": "\"0.0461255317345\""
+    },
+    "R_LE_HUB": {
+     "value": "0",
+     "expression": null
+    },
+    "R_LE_SHROUD": {
+     "value": "0",
+     "expression": null
+    },
+    "R_TE_HUB": {
+     "value": "0.05",
+     "expression": null
+    },
+    "R_TE_SHROUD": {
+     "value": "0.05",
+     "expression": null
+    },
+    "S_LE_HUB": {
+     "value": "0.5",
+     "expression": null
+    },
+    "S_LE_SHROUD": {
+     "value": "0.5",
+     "expression": null
+    },
+    "S_TE_HUB": {
+     "value": "0.75",
+     "expression": null
+    },
+    "S_TE_SHROUD": {
+     "value": "0.75",
+     "expression": null
+    }
+   },
+   "le_curve": {
+    "tag": "PARAM_CURVE_2D_BEZIER",
+    "scalars": {
+     "NAME": "LEADING_EDGE_CURVE",
+     "PARAMETRIZATION": "+5",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100"
+    },
+    "params": {
+     "LE_MERIDIONAL_BETA": {
+      "value": "0",
+      "expression": null
+     }
+    }
+   },
+   "te_curve": {
+    "tag": "PARAM_CURVE_2D_BEZIER",
+    "scalars": {
+     "NAME": "TRAILING_EDGE_CURVE",
+     "PARAMETRIZATION": "+5",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100"
+    },
+    "params": {
+     "TE_MERIDIONAL_BETA": {
+      "value": "0",
+      "expression": null
+     }
+    }
+   }
+  },
+  "tangential_stacking": {
+   "scalars": {
+    "LEAN_LAW_TYPE": "BEZIER_BETA"
+   },
+   "lean_locations": {
+    "LEAN_OFFSET": {
+     "value": "0",
+     "expression": null
+    }
+   },
+   "lean_curve": {
+    "tag": "PARAM_CURVE_2D",
+    "scalars": {
+     "NAME": "lean_curve_line",
+     "PARAMETRIZATION": "+6",
+     "CURVE_TYPE": "+3",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "params": {
+     "LEAN_BETA": {
+      "value": "0.370700005692461",
+      "expression": null
+     }
+    }
+   }
+  },
+  "abblade_main": {
+   "scalars": {
+    "NAME": "MAIN",
+    "IMPRINT_INTERNAL_EDGES": "GUIDES",
+    "EXTENSION_DISTANCE": "0",
+    "EXTENSION_SIDE": "NONE",
+    "HUB_GAP_TYPE": "NONE",
+    "SHROUD_GAP_TYPE": "CONSTANT",
+    "GAP_EXTENSION": "0.1"
+   },
+   "parameters": {
+    "HUB_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "HUB_LE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "HUB_TE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "SHROUD_GAP_WIDTH": {
+     "value": "0.002",
+     "expression": null
+    },
+    "SHROUD_LE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "SHROUD_TE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    }
+   }
+  },
+  "blade_sections": {
+   "scalars": {
+    "CONSTRUCTION_PLANE": "M_RTHETA",
+    "NB_BLADES": "+1",
+    "NB_DISCRETIZED_TE": "10"
+   },
+   "secondary": {
+    "PARAMETRIC_INTERPOLATION": "SPLINE",
+    "NB_PARAMETRIC_SECTIONS": "+0",
+    "PARAMETRIC_SPAN_LOCATIONS": "",
+    "XYZ_INTERPOLATION": "SPLINE",
+    "NB_XYZ_SECTIONS": "+0",
+    "XYZ_SPAN_LOCATIONS": "0  1"
+   }
+  },
+  "general_parameters": {
+   "scalars": {
+    "NB": {
+     "value": "9",
+     "expression": "\"9\""
+    },
+    "CASCADE_PITCH": {
+     "value": "0.140833113158",
+     "expression": "\"0.140833113158\""
+    },
+    "BLADE_ROTATION": {
+     "value": "0",
+     "expression": "\"0\""
+    }
+   }
+  },
+  "sections": [
+   {
+    "index": 1,
+    "params": {
+     "S1_CAMBER_GAMMA": {
+      "value": "-42.2971697337",
+      "expression": "\"-42.2971697337\""
+     },
+     "S1_CAMBER_BETA1": {
+      "value": "-56.0714853487",
+      "expression": "\"-56.0714853487\""
+     },
+     "S1_CAMBER_BETA2": {
+      "value": "-28.5228540826",
+      "expression": "\"-28.5228540826\""
+     },
+     "S1_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "-7.44911997333913",
+      "expression": null
+     },
+     "S1_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S1_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S1_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S1_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S1_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S1_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "10.357863175",
+      "expression": "\"10.357863175\""
+     },
+     "S1_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S1_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S1_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S1_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S1_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S1_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S1_LE_HALF_WEDGE_ANGLE": {
+      "value": "30",
+      "expression": "\"30\""
+     },
+     "S1_TE_HALF_WEDGE_ANGLE": {
+      "value": "10",
+      "expression": "\"10\""
+     },
+     "S1_HALF_THICKNESS_P1": {
+      "value": "0.00437663728371263",
+      "expression": "\"0.0028125\""
+     },
+     "S1_HALF_THICKNESS_P2": {
+      "value": "0.00437663728371263",
+      "expression": "\"0.00375\""
+     },
+     "S1_HALF_THICKNESS_P3": {
+      "value": "0.00265498482622206",
+      "expression": "\"0.0020625\""
+     },
+     "S1_PS_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S1_PS_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S1_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "10.357863175",
+      "expression": "\"10.357863175\""
+     },
+     "S1_PS_HALF_THICKNESS_P1": {
+      "value": "0.0028125",
+      "expression": "\"0.0028125\""
+     },
+     "S1_PS_HALF_THICKNESS_P2": {
+      "value": "0.00375",
+      "expression": "\"0.00375\""
+     },
+     "S1_PS_HALF_THICKNESS_P3": {
+      "value": "0.0020625",
+      "expression": "\"0.0020625\""
+     },
+     "S1_PS_HALF_THICKNESS_P4": {
+      "value": "0.0020625",
+      "expression": "\"0.0020625\""
+     },
+     "S1_TE_WEDGE_ANGLE": {
+      "value": "20.71572635",
+      "expression": "\"20.71572635\""
+     },
+     "S1_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S1_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S1_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S1_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 2,
+    "params": {
+     "S2_CAMBER_GAMMA": {
+      "value": "-56.610230084",
+      "expression": "\"-56.610230084\""
+     },
+     "S2_CAMBER_BETA1": {
+      "value": "-66.0053006511",
+      "expression": "\"-66.0053006511\""
+     },
+     "S2_CAMBER_BETA2": {
+      "value": "-47.2151595251",
+      "expression": "\"-47.2151595251\""
+     },
+     "S2_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "-7.44911997333913",
+      "expression": null
+     },
+     "S2_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S2_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S2_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S2_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S2_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S2_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "9.26572939694",
+      "expression": "\"9.26572939694\""
+     },
+     "S2_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S2_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S2_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S2_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S2_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S2_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S2_LE_HALF_WEDGE_ANGLE": {
+      "value": "20",
+      "expression": "\"20\""
+     },
+     "S2_TE_HALF_WEDGE_ANGLE": {
+      "value": "10",
+      "expression": "\"10\""
+     },
+     "S2_HALF_THICKNESS_P1": {
+      "value": "0.00341453216969967",
+      "expression": "\"0.00249375\""
+     },
+     "S2_HALF_THICKNESS_P2": {
+      "value": "0.003325",
+      "expression": "\"0.003325\""
+     },
+     "S2_HALF_THICKNESS_P3": {
+      "value": "0.00209270976483822",
+      "expression": "\"0.00182875\""
+     },
+     "S2_PS_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S2_PS_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S2_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "9.26572939694",
+      "expression": "\"9.26572939694\""
+     },
+     "S2_PS_HALF_THICKNESS_P1": {
+      "value": "0.00249375",
+      "expression": "\"0.00249375\""
+     },
+     "S2_PS_HALF_THICKNESS_P2": {
+      "value": "0.003325",
+      "expression": "\"0.003325\""
+     },
+     "S2_PS_HALF_THICKNESS_P3": {
+      "value": "0.00182875",
+      "expression": "\"0.00182875\""
+     },
+     "S2_PS_HALF_THICKNESS_P4": {
+      "value": "0.00182875",
+      "expression": "\"0.00182875\""
+     },
+     "S2_TE_WEDGE_ANGLE": {
+      "value": "18.5314587939",
+      "expression": "\"18.5314587939\""
+     },
+     "S2_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S2_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S2_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S2_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 3,
+    "params": {
+     "S3_CAMBER_GAMMA": {
+      "value": "-66.2019095103",
+      "expression": "\"-66.2019095103\""
+     },
+     "S3_CAMBER_BETA1": {
+      "value": "-71.9183415183",
+      "expression": "\"-71.9183415183\""
+     },
+     "S3_CAMBER_BETA2": {
+      "value": "-56.1442138662",
+      "expression": "\"-56.1442138662\""
+     },
+     "S3_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "-7.44911997333913",
+      "expression": null
+     },
+     "S3_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S3_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S3_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S3_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S3_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S3_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "8.17852315347",
+      "expression": "\"8.17852315347\""
+     },
+     "S3_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S3_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S3_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S3_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S3_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S3_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S3_LE_HALF_WEDGE_ANGLE": {
+      "value": "15",
+      "expression": "\"15\""
+     },
+     "S3_TE_HALF_WEDGE_ANGLE": {
+      "value": "10",
+      "expression": "\"10\""
+     },
+     "S3_HALF_THICKNESS_P1": {
+      "value": "0.00252212048508227",
+      "expression": "\"0.002025\""
+     },
+     "S3_HALF_THICKNESS_P2": {
+      "value": "0.00252212048508227",
+      "expression": "\"0.0027\""
+     },
+     "S3_HALF_THICKNESS_P3": {
+      "value": "0.0018489679787308",
+      "expression": "\"0.001485\""
+     },
+     "S3_PS_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S3_PS_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S3_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "8.17852315347",
+      "expression": "\"8.17852315347\""
+     },
+     "S3_PS_HALF_THICKNESS_P1": {
+      "value": "0.002025",
+      "expression": "\"0.002025\""
+     },
+     "S3_PS_HALF_THICKNESS_P2": {
+      "value": "0.0027",
+      "expression": "\"0.0027\""
+     },
+     "S3_PS_HALF_THICKNESS_P3": {
+      "value": "0.001485",
+      "expression": "\"0.001485\""
+     },
+     "S3_PS_HALF_THICKNESS_P4": {
+      "value": "0.001485",
+      "expression": "\"0.001485\""
+     },
+     "S3_TE_WEDGE_ANGLE": {
+      "value": "16.3570463069",
+      "expression": "\"16.3570463069\""
+     },
+     "S3_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S3_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S3_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S3_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 4,
+    "params": {
+     "S4_CAMBER_GAMMA": {
+      "value": "-70.519441007",
+      "expression": "\"-70.519441007\""
+     },
+     "S4_CAMBER_BETA1": {
+      "value": "-75.7587725182",
+      "expression": "\"-75.7587725182\""
+     },
+     "S4_CAMBER_BETA2": {
+      "value": "-62.23685872",
+      "expression": "\"-62.23685872\""
+     },
+     "S4_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "-7.44911997333913",
+      "expression": null
+     },
+     "S4_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S4_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S4_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S4_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S4_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S4_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "7.08404086305",
+      "expression": "\"7.08404086305\""
+     },
+     "S4_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S4_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S4_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S4_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S4_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S4_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S4_LE_HALF_WEDGE_ANGLE": {
+      "value": "8",
+      "expression": "\"8\""
+     },
+     "S4_TE_HALF_WEDGE_ANGLE": {
+      "value": "8",
+      "expression": "\"8\""
+     },
+     "S4_HALF_THICKNESS_P1": {
+      "value": "0.00204865820705891",
+      "expression": "\"0.00159375\""
+     },
+     "S4_HALF_THICKNESS_P2": {
+      "value": "0.00204865820705891",
+      "expression": "\"0.002125\""
+     },
+     "S4_HALF_THICKNESS_P3": {
+      "value": "0.00152960978448391",
+      "expression": "\"0.00116875\""
+     },
+     "S4_PS_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S4_PS_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S4_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "7.08404086305",
+      "expression": "\"7.08404086305\""
+     },
+     "S4_PS_HALF_THICKNESS_P1": {
+      "value": "0.00159375",
+      "expression": "\"0.00159375\""
+     },
+     "S4_PS_HALF_THICKNESS_P2": {
+      "value": "0.002125",
+      "expression": "\"0.002125\""
+     },
+     "S4_PS_HALF_THICKNESS_P3": {
+      "value": "0.00116875",
+      "expression": "\"0.00116875\""
+     },
+     "S4_PS_HALF_THICKNESS_P4": {
+      "value": "0.00116875",
+      "expression": "\"0.00116875\""
+     },
+     "S4_TE_WEDGE_ANGLE": {
+      "value": "14.1680817261",
+      "expression": "\"14.1680817261\""
+     },
+     "S4_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S4_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S4_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S4_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 5,
+    "params": {
+     "S5_CAMBER_GAMMA": {
+      "value": "-74.2925301803",
+      "expression": "\"-74.2925301803\""
+     },
+     "S5_CAMBER_BETA1": {
+      "value": "-78.4652992691",
+      "expression": "\"-78.4652992691\""
+     },
+     "S5_CAMBER_BETA2": {
+      "value": "-64.5078723626",
+      "expression": "\"-64.5078723626\""
+     },
+     "S5_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "-7.44911997333913",
+      "expression": null
+     },
+     "S5_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S5_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S5_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S5_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S5_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S5_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "5.98272108528",
+      "expression": "\"5.98272108528\""
+     },
+     "S5_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S5_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S5_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S5_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S5_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S5_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S5_LE_HALF_WEDGE_ANGLE": {
+      "value": "6",
+      "expression": "\"6\""
+     },
+     "S5_TE_HALF_WEDGE_ANGLE": {
+      "value": "6",
+      "expression": "\"6\""
+     },
+     "S5_HALF_THICKNESS_P1": {
+      "value": "0.00197199545800686",
+      "expression": "\"0.0012\""
+     },
+     "S5_HALF_THICKNESS_P2": {
+      "value": "0.00180119089782238",
+      "expression": "\"0.0016\""
+     },
+     "S5_HALF_THICKNESS_P3": {
+      "value": "0.000980153679847717",
+      "expression": "\"0.00088\""
+     },
+     "S5_PS_LE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S5_PS_TE_RADIUS": {
+      "value": "0.000403556320476",
+      "expression": "\"0.000403556320476\""
+     },
+     "S5_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "5.98272108528",
+      "expression": "\"5.98272108528\""
+     },
+     "S5_PS_HALF_THICKNESS_P1": {
+      "value": "0.0012",
+      "expression": "\"0.0012\""
+     },
+     "S5_PS_HALF_THICKNESS_P2": {
+      "value": "0.0016",
+      "expression": "\"0.0016\""
+     },
+     "S5_PS_HALF_THICKNESS_P3": {
+      "value": "0.00088",
+      "expression": "\"0.00088\""
+     },
+     "S5_PS_HALF_THICKNESS_P4": {
+      "value": "0.00088",
+      "expression": "\"0.00088\""
+     },
+     "S5_TE_WEDGE_ANGLE": {
+      "value": "11.9654421706",
+      "expression": "\"11.9654421706\""
+     },
+     "S5_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S5_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S5_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S5_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   }
+  ]
+ },
+ "R2": {
+  "source": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v7\\autoblade\\R2_5span\\R2.par",
+  "endwalls": {
+   "scalars": {
+    "APPLY_USER_NB_DISCRETE_POINTS": "+0",
+    "USER_NB_DISCRETE_POINTS": "100",
+    "HUB_CURVE_TYPE": "SPLINE_N",
+    "SHROUD_CURVE_TYPE": "SPLINE_N"
+   },
+   "hub": {
+    "scalars": {
+     "NAME": "HUB_CURVE",
+     "PARAMETRIZATION": "+0",
+     "CURVE_TYPE": "+2",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "points": [
+     [
+      "0",
+      "0.103457"
+     ],
+     [
+      "0.075",
+      "0.106629"
+     ],
+     [
+      "0.15",
+      "0.113553"
+     ],
+     [
+      "0.225",
+      "0.121737"
+     ],
+     [
+      "0.3",
+      "0.125167"
+     ]
+    ]
+   },
+   "shroud": {
+    "scalars": {
+     "NAME": "TIP_CURVE",
+     "PARAMETRIZATION": "+0",
+     "CURVE_TYPE": "+2",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "points": [
+     [
+      "0",
+      "0.3"
+     ],
+     [
+      "0.3",
+      "0.3"
+     ]
+    ]
+   }
+  },
+  "stream_surfaces": {
+   "scalars": {
+    "STREAM_SURFACE_TYPE": "LINEAR_INTERPOL",
+    "ROUNDED_TIP_TOPOLOGY": "NO",
+    "CASCADE_TOPOLOGY": "+0",
+    "CONICAL_SCALE_FACTOR": "1.2",
+    "AXIAL_DIRECTION": "+0",
+    "RADIAL_DIRECTION": "+0",
+    "S_INLET_HUB": "0",
+    "S_INLET_SHROUD": "0",
+    "S_OUTLET_HUB": "1",
+    "S_OUTLET_SHROUD": "1",
+    "ROUNDED_TIP_CLAMP_TYPE": "VECTOR",
+    "ROUNDED_TIP_PLANAR_CLAMP_FACTOR": "0.1",
+    "ROUNDED_TIP_MAIN_CLAMP_FACTOR": "0.2",
+    "ROUNDED_TIP_SECONDARY_CLAMP_FACTOR": "0.02",
+    "ROUNDED_TIP_NB_IMPRINTS": "+0"
+   },
+   "reference_traces": {
+    "REF_TRACE_HUB_Z": {
+     "value": "0.0984070044967",
+     "expression": "\"0.0984070044967\""
+    },
+    "REF_TRACE_TIP_Z": {
+     "value": "0.0907752236181",
+     "expression": "\"0.0907752236181\""
+    },
+    "REF_TRACE_HUB_R": {
+     "value": "0.115980328228",
+     "expression": "\"0.115980328228\""
+    },
+    "REF_TRACE_TIP_R": {
+     "value": "0.3",
+     "expression": "\"0.3\""
+    },
+    "REF_TRACE_HUB_ALPHA": {
+     "value": "22.9729466159",
+     "expression": "\"22.9729466159\""
+    },
+    "REF_TRACE_TIP_ALPHA": {
+     "value": "7.08082022363",
+     "expression": "\"7.08082022363\""
+    }
+   },
+   "primary_span": {
+    "S1_SPAN": {
+     "value": "0",
+     "expression": null
+    },
+    "S2_SPAN": {
+     "value": "0.25",
+     "expression": null
+    },
+    "S3_SPAN": {
+     "value": "0.5",
+     "expression": null
+    },
+    "S4_SPAN": {
+     "value": "0.75",
+     "expression": null
+    },
+    "S5_SPAN": {
+     "value": "1",
+     "expression": null
+    }
+   },
+   "rounded_tip": {
+    "TIP_SPAN": {
+     "value": "1.01",
+     "expression": null
+    }
+   }
+  },
+  "stacking_point": {
+   "STACKING_POINT": "GRAVITY_CENTER",
+   "CAMBER_POSITION": "0.4",
+   "CHORD_POSITION": "0.4"
+  },
+  "meridional_stacking": {
+   "scalars": {
+    "MERIDIONAL_LOCATION_TYPE": "SWEEP_LAW"
+   },
+   "sweep_law": {
+    "STACKING_PLANE": "SPAN_Z",
+    "REFERENCE_POINT": "HUB",
+    "REFERENCE_LENGTH": "DM",
+    "SWEEP_LAW_TYPE": "BEZIER_BETA"
+   },
+   "sweep_locations": {
+    "Z_STACKING_SWEEP": {
+     "value": "0.21",
+     "expression": "\"0.21\""
+    },
+    "R_STACKING_SWEEP": {
+     "value": "0.120321712025",
+     "expression": "\"0.120321712025\""
+    }
+   },
+   "dz_prim": {
+    "S1_DZ_PRIM": {
+     "value": "0.0782585856207",
+     "expression": "\"0.0782585856207\""
+    },
+    "S2_DZ_PRIM": {
+     "value": "0.0816684799461",
+     "expression": "\"0.0816684799461\""
+    },
+    "S3_DZ_PRIM": {
+     "value": "0.0814987184604",
+     "expression": "\"0.0814987184604\""
+    },
+    "S4_DZ_PRIM": {
+     "value": "0.0825601044924",
+     "expression": "\"0.0825601044924\""
+    },
+    "S5_DZ_PRIM": {
+     "value": "0.0893135932119",
+     "expression": "\"0.0893135932119\""
+    }
+   },
+   "dr_prim": {
+    "S1_DR_PRIM": {
+     "value": "0.0782585856207",
+     "expression": "\"0.0782585856207\""
+    },
+    "S2_DR_PRIM": {
+     "value": "0.0816684799461",
+     "expression": "\"0.0816684799461\""
+    },
+    "S3_DR_PRIM": {
+     "value": "0.0814987184604",
+     "expression": "\"0.0814987184604\""
+    },
+    "S4_DR_PRIM": {
+     "value": "0.0825601044924",
+     "expression": "\"0.0825601044924\""
+    },
+    "S5_DR_PRIM": {
+     "value": "0.0893135932119",
+     "expression": "\"0.0893135932119\""
+    }
+   },
+   "dm_prim": {
+    "S1_DM_PRIM": {
+     "value": "0.0782585856207",
+     "expression": "\"0.0782585856207\""
+    },
+    "S2_DM_PRIM": {
+     "value": "0.0816684799461",
+     "expression": "\"0.0816684799461\""
+    },
+    "S3_DM_PRIM": {
+     "value": "0.0814987184604",
+     "expression": "\"0.0814987184604\""
+    },
+    "S4_DM_PRIM": {
+     "value": "0.0825601044924",
+     "expression": "\"0.0825601044924\""
+    },
+    "S5_DM_PRIM": {
+     "value": "0.0893135932119",
+     "expression": "\"0.0893135932119\""
+    }
+   },
+   "sweep_curve": {
+    "tag": "PARAM_CURVE_2D",
+    "scalars": {
+     "NAME": "sweep_curve_line",
+     "PARAMETRIZATION": "+6",
+     "CURVE_TYPE": "+3",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "params": {
+     "SWEEP_BETA": {
+      "value": "0",
+      "expression": "\"0.000000\""
+     }
+    }
+   },
+   "edge_traces": {
+    "LE_HUB_COORDINATE_TYPE": "Z",
+    "LE_TIP_COORDINATE_TYPE": "Z",
+    "TE_HUB_COORDINATE_TYPE": "Z",
+    "TE_TIP_COORDINATE_TYPE": "Z",
+    "LEADING_EDGE_TYPE": "BEZIER_BETA",
+    "TRAILING_EDGE_TYPE": "BEZIER_BETA"
+   },
+   "edge_locations": {
+    "Z_LE_HUB": {
+     "value": "0.0984070044967",
+     "expression": "\"0.0984070044967\""
+    },
+    "Z_LE_SHROUD": {
+     "value": "0.0907752236181",
+     "expression": "\"0.0907752236181\""
+    },
+    "Z_TE_HUB": {
+     "value": "0.176808482421",
+     "expression": "\"0.176808482421\""
+    },
+    "Z_TE_SHROUD": {
+     "value": "0.180135395167",
+     "expression": "\"0.180135395167\""
+    },
+    "R_LE_HUB": {
+     "value": "0",
+     "expression": null
+    },
+    "R_LE_SHROUD": {
+     "value": "0",
+     "expression": null
+    },
+    "R_TE_HUB": {
+     "value": "0.05",
+     "expression": null
+    },
+    "R_TE_SHROUD": {
+     "value": "0.05",
+     "expression": null
+    },
+    "S_LE_HUB": {
+     "value": "0.5",
+     "expression": null
+    },
+    "S_LE_SHROUD": {
+     "value": "0.5",
+     "expression": null
+    },
+    "S_TE_HUB": {
+     "value": "0.75",
+     "expression": null
+    },
+    "S_TE_SHROUD": {
+     "value": "0.75",
+     "expression": null
+    }
+   },
+   "le_curve": {
+    "tag": "PARAM_CURVE_2D_BEZIER",
+    "scalars": {
+     "NAME": "LEADING_EDGE_CURVE",
+     "PARAMETRIZATION": "+5",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100"
+    },
+    "params": {
+     "LE_MERIDIONAL_BETA": {
+      "value": "0",
+      "expression": null
+     }
+    }
+   },
+   "te_curve": {
+    "tag": "PARAM_CURVE_2D_BEZIER",
+    "scalars": {
+     "NAME": "TRAILING_EDGE_CURVE",
+     "PARAMETRIZATION": "+5",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100"
+    },
+    "params": {
+     "TE_MERIDIONAL_BETA": {
+      "value": "0",
+      "expression": null
+     }
+    }
+   }
+  },
+  "tangential_stacking": {
+   "scalars": {
+    "LEAN_LAW_TYPE": "BEZIER_BETA"
+   },
+   "lean_locations": {
+    "LEAN_OFFSET": {
+     "value": "0",
+     "expression": null
+    }
+   },
+   "lean_curve": {
+    "tag": "PARAM_CURVE_2D",
+    "scalars": {
+     "NAME": "lean_curve_line",
+     "PARAMETRIZATION": "+6",
+     "CURVE_TYPE": "+3",
+     "DISTRIBUTION": "+0",
+     "COMMON_RATIO": "1",
+     "COMMON_RATIO2": "1",
+     "NB_DISCRETIZED_POINTS": "+100",
+     "BACKWARD_CLAMPED_ENDS": "+0"
+    },
+    "params": {
+     "LEAN_BETA": {
+      "value": "0.370700005692461",
+      "expression": null
+     }
+    }
+   }
+  },
+  "abblade_main": {
+   "scalars": {
+    "NAME": "MAIN",
+    "IMPRINT_INTERNAL_EDGES": "GUIDES",
+    "EXTENSION_DISTANCE": "0",
+    "EXTENSION_SIDE": "NONE",
+    "HUB_GAP_TYPE": "NONE",
+    "SHROUD_GAP_TYPE": "NONE",
+    "GAP_EXTENSION": "0.1"
+   },
+   "parameters": {
+    "HUB_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "HUB_LE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "HUB_TE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "SHROUD_GAP_WIDTH": {
+     "value": "0.002",
+     "expression": null
+    },
+    "SHROUD_LE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    },
+    "SHROUD_TE_GAP_WIDTH": {
+     "value": "0.001",
+     "expression": null
+    }
+   }
+  },
+  "blade_sections": {
+   "scalars": {
+    "CONSTRUCTION_PLANE": "M_RTHETA",
+    "NB_BLADES": "+1",
+    "NB_DISCRETIZED_TE": "10"
+   },
+   "secondary": {
+    "PARAMETRIC_INTERPOLATION": "SPLINE",
+    "NB_PARAMETRIC_SECTIONS": "+0",
+    "PARAMETRIC_SPAN_LOCATIONS": "",
+    "XYZ_INTERPOLATION": "SPLINE",
+    "NB_XYZ_SECTIONS": "+0",
+    "XYZ_SPAN_LOCATIONS": "0  1"
+   }
+  },
+  "general_parameters": {
+   "scalars": {
+    "NB": {
+     "value": "11",
+     "expression": "\"11\""
+    },
+    "CASCADE_PITCH": {
+     "value": "0.118803703927",
+     "expression": "\"0.118803703927\""
+    },
+    "BLADE_ROTATION": {
+     "value": "0",
+     "expression": "\"0\""
+    }
+   }
+  },
+  "sections": [
+   {
+    "index": 1,
+    "params": {
+     "S1_CAMBER_GAMMA": {
+      "value": "17.5",
+      "expression": "\"17.5\""
+     },
+     "S1_CAMBER_BETA1": {
+      "value": "47.346795369",
+      "expression": "\"47.346795369\""
+     },
+     "S1_CAMBER_BETA2": {
+      "value": "-12.9807332137",
+      "expression": "\"-12.9807332137\""
+     },
+     "S1_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "8",
+      "expression": "\"8\""
+     },
+     "S1_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S1_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S1_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S1_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S1_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S1_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "7.87486475801",
+      "expression": "\"7.87486475801\""
+     },
+     "S1_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S1_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S1_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S1_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S1_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S1_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S1_LE_HALF_WEDGE_ANGLE": {
+      "value": "7.87486475801",
+      "expression": "\"7.87486475801\""
+     },
+     "S1_TE_HALF_WEDGE_ANGLE": {
+      "value": "7.87486475801",
+      "expression": "\"7.87486475801\""
+     },
+     "S1_HALF_THICKNESS_P1": {
+      "value": "0.00159375",
+      "expression": "\"0.00159375\""
+     },
+     "S1_HALF_THICKNESS_P2": {
+      "value": "0.002125",
+      "expression": "\"0.002125\""
+     },
+     "S1_HALF_THICKNESS_P3": {
+      "value": "0.00116875",
+      "expression": "\"0.00116875\""
+     },
+     "S1_PS_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S1_PS_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S1_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "7.87486475801",
+      "expression": "\"7.87486475801\""
+     },
+     "S1_PS_HALF_THICKNESS_P1": {
+      "value": "0.00159375",
+      "expression": "\"0.00159375\""
+     },
+     "S1_PS_HALF_THICKNESS_P2": {
+      "value": "0.002125",
+      "expression": "\"0.002125\""
+     },
+     "S1_PS_HALF_THICKNESS_P3": {
+      "value": "0.00116875",
+      "expression": "\"0.00116875\""
+     },
+     "S1_PS_HALF_THICKNESS_P4": {
+      "value": "0.00116875",
+      "expression": "\"0.00116875\""
+     },
+     "S1_TE_WEDGE_ANGLE": {
+      "value": "15.749729516",
+      "expression": "\"15.749729516\""
+     },
+     "S1_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S1_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S1_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S1_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 2,
+    "params": {
+     "S2_CAMBER_GAMMA": {
+      "value": "10.2767253335",
+      "expression": "\"10.2767253335\""
+     },
+     "S2_CAMBER_BETA1": {
+      "value": "37.1420243111",
+      "expression": "\"37.1420243111\""
+     },
+     "S2_CAMBER_BETA2": {
+      "value": "-16.5887368421",
+      "expression": "\"-16.5887368421\""
+     },
+     "S2_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "8",
+      "expression": "\"8\""
+     },
+     "S2_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S2_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S2_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S2_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S2_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S2_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.53234876408",
+      "expression": "\"4.53234876408\""
+     },
+     "S2_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S2_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S2_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S2_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S2_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S2_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S2_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.53234876408",
+      "expression": "\"4.53234876408\""
+     },
+     "S2_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.53234876408",
+      "expression": "\"4.53234876408\""
+     },
+     "S2_HALF_THICKNESS_P1": {
+      "value": "0.00155625",
+      "expression": "\"0.00155625\""
+     },
+     "S2_HALF_THICKNESS_P2": {
+      "value": "0.002075",
+      "expression": "\"0.002075\""
+     },
+     "S2_HALF_THICKNESS_P3": {
+      "value": "0.00114125",
+      "expression": "\"0.00114125\""
+     },
+     "S2_PS_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S2_PS_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S2_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.53234876408",
+      "expression": "\"4.53234876408\""
+     },
+     "S2_PS_HALF_THICKNESS_P1": {
+      "value": "0.00155625",
+      "expression": "\"0.00155625\""
+     },
+     "S2_PS_HALF_THICKNESS_P2": {
+      "value": "0.002075",
+      "expression": "\"0.002075\""
+     },
+     "S2_PS_HALF_THICKNESS_P3": {
+      "value": "0.00114125",
+      "expression": "\"0.00114125\""
+     },
+     "S2_PS_HALF_THICKNESS_P4": {
+      "value": "0.00114125",
+      "expression": "\"0.00114125\""
+     },
+     "S2_TE_WEDGE_ANGLE": {
+      "value": "9.06469752815",
+      "expression": "\"9.06469752815\""
+     },
+     "S2_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S2_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S2_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S2_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 3,
+    "params": {
+     "S3_CAMBER_GAMMA": {
+      "value": "6.33859570205",
+      "expression": "\"6.33859570205\""
+     },
+     "S3_CAMBER_BETA1": {
+      "value": "30.0168271138",
+      "expression": "\"30.0168271138\""
+     },
+     "S3_CAMBER_BETA2": {
+      "value": "-17.3396357203",
+      "expression": "\"-17.3396357203\""
+     },
+     "S3_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "8",
+      "expression": "\"8\""
+     },
+     "S3_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S3_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S3_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S3_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S3_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S3_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.54172551431",
+      "expression": "\"4.54172551431\""
+     },
+     "S3_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S3_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S3_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S3_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S3_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S3_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S3_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.54172551431",
+      "expression": "\"4.54172551431\""
+     },
+     "S3_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.54172551431",
+      "expression": "\"4.54172551431\""
+     },
+     "S3_HALF_THICKNESS_P1": {
+      "value": "0.0015375",
+      "expression": "\"0.0015375\""
+     },
+     "S3_HALF_THICKNESS_P2": {
+      "value": "0.00205",
+      "expression": "\"0.00205\""
+     },
+     "S3_HALF_THICKNESS_P3": {
+      "value": "0.0011275",
+      "expression": "\"0.0011275\""
+     },
+     "S3_PS_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S3_PS_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S3_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.54172551431",
+      "expression": "\"4.54172551431\""
+     },
+     "S3_PS_HALF_THICKNESS_P1": {
+      "value": "0.0015375",
+      "expression": "\"0.0015375\""
+     },
+     "S3_PS_HALF_THICKNESS_P2": {
+      "value": "0.00205",
+      "expression": "\"0.00205\""
+     },
+     "S3_PS_HALF_THICKNESS_P3": {
+      "value": "0.0011275",
+      "expression": "\"0.0011275\""
+     },
+     "S3_PS_HALF_THICKNESS_P4": {
+      "value": "0.0011275",
+      "expression": "\"0.0011275\""
+     },
+     "S3_TE_WEDGE_ANGLE": {
+      "value": "9.08345102862",
+      "expression": "\"9.08345102862\""
+     },
+     "S3_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S3_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S3_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S3_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 4,
+    "params": {
+     "S4_CAMBER_GAMMA": {
+      "value": "5.90153987034",
+      "expression": "\"5.90153987034\""
+     },
+     "S4_CAMBER_BETA1": {
+      "value": "25.9037995404",
+      "expression": "\"25.9037995404\""
+     },
+     "S4_CAMBER_BETA2": {
+      "value": "-18.3683915812",
+      "expression": "\"-18.3683915812\""
+     },
+     "S4_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "8",
+      "expression": "\"8\""
+     },
+     "S4_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S4_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S4_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S4_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S4_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S4_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.56855200818",
+      "expression": "\"4.56855200818\""
+     },
+     "S4_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S4_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S4_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S4_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S4_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S4_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S4_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.56855200818",
+      "expression": "\"4.56855200818\""
+     },
+     "S4_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.56855200818",
+      "expression": "\"4.56855200818\""
+     },
+     "S4_HALF_THICKNESS_P1": {
+      "value": "0.00155625",
+      "expression": "\"0.00155625\""
+     },
+     "S4_HALF_THICKNESS_P2": {
+      "value": "0.002075",
+      "expression": "\"0.002075\""
+     },
+     "S4_HALF_THICKNESS_P3": {
+      "value": "0.00114125",
+      "expression": "\"0.00114125\""
+     },
+     "S4_PS_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S4_PS_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S4_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.56855200818",
+      "expression": "\"4.56855200818\""
+     },
+     "S4_PS_HALF_THICKNESS_P1": {
+      "value": "0.00155625",
+      "expression": "\"0.00155625\""
+     },
+     "S4_PS_HALF_THICKNESS_P2": {
+      "value": "0.002075",
+      "expression": "\"0.002075\""
+     },
+     "S4_PS_HALF_THICKNESS_P3": {
+      "value": "0.00114125",
+      "expression": "\"0.00114125\""
+     },
+     "S4_PS_HALF_THICKNESS_P4": {
+      "value": "0.00114125",
+      "expression": "\"0.00114125\""
+     },
+     "S4_TE_WEDGE_ANGLE": {
+      "value": "9.13710401635",
+      "expression": "\"9.13710401635\""
+     },
+     "S4_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S4_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S4_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S4_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   },
+   {
+    "index": 5,
+    "params": {
+     "S5_CAMBER_GAMMA": {
+      "value": "7.08082022363",
+      "expression": "\"7.08082022363\""
+     },
+     "S5_CAMBER_BETA1": {
+      "value": "21.9953446633",
+      "expression": "\"21.9953446633\""
+     },
+     "S5_CAMBER_BETA2": {
+      "value": "-16.4536688008",
+      "expression": "\"-16.4536688008\""
+     },
+     "S5_SS_LE_HALF_WEDGE_ANGLE": {
+      "value": "8",
+      "expression": "\"8\""
+     },
+     "S5_TSS_1": {
+      "value": "0.0252551259765378",
+      "expression": null
+     },
+     "S5_TSS_2": {
+      "value": "0.0375717583040159",
+      "expression": null
+     },
+     "S5_TSS_3": {
+      "value": "0.0496584366188575",
+      "expression": null
+     },
+     "S5_SS_REAR_SHAPE": {
+      "value": "-0.0409632196658838",
+      "expression": null
+     },
+     "S5_SS_END_LINE": {
+      "value": "0.102340009693158",
+      "expression": null
+     },
+     "S5_PS_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.66508336494",
+      "expression": "\"4.66508336494\""
+     },
+     "S5_TPS_1": {
+      "value": "0.00914676041643725",
+      "expression": null
+     },
+     "S5_TPS_2": {
+      "value": "0.0131412921454573",
+      "expression": null
+     },
+     "S5_PS_REAR_SHAPE": {
+      "value": "-0.11731588076266",
+      "expression": null
+     },
+     "S5_PS_END_LINE": {
+      "value": "0.00884015939402852",
+      "expression": null
+     },
+     "S5_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S5_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S5_LE_HALF_WEDGE_ANGLE": {
+      "value": "4.66508336494",
+      "expression": "\"4.66508336494\""
+     },
+     "S5_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.66508336494",
+      "expression": "\"4.66508336494\""
+     },
+     "S5_HALF_THICKNESS_P1": {
+      "value": "0.0016875",
+      "expression": "\"0.0016875\""
+     },
+     "S5_HALF_THICKNESS_P2": {
+      "value": "0.00225",
+      "expression": "\"0.00225\""
+     },
+     "S5_HALF_THICKNESS_P3": {
+      "value": "0.0012375",
+      "expression": "\"0.0012375\""
+     },
+     "S5_PS_LE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S5_PS_TE_RADIUS": {
+      "value": "0.000410983718243",
+      "expression": "\"0.000410983718243\""
+     },
+     "S5_PS_TE_HALF_WEDGE_ANGLE": {
+      "value": "4.66508336494",
+      "expression": "\"4.66508336494\""
+     },
+     "S5_PS_HALF_THICKNESS_P1": {
+      "value": "0.0016875",
+      "expression": "\"0.0016875\""
+     },
+     "S5_PS_HALF_THICKNESS_P2": {
+      "value": "0.00225",
+      "expression": "\"0.00225\""
+     },
+     "S5_PS_HALF_THICKNESS_P3": {
+      "value": "0.0012375",
+      "expression": "\"0.0012375\""
+     },
+     "S5_PS_HALF_THICKNESS_P4": {
+      "value": "0.0012375",
+      "expression": "\"0.0012375\""
+     },
+     "S5_TE_WEDGE_ANGLE": {
+      "value": "9.33016672988",
+      "expression": "\"9.33016672988\""
+     },
+     "S5_THROAT_WIDTH": {
+      "value": "0.014",
+      "expression": null
+     },
+     "S5_DEV_ANGLE": {
+      "value": "0",
+      "expression": "\"0\""
+     },
+     "S5_LE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     },
+     "S5_TE_RADIUS_RATIO": {
+      "value": "1",
+      "expression": null
+     }
+    },
+    "n_params": 33,
+    "main_scalars": {
+     "CONSTRUCTION_MODE": "THICKNESS"
+    }
+   }
+  ]
+ }
+}

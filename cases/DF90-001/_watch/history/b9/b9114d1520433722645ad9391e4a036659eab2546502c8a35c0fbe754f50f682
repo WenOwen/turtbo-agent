@@ -1,0 +1,103 @@
+{
+  "schema": "numeca-autogrid-optimization/v1",
+  "created_utc": "2026-09-18T14:06:59.287947+00:00",
+  "version": "mesh-v2",
+  "source_trb": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.trb",
+  "source_trb_sha256": "01e7e7381ac93878455effd086ca85daa0913d34a48d56ec4abdd37eb01f6125",
+  "row_index": 1,
+  "control_name": "streamwise_blade_upper_points",
+  "selected_value": 97,
+  "contract": {
+    "kind": "sibling_expected_json",
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.expected.json",
+    "sha256": "937c31c905ebe5bfd3ba80046a20d7829884328985704f93b556384a2f7ebe9f",
+    "confidence": "independent"
+  },
+  "tip_gap_policy": "preserve_baseline",
+  "tip_gap_width_m": null,
+  "acceptance": {
+    "min_skewness_angle_deg": 15.0,
+    "max_expansion_ratio": 3.0,
+    "max_point_increase_percent": 10.0,
+    "max_aspect_increase_percent": 15.0
+  },
+  "baseline": {
+    "points": 1686584,
+    "min_skewness_angle_deg": 9.4508,
+    "max_aspect_ratio": 1078.7,
+    "max_expansion_ratio": 2.0682
+  },
+  "trials": [
+    {
+      "candidate": 89,
+      "autogrid_returncode": 0,
+      "sentinel_ok": true,
+      "points": 1733232,
+      "min_skewness_angle_deg": 12.919,
+      "max_aspect_ratio": 1078.7,
+      "max_expansion_ratio": 2.2973,
+      "point_increase_percent": 2.765827257936748,
+      "aspect_increase_percent": 0.0,
+      "issues": [
+        {
+          "severity": "warn",
+          "code": "low_skewness",
+          "message": "��Сƫб��Ϊ 12.919��"
+        }
+      ],
+      "rejection_reasons": [
+        "min_skewness_angle"
+      ],
+      "audit_returncode": 0,
+      "accepted": false
+    },
+    {
+      "candidate": 93,
+      "autogrid_returncode": 0,
+      "sentinel_ok": true,
+      "points": 1756556,
+      "min_skewness_angle_deg": 14.544,
+      "max_aspect_ratio": 1078.7,
+      "max_expansion_ratio": 2.4149,
+      "point_increase_percent": 4.148740886905133,
+      "aspect_increase_percent": 0.0,
+      "issues": [
+        {
+          "severity": "warn",
+          "code": "low_skewness",
+          "message": "��Сƫб��Ϊ 14.544��"
+        }
+      ],
+      "rejection_reasons": [
+        "min_skewness_angle"
+      ],
+      "audit_returncode": 0,
+      "accepted": false
+    },
+    {
+      "candidate": 97,
+      "autogrid_returncode": 0,
+      "sentinel_ok": true,
+      "points": 1779880,
+      "min_skewness_angle_deg": 16.406,
+      "max_aspect_ratio": 1078.7,
+      "max_expansion_ratio": 2.5335,
+      "point_increase_percent": 5.531654515873496,
+      "aspect_increase_percent": 0.0,
+      "issues": [],
+      "rejection_reasons": [],
+      "audit_returncode": 0,
+      "accepted": true
+    }
+  ],
+  "selected": {
+    "points": 1779880,
+    "min_skewness_angle_deg": 16.406,
+    "max_aspect_ratio": 1078.7,
+    "max_expansion_ratio": 2.5335,
+    "point_increase_percent": 5.531654515873496,
+    "aspect_increase_percent": 0.0,
+    "issues": [],
+    "rejection_reasons": []
+  }
+}

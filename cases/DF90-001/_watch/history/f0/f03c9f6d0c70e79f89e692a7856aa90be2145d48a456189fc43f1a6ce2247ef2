@@ -1,0 +1,77 @@
+{
+  "note": "以下大二进制保留在 Ducted-Fan v8 原址，本案例只登记路径与哈希，不复制内容。",
+  "source_root": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8",
+  "generated_by": "tools/_import_v8.py",
+  "files": [
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized.iec",
+      "rel": "fine/v8-optimized/v8-optimized.iec",
+      "bytes": 24967872,
+      "mtime": 1789740733.347263,
+      "sha256": "b4b1b09908b462014953bb511f27be9480189c87c0cc7f51bb3cc4d0439d5113"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.cgns",
+      "rel": "fine/v8-optimized/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.cgns",
+      "bytes": 170754103,
+      "mtime": 1789741062.851829,
+      "sha256": "5e989b81ab313046ba0fe4cbde455ee8cc487e8b0b48acdcbf273187e8c6d1fd"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.mf",
+      "rel": "fine/v8-optimized/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.mf",
+      "bytes": 6614,
+      "mtime": 1789741062.354273,
+      "sha256": "3539db0fce3fadd751d82e7bfec0d007a7f63b135483866fada7706a483cbf01"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.res",
+      "rel": "fine/v8-optimized/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.res",
+      "bytes": 1015486,
+      "mtime": 1789741496.981519,
+      "sha256": "9fd40c5480468042f4a130cabff810b64b5b0ba15f016405210d753cb5bf715b"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.xmf",
+      "rel": "fine/v8-optimized/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.xmf",
+      "bytes": 7369,
+      "mtime": 1789741062.3548265,
+      "sha256": "2558e74ac410734fa6b9fbf57716f430476c06d62a7c2d478ad790023bccf81d"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.cgns",
+      "rel": "mesh/mesh-v1/mesh-v1.cgns",
+      "bytes": 53006336,
+      "mtime": 1789740245.5159073,
+      "sha256": "c4ee9159a84e2165ddde0cd6088c72b4c2cb96251451a4c2fd0c95a53178b9f3"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v1\\mesh-v1.geom",
+      "rel": "mesh/mesh-v1/mesh-v1.geom",
+      "bytes": 1663682,
+      "mtime": 1789740243.2219758,
+      "sha256": "f088a09365a10e90d638224f9a8ba310fb63c6a7149e04e4d439173046f47a23"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.adf",
+      "rel": "mesh/mesh-v2/mesh-v2.adf",
+      "bytes": 2904064,
+      "mtime": 1789740882.871635,
+      "sha256": "26e64ed4b9e135d14835de4faedb6b512c778f063236992d98821cff5324c729"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.cgns",
+      "rel": "mesh/mesh-v2/mesh-v2.cgns",
+      "bytes": 99483648,
+      "mtime": 1789741007.2860682,
+      "sha256": "06cc47b825c8d8d239d88d50e9f41540314b81331c7953f0328e1990f53b7677"
+    },
+    {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.geom",
+      "rel": "mesh/mesh-v2/mesh-v2.geom",
+      "bytes": 1726852,
+      "mtime": 1789740415.281914,
+      "sha256": "30b1cb14abb6b3637378411e52cbddf685aa11a32ba26ac2acd79c7a226c0b4e"
+    }
+  ]
+}

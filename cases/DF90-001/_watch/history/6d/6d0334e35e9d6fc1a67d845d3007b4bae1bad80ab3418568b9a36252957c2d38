@@ -1,0 +1,993 @@
+{
+  "schema_version": "1.0",
+  "audit_type": "numeca_fine_iec_run_sync",
+  "generated_at": "2026-09-18T22:17:38.4296961+08:00",
+  "passed": true,
+  "project": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized.iec",
+  "case_root": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized",
+  "project_grid": {
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+    "exists": true,
+    "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+  },
+  "project_computations": [
+    {
+      "index": 1,
+      "name": "n05000_p101325"
+    },
+    {
+      "index": 2,
+      "name": "n04500_p101325"
+    },
+    {
+      "index": 3,
+      "name": "n05500_p101325"
+    },
+    {
+      "index": 4,
+      "name": "n05000_p101107"
+    },
+    {
+      "index": 5,
+      "name": "n05000_p100771"
+    },
+    {
+      "index": 6,
+      "name": "n05000_p100435"
+    },
+    {
+      "index": 7,
+      "name": "n05000_p099763"
+    },
+    {
+      "index": 8,
+      "name": "n05000_p099091"
+    },
+    {
+      "index": 9,
+      "name": "n05000_p101846"
+    },
+    {
+      "index": 10,
+      "name": "n05000_p102450"
+    },
+    {
+      "index": 11,
+      "name": "n05000_p102988"
+    },
+    {
+      "index": 12,
+      "name": "n05000_p103257"
+    },
+    {
+      "index": 13,
+      "name": "n05000_p103525"
+    },
+    {
+      "index": 14,
+      "name": "n05000_p103794"
+    },
+    {
+      "index": 15,
+      "name": "n05000_p104130"
+    },
+    {
+      "index": 16,
+      "name": "n05000_p104466"
+    },
+    {
+      "index": 17,
+      "name": "n04500_p101148"
+    },
+    {
+      "index": 18,
+      "name": "n04500_p100876"
+    },
+    {
+      "index": 19,
+      "name": "n04500_p100604"
+    },
+    {
+      "index": 20,
+      "name": "n04500_p100060"
+    },
+    {
+      "index": 21,
+      "name": "n04500_p099516"
+    },
+    {
+      "index": 22,
+      "name": "n04500_p101747"
+    },
+    {
+      "index": 23,
+      "name": "n04500_p102237"
+    },
+    {
+      "index": 24,
+      "name": "n04500_p102672"
+    },
+    {
+      "index": 25,
+      "name": "n04500_p102890"
+    },
+    {
+      "index": 26,
+      "name": "n04500_p103107"
+    },
+    {
+      "index": 27,
+      "name": "n04500_p103325"
+    },
+    {
+      "index": 28,
+      "name": "n04500_p103597"
+    },
+    {
+      "index": 29,
+      "name": "n04500_p103869"
+    },
+    {
+      "index": 30,
+      "name": "n05500_p101061"
+    },
+    {
+      "index": 31,
+      "name": "n05500_p100654"
+    },
+    {
+      "index": 32,
+      "name": "n05500_p100248"
+    },
+    {
+      "index": 33,
+      "name": "n05500_p099435"
+    },
+    {
+      "index": 34,
+      "name": "n05500_p098622"
+    },
+    {
+      "index": 35,
+      "name": "n05500_p101955"
+    },
+    {
+      "index": 36,
+      "name": "n05500_p102687"
+    },
+    {
+      "index": 37,
+      "name": "n05500_p103337"
+    },
+    {
+      "index": 38,
+      "name": "n05500_p103662"
+    },
+    {
+      "index": 39,
+      "name": "n05500_p103987"
+    },
+    {
+      "index": 40,
+      "name": "n05500_p104313"
+    },
+    {
+      "index": 41,
+      "name": "n05500_p104719"
+    },
+    {
+      "index": 42,
+      "name": "n05500_p105126"
+    },
+    {
+      "index": 43,
+      "name": "n05000_p098419"
+    },
+    {
+      "index": 44,
+      "name": "n05000_p097747"
+    },
+    {
+      "index": 45,
+      "name": "n05000_p097075"
+    },
+    {
+      "index": 46,
+      "name": "n05000_p103391"
+    },
+    {
+      "index": 47,
+      "name": "n05000_p103458"
+    },
+    {
+      "index": 48,
+      "name": "n04500_p098972"
+    },
+    {
+      "index": 49,
+      "name": "n04500_p098428"
+    },
+    {
+      "index": 50,
+      "name": "n04500_p097884"
+    },
+    {
+      "index": 51,
+      "name": "n04500_p102998"
+    },
+    {
+      "index": 52,
+      "name": "n04500_p103052"
+    },
+    {
+      "index": 53,
+      "name": "n05500_p097809"
+    },
+    {
+      "index": 54,
+      "name": "n05500_p096996"
+    },
+    {
+      "index": 55,
+      "name": "n05500_p096183"
+    },
+    {
+      "index": 56,
+      "name": "n05500_p103824"
+    },
+    {
+      "index": 57,
+      "name": "n05500_p103906"
+    }
+  ],
+  "run_computations": [
+    {
+      "name": "n04500_p097884",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p097884",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p097884\\v8-optimized_n04500_p097884.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p097884",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p097884\\v8-optimized_n04500_p097884.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p098428",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098428",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098428\\v8-optimized_n04500_p098428.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098428",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098428\\v8-optimized_n04500_p098428.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p098972",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098972",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098972\\v8-optimized_n04500_p098972.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098972",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p098972\\v8-optimized_n04500_p098972.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p099516",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p099516",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p099516\\v8-optimized_n04500_p099516.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p099516",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p099516\\v8-optimized_n04500_p099516.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p100060",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100060",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100060\\v8-optimized_n04500_p100060.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100060",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100060\\v8-optimized_n04500_p100060.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p100604",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100604",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100604\\v8-optimized_n04500_p100604.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100604",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100604\\v8-optimized_n04500_p100604.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p100876",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100876",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100876\\v8-optimized_n04500_p100876.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100876",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p100876\\v8-optimized_n04500_p100876.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p101148",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101148",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101148\\v8-optimized_n04500_p101148.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101148",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101148\\v8-optimized_n04500_p101148.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p101325",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101325",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101325\\v8-optimized_n04500_p101325.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101325",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101325\\v8-optimized_n04500_p101325.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p101747",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101747",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101747\\v8-optimized_n04500_p101747.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101747",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p101747\\v8-optimized_n04500_p101747.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p102237",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102237",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102237\\v8-optimized_n04500_p102237.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102237",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102237\\v8-optimized_n04500_p102237.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p102672",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102672",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102672\\v8-optimized_n04500_p102672.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102672",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102672\\v8-optimized_n04500_p102672.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p102890",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102890",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102890\\v8-optimized_n04500_p102890.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102890",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102890\\v8-optimized_n04500_p102890.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p102998",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102998",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102998\\v8-optimized_n04500_p102998.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102998",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p102998\\v8-optimized_n04500_p102998.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p103052",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103052",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103052\\v8-optimized_n04500_p103052.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103052",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103052\\v8-optimized_n04500_p103052.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p103107",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103107",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103107\\v8-optimized_n04500_p103107.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103107",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103107\\v8-optimized_n04500_p103107.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p103325",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103325",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103325\\v8-optimized_n04500_p103325.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103325",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103325\\v8-optimized_n04500_p103325.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p103597",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103597",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103597\\v8-optimized_n04500_p103597.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103597",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103597\\v8-optimized_n04500_p103597.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n04500_p103869",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103869",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103869\\v8-optimized_n04500_p103869.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103869",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n04500_p103869\\v8-optimized_n04500_p103869.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p097075",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097075",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097075\\v8-optimized_n05000_p097075.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097075",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097075\\v8-optimized_n05000_p097075.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p097747",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097747",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097747\\v8-optimized_n05000_p097747.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097747",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p097747\\v8-optimized_n05000_p097747.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p098419",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p098419",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p098419\\v8-optimized_n05000_p098419.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p098419",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p098419\\v8-optimized_n05000_p098419.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p099091",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099091",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099091\\v8-optimized_n05000_p099091.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099091",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099091\\v8-optimized_n05000_p099091.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p099763",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099763",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099763\\v8-optimized_n05000_p099763.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099763",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p099763\\v8-optimized_n05000_p099763.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p100435",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100435",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100435\\v8-optimized_n05000_p100435.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100435",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100435\\v8-optimized_n05000_p100435.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p100771",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100771",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100771\\v8-optimized_n05000_p100771.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100771",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p100771\\v8-optimized_n05000_p100771.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p101107",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101107",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101107\\v8-optimized_n05000_p101107.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101107",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101107\\v8-optimized_n05000_p101107.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p101325",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p101846",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101846",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101846\\v8-optimized_n05000_p101846.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101846",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101846\\v8-optimized_n05000_p101846.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p102450",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102450",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102450\\v8-optimized_n05000_p102450.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102450",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102450\\v8-optimized_n05000_p102450.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p102988",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102988",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102988\\v8-optimized_n05000_p102988.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102988",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p102988\\v8-optimized_n05000_p102988.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p103257",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103257",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103257\\v8-optimized_n05000_p103257.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103257",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103257\\v8-optimized_n05000_p103257.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p103391",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103391",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103391\\v8-optimized_n05000_p103391.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103391",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103391\\v8-optimized_n05000_p103391.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p103458",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103458",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103458\\v8-optimized_n05000_p103458.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103458",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103458\\v8-optimized_n05000_p103458.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p103525",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103525",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103525\\v8-optimized_n05000_p103525.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103525",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103525\\v8-optimized_n05000_p103525.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p103794",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103794",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103794\\v8-optimized_n05000_p103794.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103794",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p103794\\v8-optimized_n05000_p103794.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p104130",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104130",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104130\\v8-optimized_n05000_p104130.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104130",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104130\\v8-optimized_n05000_p104130.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05000_p104466",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104466",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104466\\v8-optimized_n05000_p104466.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104466",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p104466\\v8-optimized_n05000_p104466.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p096183",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096183",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096183\\v8-optimized_n05500_p096183.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096183",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096183\\v8-optimized_n05500_p096183.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p096996",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096996",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096996\\v8-optimized_n05500_p096996.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096996",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p096996\\v8-optimized_n05500_p096996.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p097809",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p097809",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p097809\\v8-optimized_n05500_p097809.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p097809",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p097809\\v8-optimized_n05500_p097809.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p098622",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p098622",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p098622\\v8-optimized_n05500_p098622.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p098622",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p098622\\v8-optimized_n05500_p098622.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p099435",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p099435",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p099435\\v8-optimized_n05500_p099435.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p099435",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p099435\\v8-optimized_n05500_p099435.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p100248",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100248",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100248\\v8-optimized_n05500_p100248.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100248",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100248\\v8-optimized_n05500_p100248.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p100654",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100654",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100654\\v8-optimized_n05500_p100654.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100654",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p100654\\v8-optimized_n05500_p100654.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p101061",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101061",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101061\\v8-optimized_n05500_p101061.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101061",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101061\\v8-optimized_n05500_p101061.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p101325",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101325",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101325\\v8-optimized_n05500_p101325.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101325",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101325\\v8-optimized_n05500_p101325.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p101955",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101955",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101955\\v8-optimized_n05500_p101955.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101955",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p101955\\v8-optimized_n05500_p101955.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p102687",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p102687",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p102687\\v8-optimized_n05500_p102687.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p102687",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p102687\\v8-optimized_n05500_p102687.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p103337",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103337",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103337\\v8-optimized_n05500_p103337.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103337",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103337\\v8-optimized_n05500_p103337.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p103662",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103662",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103662\\v8-optimized_n05500_p103662.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103662",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103662\\v8-optimized_n05500_p103662.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p103824",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103824",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103824\\v8-optimized_n05500_p103824.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103824",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103824\\v8-optimized_n05500_p103824.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p103906",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103906",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103906\\v8-optimized_n05500_p103906.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103906",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103906\\v8-optimized_n05500_p103906.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p103987",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103987",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103987\\v8-optimized_n05500_p103987.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103987",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p103987\\v8-optimized_n05500_p103987.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p104313",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104313",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104313\\v8-optimized_n05500_p104313.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104313",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104313\\v8-optimized_n05500_p104313.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p104719",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104719",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104719\\v8-optimized_n05500_p104719.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104719",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p104719\\v8-optimized_n05500_p104719.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "name": "n05500_p105126",
+      "directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p105126",
+      "run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p105126\\v8-optimized_n05500_p105126.run",
+      "expected_directory": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p105126",
+      "expected_run_file": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05500_p105126\\v8-optimized_n05500_p105126.run",
+      "layout_canonical": true,
+      "grid": {
+        "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+        "exists": true,
+        "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    }
+  ],
+  "legacy_shadow_runs": [],
+  "project_without_run": [],
+  "run_not_registered": [],
+  "duplicate_project_names": [],
+  "duplicate_run_names": [],
+  "run_grid_mismatch": [],
+  "layout_mismatch": []
+}

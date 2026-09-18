@@ -1,0 +1,378 @@
+{
+  "schema": "turtbo-agent/case-manifest@1",
+  "case_id": "DF90-001",
+  "created": "2026-09-17T14:56:27+08:00",
+  "updated": "2026-09-19T00:20:50+08:00",
+  "revision": 46,
+  "requirement_ref": {
+    "file": "requirements.yaml",
+    "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
+    "bytes": 3853
+  },
+  "current_stage": "G5",
+  "artifacts": [
+    {
+      "stage": "G0",
+      "kind": "schema",
+      "path": "requirements.yaml",
+      "version": "v1",
+      "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
+      "bytes": 3853,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:02:34+08:00",
+      "note": "环境按 ISA 海平面假设，待用户确认",
+      "provenance": null
+    },
+    {
+      "stage": "G0",
+      "kind": "brief",
+      "path": "00-brief/open_questions.md",
+      "version": "v1",
+      "sha256": "f09eb2c3627a72f8ed5633610d81cac682bc7262b6a8549e5b2afa7db8461eac",
+      "bytes": 1994,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:02:34+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G1",
+      "kind": "brief",
+      "path": "00-brief/design_brief.md",
+      "version": "v1",
+      "sha256": "5ad3fa996275ed725e5ba6765287fdad0645ff5ab1dbe04580732998136216ea",
+      "bytes": 6118,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:02:35+08:00",
+      "note": "带条件 PASS：6100 rpm 设计点超出 EMRAX 188 连续包线，需用户确认任务剖面",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_replay/v7/sweep_summary.csv",
+      "version": "v7",
+      "sha256": "7f10f7c1ec9c93b70f12b4e9bf230d142180fd300df070db51b013fd362fc644",
+      "bytes": 7178,
+      "verdict": "INFO",
+      "ts": "2026-09-17T15:06:03+08:00",
+      "note": "内容逐字节来自基准，未修改",
+      "provenance": null
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_replay/v7/replay_audit.json",
+      "version": "v7",
+      "sha256": "6460630d85d00864a066cb72596bb03200820a60bd389ebf2e33f22c81a8fe24",
+      "bytes": 9896,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:06:03+08:00",
+      "note": "回放审计，只读",
+      "provenance": {
+        "from": "_replay/v7/sweep_summary.csv",
+        "from_sha256": "7f10f7c1ec9c93b70f12b4e9bf230d142180fd300df070db51b013fd362fc644"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_replay/v7/replay_report.md",
+      "version": "v7",
+      "sha256": "13502c722d9323ae937ca75871902a077357e3d96f4d88977a7de729fa3ab204",
+      "bytes": 3209,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:06:04+08:00",
+      "note": "",
+      "provenance": {
+        "from": "_replay/v7/replay_audit.json",
+        "from_sha256": "6460630d85d00864a066cb72596bb03200820a60bd389ebf2e33f22c81a8fe24"
+      }
+    },
+    {
+      "stage": "G6",
+      "kind": "delivery",
+      "path": "06-delivery/v1/dashboard.html",
+      "version": "v1",
+      "sha256": "17b419d5160327be68432f9086e90ecd0ab9162f6ebe1a978915dee669ae179f",
+      "bytes": 32610,
+      "verdict": "PASS",
+      "ts": "2026-09-18T22:19:31+08:00",
+      "note": "",
+      "provenance": null
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v1/流道尺寸表.csv",
+      "version": "v1",
+      "sha256": "799369fac0efd5eb8a9b61921606af0ef63dee9c4c07eeb0f86ddea99112c1af",
+      "bytes": 352,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:54+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v1/叶片几何参数表.csv",
+      "version": "v1",
+      "sha256": "6d00e19b7dd70d137e78b99e86886f8ba8ae5682066785fc647a5b553622e67b",
+      "bytes": 338,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:54+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/流道尺寸表.csv",
+        "from_sha256": "799369fac0efd5eb8a9b61921606af0ef63dee9c4c07eeb0f86ddea99112c1af"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v1/通流计算结果表.csv",
+      "version": "v1",
+      "sha256": "461c97666be8ce1eefcc1dfb9598a1b14985e27b6a01dbd670fed19a751ababa",
+      "bytes": 873,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:55+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/叶片几何参数表.csv",
+        "from_sha256": "6d00e19b7dd70d137e78b99e86886f8ba8ae5682066785fc647a5b553622e67b"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "other",
+      "path": "01-scheme/v1/benchmark_gate.json",
+      "version": "v1",
+      "sha256": "e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c",
+      "bytes": 3938,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:55+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/通流计算结果表.csv",
+        "from_sha256": "461c97666be8ce1eefcc1dfb9598a1b14985e27b6a01dbd670fed19a751ababa"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "other",
+      "path": "01-scheme/v1/benchmark_gate.md",
+      "version": "v1",
+      "sha256": "a1210064de5031414f018249535f9ee16764c2a36ba069b77a187d52d80a4086",
+      "bytes": 1743,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:56+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v1/benchmark_gate.json",
+        "from_sha256": "e338247f00b948db31e4b738241a81418e9e39c19378b6b115f3c51cdfd53b9c"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "other",
+      "path": "01-scheme/v1/inputs/turbo-flow-attempt3.json",
+      "version": "v1",
+      "sha256": "1f3fb70eaf9fcf700d389898c60e1611f99e93e62fa8a99397a205c9ba154d2f",
+      "bytes": 2560,
+      "verdict": "PASS",
+      "ts": "2026-09-17T15:10:56+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "other",
+      "path": "02-geometry/v8/PROVENANCE.md",
+      "version": "v8",
+      "sha256": "f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5",
+      "bytes": 4697,
+      "verdict": "WARN",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "同时记录 build-par/v8_build_manifest.json 已过期（hub 与 lean 均与交付不符）",
+      "provenance": {
+        "from": "01-scheme/v1/叶片几何参数表.csv",
+        "from_sha256": "6d00e19b7dd70d137e78b99e86886f8ba8ae5682066785fc647a5b553622e67b"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "geometry",
+      "path": "02-geometry/v8/autoblade/R1_13span/R1.geomTurbo",
+      "version": "v8",
+      "sha256": "32abbbf639c150adf47a66db20d083ff347728a46f948a0fe473b06ab695a0d4",
+      "bytes": 204473,
+      "verdict": "WARN",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "转子；REVERSE_THETA=0，导出后负向，与 v7 交付件方向一致",
+      "provenance": {
+        "from": "02-geometry/v8/PROVENANCE.md",
+        "from_sha256": "f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "geometry",
+      "path": "02-geometry/v8/autoblade/R2_13span/R2.geomTurbo",
+      "version": "v8",
+      "sha256": "ce0768ab5b2e04ffb06add624cdfc3800fb0c7e071f95786149ee774e5257dd8",
+      "bytes": 202807,
+      "verdict": "WARN",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "静子；REVERSE_THETA=0，导出后正向",
+      "provenance": {
+        "from": "02-geometry/v8/PROVENANCE.md",
+        "from_sha256": "f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5"
+      }
+    },
+    {
+      "stage": "G4",
+      "kind": "mesh",
+      "path": "03-mesh/v2/mesh-v2.igg",
+      "version": "v2",
+      "sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d",
+      "bytes": 483468,
+      "verdict": "PASS",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "交付网格。网格身份 SHA256 433150fa...fac3d（见 README-v8）",
+      "provenance": {
+        "from": "02-geometry/v8/autoblade/R1_13span/R1.geomTurbo",
+        "from_sha256": "32abbbf639c150adf47a66db20d083ff347728a46f948a0fe473b06ab695a0d4"
+      }
+    },
+    {
+      "stage": "G4",
+      "kind": "other",
+      "path": "03-mesh/v2/mesh-v2.qualityReport",
+      "version": "v2",
+      "sha256": "5b12a8079755b3c569cebb4fede061211073242c297658efd6c229ba8ca62784",
+      "bytes": 4442,
+      "verdict": "PASS",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "",
+      "provenance": {
+        "from": "03-mesh/v2/mesh-v2.igg",
+        "from_sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "stage": "G4",
+      "kind": "other",
+      "path": "03-mesh/v2/mesh-v2.optimization.json",
+      "version": "v2",
+      "sha256": "b9114d1520433722645ad9391e4a036659eab2546502c8a35c0fbe754f50f682",
+      "bytes": 3124,
+      "verdict": "PASS",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "注：脚本在产物写完后抛 UnicodeEncodeError，产物完整",
+      "provenance": null
+    },
+    {
+      "stage": "G4",
+      "kind": "mesh",
+      "path": "03-mesh/v1/mesh-v1.qualityReport",
+      "version": "v1",
+      "sha256": "4c849541dafa12150cb4312c92db54e24a8b8bb2da1ed461329edfd8489e91c6",
+      "bytes": 4473,
+      "verdict": "WARN",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "new-project 基线，非交付件",
+      "provenance": {
+        "from": "02-geometry/v8/autoblade/R1_13span/R1.geomTurbo",
+        "from_sha256": "32abbbf639c150adf47a66db20d083ff347728a46f948a0fe473b06ab695a0d4"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "04-solve/v1/iec_build_audit.json",
+      "version": "v1",
+      "sha256": "7b717db31d8546497d128ac2486833eb68f49e8fefabada1f700fd45b459efc3",
+      "bytes": 13116,
+      "verdict": "PASS",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "",
+      "provenance": null
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "04-solve/v1/scan_prelaunch_audit.json",
+      "version": "v1",
+      "sha256": "25ffd4d1ad2746c37ebaea8f0b2f29697ca536b97489eec340274d51feb57478",
+      "bytes": 53528,
+      "verdict": "PASS",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "",
+      "provenance": null
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "04-solve/v1/project_sync_audit.json",
+      "version": "v1",
+      "sha256": "6d0334e35e9d6fc1a67d845d3007b4bae1bad80ab3418568b9a36252957c2d38",
+      "bytes": 57169,
+      "verdict": "PASS",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "",
+      "provenance": null
+    },
+    {
+      "stage": "G5",
+      "kind": "solve",
+      "path": "04-solve/v1/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.std",
+      "version": "v1",
+      "sha256": "349a129c968ea5d45ef1ddd88c30bb3e14a0d23a31bb159df51370c421d72270",
+      "bytes": 45056,
+      "verdict": "INFO",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "其余 56 点未启动；本条目不得被解读为 accepted",
+      "provenance": null
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_external/v8-large-binaries.json",
+      "version": "v8",
+      "sha256": "f03c9f6d0c70e79f89e692a7856aa90be2145d48a456189fc43f1a6ce2247ef2",
+      "bytes": 3685,
+      "verdict": "INFO",
+      "ts": "2026-09-18T23:06:12+08:00",
+      "note": "按账本合同「只索引不复制」处理；含 n05000_p101325.cgns 162.84 MB，说明锚点已写出解",
+      "provenance": null
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "_automation/v8/scan_plan.csv",
+      "version": "v8",
+      "sha256": "2242a13fce13f9274815cdc48295976a17198b2262bfb6bcccc0307d0b5ae74e",
+      "bytes": 8965,
+      "verdict": "PASS",
+      "ts": "2026-09-18T23:06:56+08:00",
+      "note": "",
+      "provenance": {
+        "from": "02-geometry/v8/PROVENANCE.md",
+        "from_sha256": "f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5"
+      }
+    }
+  ]
+}

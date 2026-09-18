@@ -1,0 +1,593 @@
+{
+  "schema_version": "1.0",
+  "audit_type": "numeca_fine_multispeed_iec_build",
+  "generated_at": "2026-09-18T22:12:14.153431+08:00",
+  "passed": true,
+  "speed_unit_in_iec": "rpm",
+  "computation_count": 57,
+  "force_surfaces": [
+    "row_1_flux_1_Main_Blade_downStream__hub_identifier__rotating",
+    "row_1_flux_1_Main_Blade_down__hub_identifier__rotating",
+    "row_1_flux_1_Main_Blade_inlet__hub_identifier__rotating",
+    "row_1_flux_1_Main_Blade_outlet__hub_identifier__rotating",
+    "row_1_flux_1_Main_Blade_shroudgap1_tip_gap_identifier_rotating",
+    "row_1_flux_1_Main_Blade_shroudgap2_tip_gap_identifier_rotating",
+    "row_1_flux_1_Main_Blade_skin__hub_identifier__rotating",
+    "row_1_flux_1_Main_Blade_skin_blade_(aap-ps)_rotating",
+    "row_1_flux_1_Main_Blade_skin_blade_(aap-ss)_rotating",
+    "row_1_flux_1_Main_Blade_upStream__hub_identifier__rotating",
+    "row_1_flux_1_Main_Blade_up__hub_identifier__rotating"
+  ],
+  "computations": [
+    {
+      "case": "n05000_p101325",
+      "rpm": 5000,
+      "pressure_pa_abs": 101325,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p101325",
+      "rpm": 4500,
+      "pressure_pa_abs": 101325,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p101325",
+      "rpm": 5500,
+      "pressure_pa_abs": 101325,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p101107",
+      "rpm": 5000,
+      "pressure_pa_abs": 101107,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p100771",
+      "rpm": 5000,
+      "pressure_pa_abs": 100771,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p100435",
+      "rpm": 5000,
+      "pressure_pa_abs": 100435,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p099763",
+      "rpm": 5000,
+      "pressure_pa_abs": 99763,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p099091",
+      "rpm": 5000,
+      "pressure_pa_abs": 99091,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p101846",
+      "rpm": 5000,
+      "pressure_pa_abs": 101846,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p102450",
+      "rpm": 5000,
+      "pressure_pa_abs": 102450,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p102988",
+      "rpm": 5000,
+      "pressure_pa_abs": 102988,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p103257",
+      "rpm": 5000,
+      "pressure_pa_abs": 103257,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p103525",
+      "rpm": 5000,
+      "pressure_pa_abs": 103525,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p103794",
+      "rpm": 5000,
+      "pressure_pa_abs": 103794,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p104130",
+      "rpm": 5000,
+      "pressure_pa_abs": 104130,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p104466",
+      "rpm": 5000,
+      "pressure_pa_abs": 104466,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p101148",
+      "rpm": 4500,
+      "pressure_pa_abs": 101148,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p100876",
+      "rpm": 4500,
+      "pressure_pa_abs": 100876,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p100604",
+      "rpm": 4500,
+      "pressure_pa_abs": 100604,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p100060",
+      "rpm": 4500,
+      "pressure_pa_abs": 100060,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p099516",
+      "rpm": 4500,
+      "pressure_pa_abs": 99516,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p101747",
+      "rpm": 4500,
+      "pressure_pa_abs": 101747,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p102237",
+      "rpm": 4500,
+      "pressure_pa_abs": 102237,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p102672",
+      "rpm": 4500,
+      "pressure_pa_abs": 102672,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p102890",
+      "rpm": 4500,
+      "pressure_pa_abs": 102890,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p103107",
+      "rpm": 4500,
+      "pressure_pa_abs": 103107,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p103325",
+      "rpm": 4500,
+      "pressure_pa_abs": 103325,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p103597",
+      "rpm": 4500,
+      "pressure_pa_abs": 103597,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p103869",
+      "rpm": 4500,
+      "pressure_pa_abs": 103869,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p101061",
+      "rpm": 5500,
+      "pressure_pa_abs": 101061,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p100654",
+      "rpm": 5500,
+      "pressure_pa_abs": 100654,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p100248",
+      "rpm": 5500,
+      "pressure_pa_abs": 100248,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p099435",
+      "rpm": 5500,
+      "pressure_pa_abs": 99435,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p098622",
+      "rpm": 5500,
+      "pressure_pa_abs": 98622,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p101955",
+      "rpm": 5500,
+      "pressure_pa_abs": 101955,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p102687",
+      "rpm": 5500,
+      "pressure_pa_abs": 102687,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p103337",
+      "rpm": 5500,
+      "pressure_pa_abs": 103337,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p103662",
+      "rpm": 5500,
+      "pressure_pa_abs": 103662,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p103987",
+      "rpm": 5500,
+      "pressure_pa_abs": 103987,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p104313",
+      "rpm": 5500,
+      "pressure_pa_abs": 104313,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p104719",
+      "rpm": 5500,
+      "pressure_pa_abs": 104719,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p105126",
+      "rpm": 5500,
+      "pressure_pa_abs": 105126,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p098419",
+      "rpm": 5000,
+      "pressure_pa_abs": 98419,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p097747",
+      "rpm": 5000,
+      "pressure_pa_abs": 97747,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p097075",
+      "rpm": 5000,
+      "pressure_pa_abs": 97075,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p103391",
+      "rpm": 5000,
+      "pressure_pa_abs": 103391,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05000_p103458",
+      "rpm": 5000,
+      "pressure_pa_abs": 103458,
+      "speed_values_rpm": [
+        5000.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p098972",
+      "rpm": 4500,
+      "pressure_pa_abs": 98972,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p098428",
+      "rpm": 4500,
+      "pressure_pa_abs": 98428,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p097884",
+      "rpm": 4500,
+      "pressure_pa_abs": 97884,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p102998",
+      "rpm": 4500,
+      "pressure_pa_abs": 102998,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n04500_p103052",
+      "rpm": 4500,
+      "pressure_pa_abs": 103052,
+      "speed_values_rpm": [
+        4500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p097809",
+      "rpm": 5500,
+      "pressure_pa_abs": 97809,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p096996",
+      "rpm": 5500,
+      "pressure_pa_abs": 96996,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p096183",
+      "rpm": 5500,
+      "pressure_pa_abs": 96183,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p103824",
+      "rpm": 5500,
+      "pressure_pa_abs": 103824,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    },
+    {
+      "case": "n05500_p103906",
+      "rpm": 5500,
+      "pressure_pa_abs": 103906,
+      "speed_values_rpm": [
+        5500.0
+      ],
+      "force_surface_count": 11,
+      "passed": true
+    }
+  ]
+}

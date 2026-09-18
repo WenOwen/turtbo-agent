@@ -42,6 +42,9 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import case_watch as watch  # noqa: E402  文件看守 + 交接简报（同一份实现，避免漂移）
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent                      # 工作区根
 UI = HERE / "liveview_ui.html"
@@ -332,7 +335,11 @@ def list_cases():
 
 
 def parse_log(text):
-    """把 LOG.md 解析成结构化条目。格式由 case_ledger._append_log 固定。"""
+    """日志解析统一走 case_watch，避免两处实现漂移。"""
+    return watch.parse_log(text)
+
+
+def _parse_log_local(text):
     entries = []
     cur = None
     for line in text.splitlines():
@@ -444,6 +451,8 @@ class Aggregator:
             "log_tail": log_tail,
             "rules": parse_contracts(),
             "cases": list_cases(),
+            "watch": watch.status(self.case_dir),
+            "watch_changes": watch.read_changes(self.case_dir, limit=12)[::-1],
             "stage_detail": build_stage_detail(state, manifest, parse_log(read_text_safe(log_path))),
         }
 
@@ -524,12 +533,25 @@ def write_file_payload(rel, content, expected_sha256, case=None):
     new_sha = hashlib.sha256(data).hexdigest()
 
     if case:
-        log_via_ledger(case, stage=guess_stage(rel), action="界面编辑文件 " + rel,
-                       verdict="INFO",
-                       criteria="内容变更已确认；写回前 sha256 与读取时一致（乐观锁通过）",
-                       measured="sha256 " + old_sha[:16] + " -> " + new_sha[:16]
-                                + "；%d -> %d bytes" % (len(old_raw), len(data)),
-                       note="操作者通过实时工作台直接编辑")
+        # 注意：这里收到的是案例 **id**（如 DF90-001），不是路径，必须先解析。
+        # 之前直接拼 ROOT/id 导致目录不存在、日志静默写不出来，归因因此全丢。
+        real = case_dir_of(case)
+        if real is not None:
+            proc = log_via_ledger(real, stage=guess_stage(rel), action="界面编辑文件 " + rel,
+                                  verdict="INFO",
+                                  criteria="内容变更已确认；写回前 sha256 与读取时一致（乐观锁通过）",
+                                  measured="sha256 " + old_sha[:16] + " -> " + new_sha[:16]
+                                           + "；%d -> %d bytes" % (len(old_raw), len(data)),
+                                  note="操作者通过实时工作台直接编辑")
+            if proc.returncode != 0:
+                # 日志写失败不能静默 —— 否则这次改动会永远归因不到人
+                raise ApiError("文件已写入，但审计日志写入失败："
+                               + ((proc.stderr or proc.stdout or "").strip()[:200]), 500)
+            # 立刻跑一轮看守：确保这次改动在日志已经存在之后才被检测到，归因必然命中
+            try:
+                watch.tick(real)
+            except Exception:
+                pass
     return {"ok": True, "sha256": new_sha, "bytes": len(data), "old_sha256": old_sha}
 
 
@@ -791,6 +813,19 @@ def main(argv=None):
     Handler.default_case = case_dir
     Handler.extra_roots = extra
     Handler.ui_bytes = UI.read_bytes()
+
+    # 看守后台线程：不依赖有没有人开页面，服务在跑就在看守。
+    def _watch_loop():
+        interval = 3.0
+        while True:
+            try:
+                for c in list_cases():
+                    watch.tick(Path(c["dir"]))
+            except Exception:
+                pass
+            time.sleep(interval)
+
+    threading.Thread(target=_watch_loop, daemon=True).start()
     print("  案例数  : " + str(len(list_cases())) + "（可用 ?case=<id> 切换）")
 
     port = pick_port(args.port)

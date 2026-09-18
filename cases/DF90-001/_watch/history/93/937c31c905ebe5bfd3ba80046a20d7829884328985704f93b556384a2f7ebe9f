@@ -1,0 +1,53 @@
+{
+  "mesh": {
+    "first_cell_height_m": 1e-05,
+    "accuracy": "medium",
+    "grid_levels": 3
+  },
+  "channel": {
+    "source_geomturbo": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\autoblade\\R1_13span\\R1.geomTurbo",
+    "hub": {
+      "point_count": 100,
+      "sha256": "f83f5e76f4f60e5ff0d00e67b8f2ff112cc7d9153f3aca08265b84817591ac5e",
+      "first_zr_m": [
+        0.0,
+        0.08
+      ],
+      "last_zr_m": [
+        0.3,
+        0.113178491592407
+      ]
+    },
+    "shroud": {
+      "point_count": 100,
+      "sha256": "f5a65d39907fbc723d2402d314724469367a90cddc9b380c2cf75876314037f2",
+      "first_zr_m": [
+        0.0,
+        0.3
+      ],
+      "last_zr_m": [
+        0.3,
+        0.3
+      ]
+    }
+  },
+  "rows": {
+    "row 1": {
+      "machine_row": "R1",
+      "blades": 9,
+      "type": "rotor",
+      "tip_gap": true,
+      "tip_gap_width_m": 0.002,
+      "rotation_speed_rpm": 5000.0,
+      "spanwise_layers": 73
+    },
+    "row 2": {
+      "machine_row": "R2",
+      "blades": 11,
+      "type": "stator",
+      "tip_gap": false,
+      "rotation_speed_rpm": 0.0,
+      "spanwise_layers": 57
+    }
+  }
+}

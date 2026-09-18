@@ -1,0 +1,18 @@
+{
+ "rows": {
+  "R1": [
+   "R1.abp",
+   "R1.geomTurbo",
+   "R1.par",
+   "R1\\model616c.abm"
+  ],
+  "R2": [
+   "R2.abp",
+   "R2.geomTurbo",
+   "R2.par",
+   "R2\\model616c.abm"
+  ]
+ },
+ "reopen_ok": true,
+ "clean": true
+}

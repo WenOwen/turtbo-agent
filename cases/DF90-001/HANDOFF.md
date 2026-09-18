@@ -1,0 +1,83 @@
+# DF90-001 交接简报
+
+> **自动生成，勿手改。** 由 tools/case_watch.py 维护。
+> 生成于 2026-09-19T00:23:32+08:00　·　当前阶段 **G5**　·　revision 46
+> **新会话请先读完本文件再动手。**
+
+## 一句话现状
+已完成 G0/G1/G2/G3/G4　**进行中 G5**　未开始 G6
+
+最近一次记录：2026-09-19T00:20:50+08:00　INFO　界面编辑文件 cases/DF90-001/00-brief/open_questions.md
+
+## 未登记的改动（近 14 天 1 条，历史共 1 条）
+
+这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
+可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
+
+- 00:22:55　modified　_automation/v8/scan_plan.csv　8921 -> 8965 bytes
+
+## 最近 10 次变更
+
+| 时间 | 谁 | 动作 | 文件 | 大小变化 |
+|---|---|---|---|---|
+| 09-19 00:22:55 | **unknown** | modified | _automation/v8/scan_plan.csv | 8921 -> 8965 |
+| 09-19 00:22:04 | human(web-ui) | modified | 00-brief/open_questions.md | 1994 -> 1994 |
+
+## 你接手前必须知道
+
+**结论非 PASS 的产物（4 条）**
+
+- [WARN] 02-geometry/v8/PROVENANCE.md　— 同时记录 build-par/v8_build_manifest.json 已过期（hub 与 lean 均与交付不符）
+- [WARN] 02-geometry/v8/autoblade/R1_13span/R1.geomTurbo　— 转子；REVERSE_THETA=0，导出后负向，与 v7 交付件方向一致
+- [WARN] 02-geometry/v8/autoblade/R2_13span/R2.geomTurbo　— 静子；REVERSE_THETA=0，导出后正向
+- [WARN] 03-mesh/v1/mesh-v1.qualityReport　— new-project 基线，非交付件
+
+## 未决问题（10 条）
+
+- `environment.*`　来源：**assumed**　按 ISA 海平面（101325 Pa / 288.15 K）假设，用户未确认
+- `materials.blade`　来源：open　叶片材料（注塑 / 复材 / 金属）
+- `materials.duct`　来源：open　涵道材料
+- `manufacturing.min_le_radius_m`　来源：open　前缘最小可制造半径（注塑件通常 ≥0.3–0.5 mm）
+- `manufacturing.min_chord_m`　来源：open　最小弦长
+- `manufacturing.process`　来源：open　制造工艺
+- `shaft.tip_mach_limit`　来源：open　桨尖马赫数上限（民用常取 ≤0.7，军用 ≤0.85；**需用户确认适用值**）
+- 涵道几何　来源：open　是否含扩张段 / 收缩段？唇口形式？
+- 轴向长度　来源：open　轴向总长是否有约束
+- `acceptance.ACC-1` 之外　来源：待细化　是否还有其他验收口径（如效率下限、噪声、重量）
+
+## 产物（26 条）
+
+| 阶段 | 结论 | 版本 | 路径 | sha256 |
+|---|---|---|---|---|
+| G0 | PASS | v1 | requirements.yaml | 76749d8b |
+| G0 | PASS | v1 | 00-brief/open_questions.md | f09eb2c3 |
+| G1 | PASS | v1 | 00-brief/design_brief.md | 5ad3fa99 |
+| G5 | INFO | v7 | _replay/v7/sweep_summary.csv | 7f10f7c1 |
+| G5 | PASS | v7 | _replay/v7/replay_audit.json | 6460630d |
+| G5 | PASS | v7 | _replay/v7/replay_report.md | 13502c72 |
+| G6 | PASS | v1 | 06-delivery/v1/dashboard.html | 17b419d5 |
+| G2 | PASS | v1 | 01-scheme/v1/流道尺寸表.csv | 799369fa |
+| G2 | PASS | v1 | 01-scheme/v1/叶片几何参数表.csv | 6d00e19b |
+| G2 | PASS | v1 | 01-scheme/v1/通流计算结果表.csv | 461c9766 |
+| G2 | PASS | v1 | 01-scheme/v1/benchmark_gate.json | e338247f |
+| G2 | PASS | v1 | 01-scheme/v1/benchmark_gate.md | a1210064 |
+| G2 | PASS | v1 | 01-scheme/v1/inputs/turbo-flow-attempt3.json | 1f3fb70e |
+| G3 | WARN | v8 | 02-geometry/v8/PROVENANCE.md | f41a2e7f |
+| G3 | WARN | v8 | 02-geometry/v8/autoblade/R1_13span/R1.geomTurbo | 32abbbf6 |
+| G3 | WARN | v8 | 02-geometry/v8/autoblade/R2_13span/R2.geomTurbo | ce0768ab |
+| G4 | PASS | v2 | 03-mesh/v2/mesh-v2.igg | 433150fa |
+| G4 | PASS | v2 | 03-mesh/v2/mesh-v2.qualityReport | 5b12a807 |
+| G4 | PASS | v2 | 03-mesh/v2/mesh-v2.optimization.json | b9114d15 |
+| G4 | WARN | v1 | 03-mesh/v1/mesh-v1.qualityReport | 4c849541 |
+| G5 | PASS | v1 | 04-solve/v1/iec_build_audit.json | 7b717db3 |
+| G5 | PASS | v1 | 04-solve/v1/scan_prelaunch_audit.json | 25ffd4d1 |
+| G5 | PASS | v1 | 04-solve/v1/project_sync_audit.json | 6d0334e3 |
+| G5 | INFO | v1 | 04-solve/v1/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.std | 349a129c |
+| G5 | INFO | v8 | _external/v8-large-binaries.json | f03c9f6d |
+| G5 | PASS | v8 | _automation/v8/scan_plan.csv | 2242a13f |
+
+---
+
+看守状态：监视 386 个文件　·　累计变更 2 条　·　历史库 284 份内容
+
+变更流明细：_watch/changes.jsonl　·　历史内容：_watch/history/<sha256>
