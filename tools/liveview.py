@@ -557,7 +557,7 @@ def build_views(case_id, force=False):
                     "images": [{"title": t, "note": n, "path": rel + "/" + f}
                                for f, t, n in (
                                    ("meridional.svg", "子午面", "流道轮廓 + 叶片径向位置"),
-                                   ("cascade.svg", "叶栅展开", "每个截面的剖面形状"),
+                                   ("cascade.svg", "各截面形状", "13 个截面的剖面，同一比例尺"),
                                    ("blade3d.svg", "轴测", "叶片与涵道的立体关系"))],
                 })
         if views:

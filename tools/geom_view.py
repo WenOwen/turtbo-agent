@@ -10,7 +10,8 @@
 三个视角，对应工程师真正会看的三种图：
 
   子午面 meridional   x(轴向) vs r(半径) —— 流道长什么样、叶片在哪个半径
-  叶栅展开 cascade    把每个截面按弧长展开 —— 叶片剖面长什么样
+  各截面形状 cascade  把每个截面按弧长展开 —— 叶片剖面长什么样（注意：只有单个
+                      截面轮廓，没有栅距/相邻叶片，所以不叫"叶栅展开"）
   轴测 blade3d        绕轴旋转后投影 —— 叶片立体长什么样
 
 用法
@@ -510,7 +511,7 @@ def build(geom_path: Path, out_dir: Path):
     written, cards = [], []
     for fname, title, note, fn in (
             ("meridional.svg", "子午面", "流道轮廓 + 叶片径向位置", view_meridional),
-            ("cascade.svg", "叶栅展开", "每个截面的剖面形状（前缘点标白）", view_cascade),
+            ("cascade.svg", "各截面形状", "每个截面的剖面形状（前缘点标白，同一比例尺）", view_cascade),
             ("blade3d.svg", "轴测", "叶片与涵道的立体关系", view_blade3d)):
         svg = fn(geom)
         (out_dir / fname).write_text(svg, encoding="utf-8", newline="")
