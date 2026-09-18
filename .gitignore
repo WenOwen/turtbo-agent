@@ -46,6 +46,13 @@ _dashboard-build/
 cases/**/_watch/heartbeat.json
 cases/**/*.before-restore
 
+# ── 绝不入库：别人家源码 / 热补丁 / 游离数据 ────────────────
+# _memfix 是给第三方 dsh-memory 插件打的热补丁，里面带着该包的完整副本
+# （含 sourcemap 的 sourcesContent）。一次 git add -A 就会把别人的源码
+# 连同伪造备份一起提交 —— 许可证与溯源都是问题。
+_memfix/
+hub
+
 # ── 编辑器 / 系统 ─────────────────────────────────────────
 .vscode/
 .idea/
