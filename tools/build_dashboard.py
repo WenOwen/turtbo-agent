@@ -251,7 +251,7 @@ def build(case: Path, version: str) -> str:
             + '<meta name="viewport" content="width=device-width,initial-scale=1">'
             + "<title>" + esc(manifest.get("case_id")) + " · 设计案例看板</title>"
             + "<style>" + CSS + "</style></head><body><div class='wrap'>"
-            + "<h1>" + esc(manifest.get("case_id")) + " · 涵道风扇启动设计案例看板</h1>"
+            + "<h1>" + esc(manifest.get("case_id")) + " · 涵道风扇气动设计案例看板</h1>"
             + "<div class='sub'>生成于 " + esc(built) + "　·　单文件自包含，无外部依赖</div>"
             + "<div class='card'><dl class='kv'>"
             + "<dt>当前阶段</dt><dd>" + esc(manifest.get("current_stage")) + "</dd>"

@@ -1,9 +1,9 @@
 ---
-name: ducted-fan-kickoff-design
-description: "涵道风扇气动启动设计全流程编排 / ducted-fan aerodynamic kickoff design orchestration. 从一句推力需求出发，经需求→设计大纲→1D通流方案→叶片造型→AutoGrid 网格→FINE 求解→CFView 后处理→交付三表，用七道闸门（G0-G6）串起整条链。用于\"设计一台 XX kgf/kW 的涵道风扇\"、\"涵道风扇方案\"、\"ducted fan preliminary design\"、\"风扇启动设计\"、需要从需求走到 CFD 交付的场合。含面向小白的引导、需求问答清单、失败诊断树与可执行判据库。"
+name: ducted-fan-aero-design
+description: "涵道风扇气动设计全流程编排 / ducted-fan aerodynamic design orchestration. 从一句推力需求出发，经需求→设计大纲→1D通流方案→叶片造型→AutoGrid 网格→FINE 求解→CFView 后处理→交付三表，用七道闸门（G0-G6）串起整条链。用于\"设计一台 XX kgf/kW 的涵道风扇\"、\"涵道风扇方案\"、\"ducted fan preliminary design\"、\"风扇气动设计\"、需要从需求走到 CFD 交付的场合。含面向小白的引导、需求问答清单、失败诊断树与可执行判据库。"
 ---
 
-# 涵道风扇气动启动设计｜全流程编排
+# 涵道风扇气动设计｜全流程编排
 
 **一句话**：把「我要一台 90 kgf 的涵道风扇」变成「有版本、有日志、可追溯的 CFD 交付物」。
 

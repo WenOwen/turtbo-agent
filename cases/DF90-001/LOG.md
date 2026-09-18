@@ -152,3 +152,17 @@
 - 结论：PASS
 - 备注：G6 闸门原先漏认 .html 交付物，已修正 gate_check.py 的交付文件类型集合。
 
+## 2026-09-18T22:19:20+08:00 | G0 需求 | INFO
+- 动作：skill 改名：ducted-fan-kickoff-design -> ducted-fan-aero-design
+- 实测：目录 1 处、文件引用 9 个、中文措辞 6 处、frontmatter name 1 处，全部更新；残留引用扫描 0 条
+- 判据：用户澄清「启动设计」为「气动设计」笔误；kickoff 是误译，正名为 aerodynamic
+- 结论：INFO
+- 备注：已运行的 turbo-flow attempt-1 输入与其 result.json/designed_project.json 保留原描述字符串，作为历史运行记录不复写（符合本合同「只追加、不复写」）。看板已重生成并原地换版。
+
+## 2026-09-18T22:19:32+08:00 | G0 需求 | INFO
+- 动作：skill 改名 ducted-fan-kickoff-design -> ducted-fan-aero-design
+- 实测：目录 1 处、文件引用 9 个、中文措辞 6 处、frontmatter name 1 处；残留引用扫描 0 条
+- 判据：用户澄清「启动设计」为「气动设计」笔误；kickoff 是误译，正名 aerodynamic
+- 结论：INFO
+- 备注：已运行的 turbo-flow attempt-1 输入及其 result.json/designed_project.json 保留原描述字符串，作为历史运行记录不复写（符合本账本「只追加、不复写」合同）。看板已重生成并原地换版。
+

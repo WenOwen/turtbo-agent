@@ -17,7 +17,7 @@
   Ducted-Fan/run/90kg-duct-fan-v7/fine/v7-optimized/sweep_summary.csv
 - 适用边界：凡交付物用自然语言描述「边界」而非直接给状态码的场合。
   **不得据此认为两个状态等价**——rejected 是策略判定，stopped 是人为干预，审计语义不同。
-- 晋升状态：待晋升 -> ducted-fan-kickoff-design/references/gates.md#G5
+- 晋升状态：待晋升 -> ducted-fan-aero-design/references/gates.md#G5
 ## 2026-09-17 | turbo-flow 默认配置会静默改掉被需求锁死的桨盘直径
 
 - 来源：实测发现（G2 对标 A/B 三组）

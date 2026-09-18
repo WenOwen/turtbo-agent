@@ -32,7 +32,7 @@ python tools/case_ledger.py new --case-id DF90-002 --root cases
 ## 2. G0：说清你要什么
 
 用 `ask_user_question` 或直接对话回答 11 项（见
-`.agents/skills/ducted-fan-kickoff-design/references/requirements-interview.md`）。
+`.agents/skills/ducted-fan-aero-design/references/requirements-interview.md`）。
 
 **最少要答出 4 项**：推力目标、环境条件、桨盘直径、转速上限。
 
@@ -49,7 +49,7 @@ python tools/case_ledger.py stage --case cases/DF90-002 --stage G0 --status done
 
 ## 3. G1：设计大纲
 
-让 agent 按 `.agents/skills/ducted-fan-kickoff-design/references/gates.md#G1` 写
+让 agent 按 `.agents/skills/ducted-fan-aero-design/references/gates.md#G1` 写
 `00-brief/design_brief.md`，然后：
 
 ```powershell
@@ -157,7 +157,7 @@ python tools/case_ledger.py show   --case cases/DF90-002   # 阶段与产物总�
 
 | 症状 | 先看 |
 |---|---|
-| 任何报错 | `.agents/skills/ducted-fan-kickoff-design/references/failure-diagnosis.md`（14 条诊断树） |
+| 任何报错 | `.agents/skills/ducted-fan-aero-design/references/failure-diagnosis.md`（14 条诊断树） |
 | 推力/功率/角度符号口径 | `.../references/ducted-fan-contracts.md`（C-001…C-010） |
 | 不知道这一步判什么 | `.../references/gates.md` |
 | 版本/日志/溯源怎么写 | `.agents/skills/turbomachinery-case-ledger/SKILL.md` |

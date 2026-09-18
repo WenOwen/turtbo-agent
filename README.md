@@ -4,7 +4,7 @@
 把「需求 → 设计大纲 → 1D/通流方案 → 叶片造型 → AutoGrid 网格 → FINE 求解 →
 CFView 后处理 → 交付三表」整条链沉淀为可被 agent 自动加载、可审计、可版本追溯的 skill。
 
-首个落地场景：**涵道风扇启动设计（ducted-fan kickoff design）**。
+首个落地场景：**涵道风扇气动设计（ducted-fan aerodynamic design）**。
 
 ---
 
@@ -30,7 +30,7 @@ turtbo-agent/.agents/skills/     ← rank 200 项目级 skill 根
 
 ```
 .agents/skills/          本轮核心交付：4 个新 skill（唯一真源，随 git 版本化）
-  ducted-fan-kickoff-design/      主编排：G0→G6 闸门 + 小白引导 + 需求问答
+  ducted-fan-aero-design/      主编排：G0→G6 闸门 + 小白引导 + 需求问答
   turbomachinery-case-ledger/     版本沉淀 + 工程日志 + manifest 合同
   ducted-fan-1d-scheme/           1D/通流方案合同（需求 → 三表）
   cascade-forge-geometry-handoff/ 叶栅参数 → geomTurbo 调用契约
@@ -84,7 +84,7 @@ templates/               需求 / 大纲 / 日志模板
 3. **收敛主判据是末段质量流量稳定性**，不是固定残差数值。
    残差只用于识别 NaN、爆炸与持续恶化。
 
-完整清单见 `.agents/skills/ducted-fan-kickoff-design/references/ducted-fan-contracts.md`。
+完整清单见 `.agents/skills/ducted-fan-aero-design/references/ducted-fan-contracts.md`。
 
 ---
 

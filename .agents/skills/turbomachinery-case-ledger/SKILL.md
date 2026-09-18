@@ -7,7 +7,7 @@ description: "叶轮机械设计案例的版本沉淀与工程日志合同 / des
 
 本 skill 回答三个问题：**产物放哪、版本怎么涨、经验怎么沉淀。**
 
-它是 `ducted-fan-kickoff-design` 的地基；任何阶段技能（AutoBlade / AutoGrid / FINE / CFView）
+它是 `ducted-fan-aero-design` 的地基；任何阶段技能（AutoBlade / AutoGrid / FINE / CFView）
 产出的文件，都必须经本 skill 的合同登记，才算"交付物"。**没有登记的文件只是一堆文件。**
 
 ## 适用与不适用

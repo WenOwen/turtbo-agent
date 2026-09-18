@@ -9,7 +9,7 @@
 # 用法：
 #   .\scripts\sync_skills.ps1              # 预演（默认）
 #   .\scripts\sync_skills.ps1 -Execute     # 真正写入用户根
-#   .\scripts\sync_skills.ps1 -Execute -Only ducted-fan-kickoff-design
+#   .\scripts\sync_skills.ps1 -Execute -Only ducted-fan-aero-design
 
 [CmdletBinding()]
 param(

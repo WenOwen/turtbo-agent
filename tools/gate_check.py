@@ -5,8 +5,8 @@
 
 判据来源
 --------
-- 领域硬合同：.agents/skills/ducted-fan-kickoff-design/references/ducted-fan-contracts.md
-- 闸门细则：  .agents/skills/ducted-fan-kickoff-design/references/gates.md
+- 领域硬合同：.agents/skills/ducted-fan-aero-design/references/ducted-fan-contracts.md
+- 闸门细则：  .agents/skills/ducted-fan-aero-design/references/gates.md
 
 原则
 ----

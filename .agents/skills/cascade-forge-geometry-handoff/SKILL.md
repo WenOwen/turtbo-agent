@@ -121,4 +121,4 @@ python tools/case_ledger.py add --case cases/<ID> --stage G3 --kind geometry `
 | geomTurbo 被 AutoGrid 报格式错误 | 先查 F-001（中文路径），不要改文件语法 |
 | 叶片镜像 / 吸力压力面互换 | 查 `REVERSE_THETA` 与 `SIDES_EXCHANGE`；这是设置错误不是几何错误 |
 
-相关：`ducted-fan-kickoff-design/references/failure-diagnosis.md#F-001`
+相关：`ducted-fan-aero-design/references/failure-diagnosis.md#F-001`
