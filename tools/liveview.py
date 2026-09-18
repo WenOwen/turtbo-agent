@@ -867,16 +867,24 @@ class Handler(BaseHTTPRequestHandler):
             if got != self.token:
                 raise ApiError("缺少或错误的会话令牌（页面刷新即可）", 403)
 
-    def _send(self, code, body, ctype):
+    def _send(self, code, body, ctype, extra_headers=None):
+        extra_headers = extra_headers or {}
+        headers = {
+            "Content-Type": ctype,
+            "Content-Length": str(len(body)),
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+            "Referrer-Policy": "no-referrer",
+            "Content-Security-Policy":
+                "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
+                "connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'",
+        }
+        # extra 是**覆盖**不是追加 —— 同名头发两遍浏览器会取交集，
+        # 结果是两边都不生效（实测踩过：sandbox 那条被拼在默认策略后面）。
+        headers.update(extra_headers)
         self.send_response(code)
-        self.send_header("Content-Type", ctype)
-        self.send_header("Content-Length", str(len(body)))
-        self.send_header("Cache-Control", "no-store")
-        self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Referrer-Policy", "no-referrer")
-        self.send_header("Content-Security-Policy",
-                         "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
-                         "connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'")
+        for k, v in headers.items():
+            self.send_header(k, v)
         self.end_headers()
         try:
             self.wfile.write(body)
@@ -934,7 +942,8 @@ class Handler(BaseHTTPRequestHandler):
                            "application/json; charset=utf-8")
         elif path == "/api/views":
             try:
-                payload = json.dumps(build_views(case_id or self.default_case.name),
+                force = (qs.get("force") or ["0"])[0] not in ("0", "", "false")
+                payload = json.dumps(build_views(case_id or self.default_case.name, force=force),
                                      ensure_ascii=False).encode("utf-8")
                 self._send(200, payload, "application/json; charset=utf-8")
             except ApiError as exc:
@@ -950,9 +959,16 @@ class Handler(BaseHTTPRequestHandler):
                 p = resolve_in_root(rel)
                 if not p.is_file() or p.suffix.lower() not in (".svg", ".png", ".jpg", ".jpeg"):
                     raise ApiError("不是可展示的图片：" + rel, 404)
+                suffix = p.suffix.lower()
                 ctype = {".svg": "image/svg+xml", ".png": "image/png",
-                         ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}[p.suffix.lower()]
-                self._send(200, p.read_bytes(), ctype + "; charset=utf-8")
+                         ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}[suffix]
+                extra = {}
+                if suffix == ".svg":
+                    # SVG 里可以带 <script>。用 <img> 加载不会执行，但**直接导航**
+                    # 就会在同源里跑起来 —— 那样它能 fetch("/") 读到会话令牌，
+                    # 再用令牌调写接口。加 CSP sandbox 把它关进笼子。
+                    extra["Content-Security-Policy"] = "sandbox; default-src 'none'; style-src 'unsafe-inline'"
+                self._send(200, p.read_bytes(), ctype + "; charset=utf-8", extra)
             except ApiError as exc:
                 self._send(exc.status, json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8"),
                            "application/json; charset=utf-8")
