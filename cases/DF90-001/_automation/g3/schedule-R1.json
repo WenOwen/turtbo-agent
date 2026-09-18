@@ -1,0 +1,152 @@
+{
+  "name": "DF90-001-R1",
+  "blade_count": 9,
+  "rotation_direction": "ccw",
+  "sections": [
+    {
+      "span_fraction": 0.0,
+      "radius_m": 0.107774,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.0170370869,
+      "radius_m": 0.1110489711,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.0669872981,
+      "radius_m": 0.1206507004,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.1464466094,
+      "radius_m": 0.1359248459,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.25,
+      "radius_m": 0.1558305,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.3705904774,
+      "radius_m": 0.1790111251,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.5,
+      "radius_m": 0.203887,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.6294095226,
+      "radius_m": 0.2287628749,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.75,
+      "radius_m": 0.2519435,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.8535533906,
+      "radius_m": 0.2718491541,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.9330127019,
+      "radius_m": 0.2871232996,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 0.9829629131,
+      "radius_m": 0.2967250289,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    },
+    {
+      "span_fraction": 1.0,
+      "radius_m": 0.3,
+      "chord_m": 0.09,
+      "geometry_id": "",
+      "stagger_deg": -68.392,
+      "axial_offset_m": 0.0,
+      "tangential_offset_m": 0.0,
+      "lean_m": 0.0,
+      "sweep_m": 0.0
+    }
+  ],
+  "output_section_count": 13,
+  "units": "m"
+}

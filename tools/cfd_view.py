@@ -115,8 +115,12 @@ def plot(s, rows, x0, y0, w, h, ykey, ylabel, unit, color_of, fmt="%.4g"):
         s.append('<text x="%d" y="%d" fill="%s" font-size="12">无数据</text>'
                  % (x0 + 20, y0 + h / 2, DIM))
         return
-    xs = [r["_p"] for r in pts]
-    ys = [r[ykey] for r in pts]
+    # 轴范围按**已验收点**算。用全部行会把未验收的离群点算进来 ——
+    # 实测轴功率轴被拉到 -4462 W（已验收点最低只有 275.9 W），有用区间被压成一条线。
+    acc_pts = [r for r in pts if r.get("state") == "accepted"]
+    span = acc_pts if len(acc_pts) >= 2 else pts
+    xs = [r["_p"] for r in span]
+    ys = [r[ykey] for r in span]
     xlo, xhi = min(xs), max(xs)
     ylo, yhi = min(ys), max(ys)
     if xhi - xlo < 1e-9:
@@ -147,8 +151,12 @@ def plot(s, rows, x0, y0, w, h, ykey, ylabel, unit, color_of, fmt="%.4g"):
                  % (X(v), y0 + h + 15, DIM, v))
     s.append('<text x="%.1f" y="%.1f" fill="%s" font-size="11" text-anchor="middle">%s</text>'
              % (x0 + w / 2, y0 + h + 32, DIM, "出口静压 (Pa)"))
-    s.append('<text x="%.1f" y="%.1f" fill="%s" font-size="11" text-anchor="middle">%s</text>'
-             % (x0 - 42, y0 + h / 2, DIM, ylabel + (" " + unit if unit else "")))
+    # 轴标题**竖排**画在最左边 —— 横排会和 text-anchor=end 的刻度标签叠在一起
+    # （实测重叠 43 px，轴功率/扭矩/效率三张都中招）。
+    s.append('<text x="%.1f" y="%.1f" fill="%s" font-size="11" text-anchor="middle" '
+             'transform="rotate(-90 %.1f %.1f)">%s</text>'
+             % (x0 - 66, y0 + h / 2, DIM, x0 - 66, y0 + h / 2,
+                ylabel + (" " + unit if unit else "")))
 
     # 每个转速一条线（只连 accepted）
     rpms = sorted({r["_rpm"] for r in pts if r["_rpm"] is not None})
