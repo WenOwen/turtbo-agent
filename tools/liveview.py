@@ -54,6 +54,38 @@ except Exception:
 
 DEFAULT_EXTRA_ROOTS = [Path("D:/Project/Research/Ducted-Fan/run")]
 
+# 工程合同文件：人话解释直接从它解析，保证与正式合同同源、不会漂移
+CONTRACTS = ROOT / ".agents" / "skills" / "ducted-fan-aero-design" / "references" / "ducted-fan-contracts.md"
+
+
+def parse_contracts(path=None):
+    """从合同文件里抽出每条的 标题 / 人话 / 当初为什么加 / 来源。"""
+    path = Path(path) if path else CONTRACTS
+    if not path.is_file():
+        return []
+    text = read_text_safe(path)
+    parts = re.split(r"\n## (C-\d+)\s+([^\n]*)\n", text)
+    rules = []
+    for i in range(1, len(parts) - 2, 3):
+        cid, title, body = parts[i], parts[i + 1], parts[i + 2]
+
+        def grab(label):
+            m = re.search(r"\*\*" + label + r"\*\*：(.+?)(?:\n\s*\n|\n\*\*)", body, re.S)
+            if not m:
+                return ""
+            return re.sub(r"\s+", " ", m.group(1)).strip()
+
+        src = re.search(r"\*\*来源\*\*：(.+?)(?:\n|$)", body)
+        rules.append({
+            "id": cid,
+            "title": title.strip(),
+            "plain": grab("人话"),
+            "why": grab("当初为什么加"),
+            "source": re.sub(r"\s+", " ", src.group(1)).strip()[:150] if src else "",
+        })
+    return rules
+
+
 STAGE_DIR = {
     "00-brief": "G1", "01-scheme": "G2", "02-geometry": "G3",
     "03-mesh": "G4", "04-solve": "G5", "05-post": "G6", "06-delivery": "G6",
@@ -305,6 +337,7 @@ class Aggregator:
                                   "bytes": newest.get("bytes")},
             "log_age_sec": log_age,
             "log_tail": log_tail,
+            "rules": parse_contracts(),
         }
 
 
@@ -398,6 +431,7 @@ def main(argv=None):
     print("  案例    : " + str(case_dir))
     print("  监视    : " + "；".join([str(case_dir)] + extra))
     print("  地址    : " + url)
+    print("  合同    : " + str(len(parse_contracts())) + " 条（含人话解释）")
     print("  停止    : 按 Ctrl+C")
     print("=" * 62)
 
