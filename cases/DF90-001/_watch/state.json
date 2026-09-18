@@ -1,13 +1,6 @@
 {
   "initialized": true,
-  "baseline_at": "2026-09-19T00:21:51+08:00",
-  "files": 386,
-  "history_stored": 1,
-  "last_tick": "2026-09-19T00:23:32+08:00",
-  "last_tick_epoch": 1789748612.2943957,
-  "total_changes": 2,
-  "hashes": {
-    "00-brief/open_questions.md": "f09eb2c3627a72f8ed5633610d81cac682bc7262b6a8549e5b2afa7db8461eac",
-    "_automation/v8/scan_plan.csv": "2242a13fce13f9274815cdc48295976a17198b2262bfb6bcccc0307d0b5ae74e"
-  }
+  "baseline_at": "2026-09-19T00:32:34+08:00",
+  "files": 91,
+  "history_stored": 0
 }

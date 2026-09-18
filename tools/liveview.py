@@ -632,15 +632,9 @@ def run_action(case_id, action, params):
         out, err, code = "", "命令超时（900 秒）", -1
     elapsed = time.time() - started
 
-    if case_dir is not None:
-        head = (out or err or "").strip().splitlines()
-        summary = " / ".join(head[:3])[:300] if head else ("exit=%d" % code)
-        log_via_ledger(case_dir, stage="G0",
-                       action="界面执行动作：" + ACTIONS[action][0],
-                       verdict="PASS" if code == 0 else "FAIL",
-                       criteria="命令退出码为 0",
-                       measured="exit=%d  用时 %.1fs" % (code, elapsed),
-                       note=summary)
+    # 这里**不写日志**：跑闸门/校验/预检只是看结果，没有改变任何工程内容。
+    # 看守只记录四类实质变更（设计参数/几何/网格/算例参数），
+    # "谁点了哪个按钮"不属于其中 —— 界面控制台里有实时输出就够了。
     return {"ok": code == 0, "exit": code, "elapsed": round(elapsed, 1),
             "stdout": out[-20000:], "stderr": err[-8000:],
             "command": " ".join(cmd[1:])}

@@ -50,12 +50,40 @@ WATCH_DIRNAME = "_watch"
 HANDOFF_NAME = "HANDOFF.md"
 EXCLUDE_DIRS = {WATCH_DIRNAME, ".git", "__pycache__", "node_modules", ".venv",
                 ".pytest_cache", ".ruff_cache", ".playwright-cli", ".turbo-flow"}
-# 账本自身管理的文件不看守：
-#   LOG.md      是日志本身，看守它等于自己看自己
-#   STATE.json  阶段状态机，改动即账本行为
-#   manifest.json 产物索引，任何登记都会改它 —— 实测它会被标成 unknown，纯噪声
-# 看守的目标是**产物**的未登记改动，不是账本状态的变动。
+# ── 边界：只看工程实质变更 ──────────────────────────────────────────────
+# 看守不是行为日志。它只关心四类东西变了没有：
+#     设计参数 / 几何 / 网格 / 算例参数
+# 其余一律不看 —— 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。
+#
+# 规则是白名单：路径前缀 + 扩展名，两个都对上才看。
+CATEGORY_RULES = [
+    ("设计参数", ("requirements.yaml",),  {".yaml", ".yml"}),
+    ("设计参数", ("01-scheme/",),         {".csv", ".json"}),
+    ("几何",     ("02-geometry/",),       {".geomTurbo", ".par", ".abp", ".abm",
+                                           ".dat", ".stl", ".xmt_txt"}),
+    ("网格",     ("03-mesh/",),           {".trb", ".igg", ".bcs", ".config", ".qualityReport"}),
+    ("算例参数", ("04-solve/",),          {".run", ".iec", ".csv"}),
+    ("算例参数", ("_automation/",),        {".csv"}),   # 扫描计划等
+]
+
+# 账本自身状态与看守自己的产物永远不看
 EXCLUDE_FILES = {HANDOFF_NAME, "LOG.md", "STATE.json", "manifest.json"}
+
+
+def classify(rel):
+    """返回该文件属于哪一类工程内容；不属于四类之一就返回 None（不看）。"""
+    rel = rel.replace("\\", "/")
+    ext = os.path.splitext(rel)[1].lower()
+    for cat, prefixes, exts in CATEGORY_RULES:
+        if ext not in exts:
+            continue
+        for pref in prefixes:
+            if pref.endswith("/"):
+                if rel.startswith(pref):
+                    return cat
+            elif rel == pref:
+                return cat
+    return None
 
 HISTORY_MAX_BYTES = 2 * 1024 * 1024
 SHA_MAX_BYTES = 64 * 1024 * 1024
@@ -166,7 +194,11 @@ def scan(case_dir):
                 st = p.stat()
             except Exception:
                 continue
-            out[p.relative_to(case_dir).as_posix()] = [st.st_size, st.st_mtime_ns]
+            rel = p.relative_to(case_dir).as_posix()
+            cat = classify(rel)
+            if cat is None:
+                continue                      # 不是工程实质内容，不看
+            out[rel] = [st.st_size, st.st_mtime_ns, cat]
     return out
 
 
@@ -218,18 +250,24 @@ def read_history(case_dir, digest):
 def detect(prev, cur):
     """比较两轮指纹，返回变更列表。"""
     changes = []
-    for rel, (size, mtime) in cur.items():
+
+    def cat_of(entry):
+        return entry[2] if len(entry) > 2 else classify(entry and "") or "未知"
+
+    for rel, entry in cur.items():
+        size, mtime = entry[0], entry[1]
         old = prev.get(rel)
         if old is None:
             changes.append({"path": rel, "kind": "added", "size": size,
-                            "size_before": 0, "mtime_ns": mtime})
+                            "size_before": 0, "mtime_ns": mtime, "category": cat_of(entry)})
         elif old[0] != size or old[1] != mtime:
             changes.append({"path": rel, "kind": "modified", "size": size,
-                            "size_before": old[0], "mtime_ns": mtime})
-    for rel, (size, mtime) in prev.items():
+                            "size_before": old[0], "mtime_ns": mtime, "category": cat_of(entry)})
+    for rel, entry in prev.items():
         if rel not in cur:
             changes.append({"path": rel, "kind": "deleted", "size": 0,
-                            "size_before": size, "mtime_ns": None})
+                            "size_before": entry[0], "mtime_ns": None,
+                            "category": entry[2] if len(entry) > 2 else "未知"})
     changes.sort(key=lambda c: c.get("mtime_ns") or 0)
     return changes
 
@@ -344,6 +382,7 @@ def tick(case_dir, verbose=False):
                            .astimezone().replace(microsecond=0).isoformat()
                            if ch.get("mtime_ns") else None),
             "path": rel, "kind": ch["kind"],
+            "category": ch.get("category", ""),
             "size": ch["size"], "size_before": ch["size_before"],
             "mtime_ns": ch.get("mtime_ns"),
             "sha256": new_sha, "sha256_before": old_sha,
@@ -460,7 +499,8 @@ def build_handoff(case_dir, new_records=None, snapshot=None):
         L.append("")
         for c in unlogged_recent[-8:]:
             when = (c.get("file_mtime") or c["ts"])[11:19]
-            L.append("- " + when + "　" + c["kind"] + "　" + c["path"]
+            L.append("- " + when + "　**" + str(c.get("category") or "?") + "**　"
+                     + c["kind"] + "　" + c["path"]
                      + "　" + str(c.get("size_before")) + " -> " + str(c.get("size")) + " bytes")
         if len(unlogged_recent) > 8:
             L.append("- …另有 " + str(len(unlogged_recent) - 8) + " 条，见 _watch/changes.jsonl")
@@ -474,16 +514,16 @@ def build_handoff(case_dir, new_records=None, snapshot=None):
     L.append("## 最近 10 次变更")
     L.append("")
     if changes:
-        L.append("| 时间 | 谁 | 动作 | 文件 | 大小变化 |")
-        L.append("|---|---|---|---|---|")
+        L.append("| 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |")
+        L.append("|---|---|---|---|---|---|")
         for c in changes[-10:][::-1]:
             when = (c.get("file_mtime") or c["ts"])[5:19].replace("T", " ")
             who = c.get("actor", "?")
             if c.get("attribution") == "none":
                 who = "**unknown**"
             delta = str(c.get("size_before")) + " -> " + str(c.get("size"))
-            L.append("| " + when + " | " + who + " | " + c.get("kind", "") + " | "
-                     + c["path"] + " | " + delta + " |")
+            L.append("| " + when + " | " + str(c.get("category") or "") + " | " + who
+                     + " | " + c.get("kind", "") + " | " + c["path"] + " | " + delta + " |")
     else:
         L.append("（本次基线建立后尚无变更记录）")
     L.append("")
@@ -541,6 +581,9 @@ def build_handoff(case_dir, new_records=None, snapshot=None):
     L.append("看守状态：监视 " + str(watch_state.get("files", 0)) + " 个文件　·　累计变更 "
              + str(watch_state.get("total_changes", len(changes))) + " 条　·　历史库 "
              + str(hist_count) + " 份内容")
+    L.append("")
+    L.append("**看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。")
+    L.append("跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。")
     L.append("")
     L.append("变更流明细：_watch/changes.jsonl　·　历史内容：_watch/history/<sha256>")
 
