@@ -70,6 +70,47 @@ templates/               需求 / 大纲 / 日志模板
 
 ---
 
+## 看见它在做什么（实时工作台）
+
+这个仓库里的阶段、版本、判据、日志都写在文件里——翻文件才能看懂。工作台把它们变成
+**一扇会自己刷新的窗口**：
+
+```
+双击  start-liveview.cmd          （或 python tools/liveview.py）
+```
+
+浏览器自动打开 `http://127.0.0.1:8899/`，左侧和 DSH 对话并排放即可。
+
+**它显示什么**
+
+| 面板 | 内容 | 数据来自 |
+|---|---|---|
+| 阶段时间线 | G0→G6 每道闸门的状态 | `cases/<ID>/STATE.json` |
+| 现在在做什么 | 从**进程 + 文件变动**推断，不说没根据的话 | `Get-Process` + mtime |
+| 正在运行的进程 | 只列 NUMECA / 求解 / MPI 相关 | `Get-Process` |
+| 最近改动的文件 | 全监视根下最新的 8 个 | 目录遍历 |
+| 工程日志 | `LOG.md` 尾部 70 行，自动滚到最新 | `LOG.md` |
+
+**设计原则**：**不虚报活动。** 只有检测到求解器进程才说"求解器正在算"；
+只开着 IGG 界面而没在算，会如实显示「NUMECA 界面打开着（未在计算）」。
+日志若停在几分钟前，也会如实写"最近写入 N 分钟前"。
+
+**参数**
+
+```powershell
+python tools/liveview.py --port 8900
+python tools/liveview.py --case cases/DF90-001
+python tools/liveview.py --watch "D:\some\other\run"   # 额外监视目录（可重复）
+python tools/liveview.py --no-browser
+```
+
+零第三方依赖、只读、不写工作区以外的任何文件。
+（截图见 `docs/liveview-screenshot.png`。）
+
+**尚未实现**（面板里是占位）：版本沉淀树、对标数字与曲线、`C-001…C-011` 的白话解释。
+
+---
+
 ## 快速开始
 
 见 `docs/QUICKSTART-BEGINNER.md`（从零到第一个网格，命令可粘贴执行）。

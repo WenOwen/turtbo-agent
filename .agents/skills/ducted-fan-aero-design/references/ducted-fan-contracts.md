@@ -120,18 +120,24 @@ T = ṁ_out · Vx_out + (p_out − p_∞) · A_out
 **合同**
 FINE/Turbo 要的 Reynolds 参考量**不得**保留 GUI 默认（`1 m`、`10 m/s`、`1.2 kg/m3`）。
 
-| 量 | 取法 |
-|---|---|
-| Characteristic length | `section_schedule.csv` 的代表性弦长，默认转子/静子平均弦 |
-| Characteristic velocity | 优先 `sqrt(Va² + U_mid²)`；无转速时退化为截面表轴向速度作下界 |
-| Characteristic density | 入口/平均密度，来自 S2/平均线输出或理想气体入口态 |
+**来源列必须指向本工作流的产物**（下表已按 DF90-001 链路重新指向；
+原合同引自 CompAI 线，那里的 `section_schedule.csv` 在本链路**不存在**）：
+
+| 量 | 取法 | 本链路的来源列/文件 |
+|---|---|---|
+| Characteristic length | 转子/静子的**平均弦长** | `01-scheme/vN/叶片几何参数表.csv` 的 `弦长(m)` 列 |
+| Characteristic velocity | 优先 `sqrt(Va² + U_mid²)` | `Va` 取自 `通流计算结果表.csv`；`U_mid = ω·r_mean`，`r_mean` 取自 `流道尺寸表.csv` 的 `中径半径(m)` |
+| Characteristic density | 入口/平均密度 | `requirements.yaml` 的 `environment.density_kg_m3`，或平均线输出的近入口均值 |
 
 必须在 case notes 或 manifest 里记录取值**及其来源列/文件**。
 
-**已记录实例**：`fptip_024_stator_trim_004` → 长 0.08 m（弦长 0.078–0.084）、
-速 100 m/s（Va≈56.9，5300 rpm 中径叶速≈103）、密度 1.21 kg/m³（近入口均值），Re ≈ 5.4e5。
+**参考实例（外来项目，勿照抄数值）**：`fptip_024_stator_trim_004` 属 CompAI 线 →
+长 0.08 m（弦长 0.078–0.084）、速 100 m/s（Va≈56.9，5300 rpm 中径叶速≈103）、
+密度 1.21 kg/m³，Re ≈ 5.4e5。**仅用于校验量级，其数值不得跨算例复制。**
 
 **来源**：`numeca-cfd-workflow/SKILL.md`「FINE/Turbo Reference Quantities」
+（2026-09-18 全语料核对：`section_schedule.csv` 与 `fptip_024_stator_trim_004`
+在 Ducted-Fan 下 0 命中，均属 CompAI 线，故重新指向本链路产物。）
 **适用边界**：所有 FINE/Turbo 算例。具体数值不可跨算例复制。
 
 ---
