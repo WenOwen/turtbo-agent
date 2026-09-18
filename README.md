@@ -30,13 +30,13 @@ turtbo-agent/.agents/skills/     ← rank 200 项目级 skill 根
 
 ```
 .agents/skills/          本轮核心交付：4 个新 skill（唯一真源，随 git 版本化）
-  ducted-fan-aero-design/      主编排：G0→G6 闸门 + 小白引导 + 需求问答
-  turbomachinery-case-ledger/     版本沉淀 + 工程日志 + manifest 合同
-  ducted-fan-1d-scheme/           1D/通流方案合同（需求 → 三表）
+  ducted-fan-aero-design/      主编排：七步流程 + 小白引导 + 需求问答
+  turbomachinery-case-ledger/     版本沉淀 + 工程日志 + 文件清单规矩
+  ducted-fan-1d-scheme/           一维/通流方案规矩（需求 → 三表）
   cascade-forge-geometry-handoff/ 叶栅参数 → geomTurbo 调用契约
 tools/                   薄封装 CLI：--json / --dry-run / manifest / 稳定退出码
   case_ledger.py         幂等登记产物、哈希、溯源
-  gate_check.py          阶段闸门判定，自动写 LOG.md
+  gate_check.py          每一步做完的验收判定，自动写 LOG.md
   replay_audit.py        对既有算例做只读回放验收
   build_dashboard.py     生成单文件自包含 HTML 看板
   preflight.py           授权 / MPI / 磁盘 / 路径 / projectRoot 预检
@@ -86,15 +86,15 @@ templates/               需求 / 大纲 / 日志模板
 | 面板 | 内容 | 数据来自 |
 |---|---|---|
 | **案例选择器** | 右上角下拉，列出 `cases/` 下所有登记案例 | 各案例的 `manifest.json` |
-| 阶段时间线 | G0→G6 每道闸门的状态，**可点击** | `STATE.json` |
+| 设计进度 | 七步流程的状态，**可点击**；内部编号以小灰字附在右上角 | `STATE.json` |
 | **阶段详情** | 点任意阶段 → 该阶段的**全部产物**（含体积/sha256/上游/备注）+ **全部过程记录**（判据/实测/结论） | `manifest.json` + `LOG.md` |
 | 现在在做什么 | 从**进程 + 文件变动**推断，不说没根据的话 | `Get-Process` + mtime |
 | 正在运行的进程 | 只列 NUMECA / 求解 / MPI 相关 | `Get-Process` |
 | 最近改动的文件 | 全监视根下最新的 8 个 | 目录遍历 |
 | 工程日志 | `LOG.md` 尾部 70 行，自动滚到最新 | `LOG.md` |
-| 规则白话 | `C-001…C-011`，点开看人话 + 来历 | `ducted-fan-contracts.md` |
+| 为什么有这些条条框框 | 每条规矩点开看白话 + 当初为什么加 + 来源 | `ducted-fan-contracts.md` |
 | **变更流** | **只看四类工程实质变更**（设计参数/几何/网格/算例参数）；未登记的改动高亮 | `_watch/changes.jsonl` |
-| **操作台** | 跑闸门 / 校验 / 预检 / 回放；**点产物路径可编辑并保存** | 人工操作记 `human(web-ui)` |
+| **操作台** | 跑检查 / 校验 / 预检 / 回放；**点产物路径可编辑并保存** | 人工操作记 `human(web-ui)` |
 
 **设计原则**：**不虚报活动。** 只有检测到求解器进程才说"求解器正在算"；
 只开着 IGG 界面而没在算，会如实显示「NUMECA 界面打开着（未在计算）」。
@@ -112,7 +112,11 @@ python tools/liveview.py --no-browser
 零第三方依赖、只读、不写工作区以外的任何文件。
 （截图见 `docs/liveview-screenshot.png`。）
 
-**尚未实现**（面板里是占位）：版本沉淀树、对标数字与曲线、`C-001…C-011` 的白话解释。
+**术语翻译**：界面和 agent 对用户说话时，不出现「闸门 / 合同 / 判据」这类内部词。
+唯一的翻译源是 `.agents/skills/ducted-fan-aero-design/references/plain-language.json`，
+`python tools/gate_check.py audit` 会检查每一步都有对应的白话说法，缺了就报漂移。
+
+**尚未实现**（面板里是占位）：版本沉淀树、对标数字与曲线。
 
 ---
 
@@ -122,7 +126,7 @@ python tools/liveview.py --no-browser
 
 ---
 
-## 三条不可违背的合同
+## 三条不可违背的规矩
 
 1. **一个唯一网格 ↔ 一个独立 `.iec`。** 不同网格不得共用工程。
 2. **整机静推力只认控制体口径** `T = ṁ_out·Vx_out + (p_out − p∞)·A_out`。

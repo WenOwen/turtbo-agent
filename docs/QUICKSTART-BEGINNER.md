@@ -3,6 +3,20 @@
 > 目标读者：**会用命令行，但没做过涵道风扇气动设计**。
 > 全程只用到本仓库的脚本；NUMECA 用你已装好的正版。
 
+**这份文档里的「第 N 步」和命令里的 `G0`-`G6` 是一回事。**
+标题写中文是因为你要照着做；命令里写编号是因为脚本和工程日志只认它。
+界面上你看到的也是中文，右上角的灰色小字才是编号。
+
+| 第几步 | 干什么 | 命令里的编号 |
+|---|---|---|
+| 第 1 步 | 说清你要什么 | `G0` |
+| 第 2 步 | 先算一笔账，看这事靠不靠谱 | `G1` |
+| 第 3 步 | 出一版流道和叶片方案 | `G2` |
+| 第 4 步 | 把叶片真正画出来 | `G3` |
+| 第 5 步 | 划网格 | `G4` |
+| 第 6 步 | 跑 CFD 算一遍 | `G5` |
+| 第 7 步 | 出报告和交付表 | `G6` |
+
 ---
 
 ## 0. 一次性环境检查（30 秒）
@@ -29,7 +43,7 @@ python tools/case_ledger.py new --case-id DF90-002 --root cases
 
 ---
 
-## 2. G0：说清你要什么
+## 2. 第 1 步 · 说清你要什么
 
 用 `ask_user_question` 或直接对话回答 11 项（见
 `.agents/skills/ducted-fan-aero-design/references/requirements-interview.md`）。
@@ -43,11 +57,12 @@ python tools/gate_check.py requirements --case cases/DF90-002
 python tools/case_ledger.py stage --case cases/DF90-002 --stage G0 --status done
 ```
 
-**应该看到**：`闸门 G0 判定：PASS`（5 项全 v）。
+**应该看到**：`第 1 步检查：通过`。
+（命令行里会打印成 `闸门 G0 判定：PASS`，是同一件事。）
 
 ---
 
-## 3. G1：设计大纲
+## 3. 第 2 步 · 先算一笔账（设计大纲）
 
 让 agent 按 `.agents/skills/ducted-fan-aero-design/references/gates.md#G1` 写
 `00-brief/design_brief.md`，然后：
@@ -60,7 +75,7 @@ python tools/gate_check.py brief --case cases/DF90-002
 
 ---
 
-## 4. G2：一维方案（会自动跑 turbo-flow）
+## 4. 第 3 步 · 一维通流方案（会自动跑 turbo-flow）
 
 按 `.agents/skills/ducted-fan-1d-scheme/SKILL.md` 准备两个 JSON：
 
@@ -81,40 +96,41 @@ python tools/turboflow_adapter.py `
 ```
 
 **应该看到**：三张 CSV + `benchmark_gate.json` / `.md`，最后一行是
-`对标闸门：PASS (PASS 6 / WARN 1 / FAIL 0)`。
+`对标闸门：PASS (PASS 6 / WARN 1 / FAIL 0)` ——
+意思是「和基线对上了：6 项通过、1 项注意、0 项没通过」。
 
 > ⚠️ turbo-flow 会在写出结果**之后**尝试渲染 PDF，在受限环境里会抛
 > `PermissionError` 并返回非 0。**先检查 result.json 在不在**，不要在就不管退出码。
 
 ---
 
-## 5. G3：叶片造型
+## 5. 第 4 步 · 把叶片画出来
 
 见 `.agents/skills/cascade-forge-geometry-handoff/SKILL.md`。
 **这一段的端到端尚未验证**——第一次跑通后请把它标为已验证。
 
 ---
 
-## 6. G4：AutoGrid 划网格
+## 6. 第 5 步 · AutoGrid 划网格
 
-先跑闸门看还缺什么：
+先跑一遍检查，看还缺什么：
 
 ```powershell
 python tools/gate_check.py mesh --case cases/DF90-002 --version v1
 ```
 
-没有 `03-mesh/v1/` 时它会如实报 `SKIP`（**不是 PASS**）。
-生成后闸门会检查负单元、六件套齐全、质量报告非空。
+没有 `03-mesh/v1/` 时它会如实报 `SKIP`（**不是 PASS** —— 缺数据不等于做完了）。
+生成后会自动查三件事：有没有负体积单元、该有的文件齐不齐、质量报告是不是空的。
 
 ---
 
-## 7. G5 / G6：求解与交付
+## 7. 第 6、7 步 · 跑 CFD 与交付
 
 ```powershell
-# G5：拿 sweep_summary.csv 过闸门
+# 第 6 步：拿 sweep_summary.csv 跑检查
 python tools/gate_check.py solve --case cases/DF90-002 --summary "<...>/sweep_summary.csv"
 
-# G6：检查交付表干净
+# 第 7 步：检查交付表干净
 python tools/gate_check.py post --case cases/DF90-002 --version v1
 ```
 
@@ -159,6 +175,6 @@ python tools/case_ledger.py show   --case cases/DF90-002   # 阶段与产物总�
 |---|---|
 | 任何报错 | `.agents/skills/ducted-fan-aero-design/references/failure-diagnosis.md`（14 条诊断树） |
 | 推力/功率/角度符号口径 | `.../references/ducted-fan-contracts.md`（C-001…C-010） |
-| 不知道这一步判什么 | `.../references/gates.md` |
+| 不知道这一步到底查什么 | `.../references/gates.md`（每步的完整检查清单）|
 | 版本/日志/溯源怎么写 | `.agents/skills/turbomachinery-case-ledger/SKILL.md` |
 | turbo-flow 配置 | `.agents/skills/ducted-fan-1d-scheme/references/turbo-flow-config.md` |

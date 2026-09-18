@@ -25,9 +25,11 @@ h1{font-size:19px;margin:0 0 2px;font-weight:650}
 .dot.dead{background:var(--bad)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 .tl{display:flex;gap:8px;flex-wrap:wrap}
-.st{flex:1 1 132px;border:1px solid var(--line);border-radius:8px;padding:11px 13px;background:var(--panel2);position:relative}
-.st .g{font-size:11px;color:var(--dim2);font-weight:700;letter-spacing:.06em}
-.st .n{font-size:13.5px;margin-top:3px}
+.st{flex:1 1 150px;border:1px solid var(--line);border-radius:8px;padding:11px 13px;background:var(--panel2);position:relative}
+.st .g{font-size:11.5px;color:var(--dim2);font-weight:700;letter-spacing:.04em}
+.st .gid{position:absolute;right:9px;top:11px;font-size:10px;color:#454d57;
+  font-family:ui-monospace,Consolas,monospace;letter-spacing:.04em}
+.st .n{font-size:13.5px;margin-top:3px;line-height:1.4}
 .st .s{font-size:11px;margin-top:9px;display:inline-block;padding:1px 8px;border-radius:99px}
 .st.done{border-color:#1f6f34}.st.done .s{background:#12331d;color:#4ac26b}
 .st.run{border-color:#1f4f86;box-shadow:0 0 0 1px #1f4f86}
@@ -73,6 +75,12 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
 .st.sel .g::after{content:" · 已选中";color:var(--run);font-weight:400}
 .sdlabel{font-size:12px;color:var(--dim2);margin:16px 0 8px;font-weight:600}
 .sdlabel:first-child{margin-top:0}
+.gid2{font-size:11px;color:#454d57;font-family:ui-monospace,Consolas,monospace;
+  font-weight:400;margin-left:8px;letter-spacing:.04em}
+.guide{display:grid;grid-template-columns:74px 1fr;gap:6px 12px;font-size:13px;
+  background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.guide dt{color:var(--dim2);font-size:12px;padding-top:1px}
+.guide dd{margin:0;line-height:1.6}
 .logent{border-left:2px solid #3d4753;padding:9px 0 9px 13px;margin-bottom:10px}
 .logent.pass{border-left-color:#238636}
 .logent.warn{border-left-color:#9e6a03}
@@ -131,7 +139,9 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   </div>
 
   <div class="card">
-    <h2>阶段时间线（G0 → G6）· 点任意一格看该阶段的产物与过程记录</h2>
+    <h2>设计进度 · 跟着走完这七步，就得到一台涵道风扇</h2>
+    <p class="hint">点任意一步，看这一步交出了哪些文件、中间做了什么决定。
+      右上角的灰色小字是内部编号，你在工程日志里会见到它，平时可以不管。</p>
     <div class="tl" id="timeline"></div>
   </div>
 
@@ -140,38 +150,30 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   <div class="card" id="console-card">
     <h2>操作台 · 人工操控</h2>
     <div class="btnrow">
-      <span class="bgroup">跑闸门</span>
-      <select id="gatesel" class="minisel">
-        <option value="G0">G0 需求</option>
-        <option value="G1">G1 设计大纲</option>
-        <option value="G2">G2 1D通流方案</option>
-        <option value="G3">G3 叶片造型</option>
-        <option value="G4">G4 网格</option>
-        <option value="G5">G5 求解</option>
-        <option value="G6">G6 后处理与交付</option>
-      </select>
+      <span class="bgroup">跑检查</span>
+      <select id="gatesel" class="minisel"></select>
       <button class="btn" onclick="runAction('gate')">执行</button>
       <span class="bsep"></span>
       <button class="btn" onclick="runAction('verify')">校验案例</button>
       <button class="btn" onclick="runAction('preflight')">环境预检</button>
       <button class="btn" onclick="runAction('replay')">回放审计 v7</button>
-      <button class="btn" onclick="runAction('audit')">判据自检</button>
+      <button class="btn" onclick="runAction('audit')">规矩自检</button>
       <span class="bsep"></span>
       <button class="btn ghost" onclick="clearConsole()">清屏</button>
     </div>
     <p class="hint">所有操作都通过 <span class="mono">tools/</span> 下的同一套工具执行，
-      并自动向 <span class="mono">LOG.md</span> 追加一条 <b>操作者 = human(web-ui)</b> 的记录。
+      并自动向 <span class="mono">LOG.md</span> 追加一条「<b>操作者 = human(web-ui)</b>」的记录。
       界面和 agent 共用同一条审计链。</p>
     <pre id="console" class="con">（尚无输出）</pre>
   </div>
 
   <div class="card">
-    <h2>变更流（文件看守）· <span id="watchsum" style="color:var(--dim2);font-weight:400"></span></h2>
+    <h2>谁动了关键文件 · <span id="watchsum" style="color:var(--dim2);font-weight:400"></span></h2>
     <div id="watchlist"></div>
     <p class="hint"><b>只看四类工程实质变更</b>：设计参数 / 几何 / 网格 / 算例参数。
       跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。
-      看守只看磁盘，不问是谁写的 —— AutoBlade 手改、agent 直接写、界面保存，一视同仁。
-      日志里有对应条目的会归因到操作者；没有的如实标 <b>unknown</b>。
+      它只看磁盘，不问是谁写的 —— AutoBlade 手改、agent 直接写、界面保存，一视同仁。
+      日志里有对应条目的会记上是谁；没有的如实标 <b>unknown</b>。
       <b>unknown 不代表出错，代表"有人说都没说就改了东西"</b>，接手前值得看一眼。</p>
   </div>
 
@@ -216,16 +218,17 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   <div class="grid2">
     <div class="card">
       <h2>版本沉淀</h2>
-      <div id="versions" class="placeholder">待补：按 vN 列出每个阶段的产物与体积</div>
+      <div id="versions" class="placeholder">待补：按版本列出每一步交出来的文件和体积</div>
     </div>
     <div class="card">
       <h2>对标数字</h2>
-      <div id="metrics" class="placeholder">待补：效率 / 功率 / 推力 目标 vs 实测</div>
+      <div id="metrics" class="placeholder">待补：效率 / 功率 / 推力，目标值和算出来的值对照</div>
     </div>
   </div>
 
   <div class="card">
-    <h2>这些规矩是啥（白话）· <span id="rulecount" style="color:var(--dim2)"></span></h2>
+    <h2>为什么有这些条条框框 · <span id="rulecount" style="color:var(--dim2)"></span></h2>
+    <p class="hint">每一条都是踩过一次坑才定下来的。展开看：说的是什么（白话）、当初为什么要加、以及它的来源。</p>
     <div id="rules" class="placeholder">载入中…</div>
   </div>
 
@@ -277,9 +280,35 @@ function fmtBytes(n){
   return (n/1073741824).toFixed(2) + " GB";
 }
 
-var STAGE_TITLE = {G0:"需求",G1:"设计大纲",G2:"1D 通流方案",G3:"叶片造型",G4:"网格",G5:"求解",G6:"后处理与交付"};
+// 内部编号 → 给人看的话。表在
+// .agents/skills/ducted-fan-aero-design/references/plain-language.json，
+// 服务端随 /api/state 一起下发；界面不自己抄一份，否则又多一个漂移点。
+var STAGE_FALLBACK = {G0:"需求",G1:"设计大纲",G2:"1D 通流方案",G3:"叶片造型",G4:"网格",G5:"求解",G6:"后处理与交付"};
+var PLAIN = null;
+var PLAIN_BY_ID = {};
+
+function plainInit(p){
+  if (!p || !p.stages || !p.stages.length) return;
+  PLAIN = p;
+  PLAIN_BY_ID = {};
+  for (var i=0;i<p.stages.length;i++) PLAIN_BY_ID[p.stages[i].id] = p.stages[i];
+  var sel = el("gatesel");
+  if (sel){
+    var cur = sel.value, opts = "";
+    for (var j=0;j<p.stages.length;j++){
+      var s = p.stages[j];
+      opts += '<option value="' + esc(s.id) + '">第 ' + s.step + ' 步 · ' + esc(s.title) + '</option>';
+    }
+    sel.innerHTML = opts;
+    if (cur) sel.value = cur;
+  }
+}
+function stageStep(g){ var s = PLAIN_BY_ID[g]; return s ? ("第 " + s.step + " 步") : g; }
+function stageTitle(g){ var s = PLAIN_BY_ID[g]; return s ? s.title : (STAGE_FALLBACK[g] || g); }
+function stageById(g){ return PLAIN_BY_ID[g] || null; }
+
 var STAGE_CLASS = {done:"done", in_progress:"run", blocked:"blocked", pending:"pending"};
-var STAGE_TEXT  = {done:"已完成", in_progress:"进行中", blocked:"阻塞", pending:"未开始"};
+var STAGE_TEXT  = {done:"已完成", in_progress:"正在做", blocked:"卡住了", pending:"还没开始", skipped:"跳过"};
 
 var STAGE_ORDER = ["G0","G1","G2","G3","G4","G5","G6"];
 
@@ -292,9 +321,10 @@ function renderTimeline(stages, current){
     var cls = STAGE_CLASS[status] || "pending";
     var txt = STAGE_TEXT[status] || status;
     html += '<div class="st ' + cls + (g === selectedStage ? ' sel' : '') + '"'
-         +  ' onclick="selectStage(&quot;' + g + '&quot;)" title="点击查看该阶段的产物与过程记录">'
-         +  '<div class="g">' + g + '</div>'
-         +  '<div class="n">' + esc(STAGE_TITLE[g]) + '</div>'
+         +  ' onclick="selectStage(&quot;' + g + '&quot;)" title="点击看这一步交出了什么、中间做了什么决定">'
+         +  '<div class="g">' + esc(stageStep(g)) + '</div>'
+         +  '<span class="gid">' + esc(g) + '</span>'
+         +  '<div class="n">' + esc(stageTitle(g)) + '</div>'
          +  '<span class="s">' + esc(txt) + '</span>'
          +  (i < STAGE_ORDER.length-1 ? '<span class="arrow">›</span>' : '')
          +  '</div>';
@@ -314,14 +344,26 @@ function renderStageDetail(detail, sel){
   var d = detail && detail[sel];
   if (!d){ setHTML("stagedetail", ""); return; }
   var h = '<div class="card">'
-        + '<h2>阶段 ' + esc(d.id) + ' ' + esc(d.name) + ' · '
+        + '<h2>' + esc(stageStep(sel)) + ' · ' + esc(stageTitle(sel))
+        + '<span class="gid2">' + esc(d.id) + '</span>'
+        + '<span style="color:var(--dim2);font-weight:400"> · '
         + esc(STAGE_TEXT[d.status] || d.status)
-        + (d.updated ? ' · 更新于 ' + esc(d.updated) : '') + '</h2>';
+        + (d.updated ? ' · 更新于 ' + esc(d.updated) : '') + '</span></h2>';
 
-  h += '<div class="sdlabel">产物（' + d.artifacts.length + '）</div>';
+  var sp = stageById(sel);
+  if (sp){
+    h += '<dl class="guide">'
+       + '<dt>你要做的</dt><dd>' + esc(sp.you) + '</dd>'
+       + '<dt>我会做的</dt><dd>' + esc(sp.agent) + '</dd>'
+       + '<dt>怎样算过</dt><dd>' + esc(sp.done) + '</dd>'
+       + (sp.stuck ? '<dt>卡住了</dt><dd>' + esc(sp.stuck) + '</dd>' : '')
+       + '</dl>';
+  }
+
+  h += '<div class="sdlabel">这一步交出来的文件（' + d.artifacts.length + '）</div>';
   if (d.artifacts.length){
     h += '<table><thead><tr><th>结论</th><th>版本</th><th>路径</th><th>体积</th>'
-       + '<th>sha256</th><th>上游</th></tr></thead><tbody>';
+       + '<th>文件指纹</th><th>从哪来</th></tr></thead><tbody>';
     for (var i=0;i<d.artifacts.length;i++){
       var a = d.artifacts[i];
       h += '<tr><td><span class="v v-' + esc(a.verdict) + '">' + esc(a.verdict) + '</span></td>'
@@ -338,10 +380,10 @@ function renderStageDetail(detail, sel){
     }
     h += '</tbody></table>';
   } else {
-    h += '<div class="placeholder">该阶段暂无登记产物</div>';
+    h += '<div class="placeholder">这一步还没有交出来的文件</div>';
   }
 
-  h += '<div class="sdlabel">过程记录（' + d.log.length + ' 条）</div>';
+  h += '<div class="sdlabel">工程日志里关于这一步的记录（' + d.log.length + ' 条）</div>';
   if (d.log.length){
     for (var j=0;j<d.log.length;j++){
       var e = d.log[j];
@@ -360,7 +402,7 @@ function renderStageDetail(detail, sel){
          + '</div>';
     }
   } else {
-    h += '<div class="placeholder">该阶段暂无过程记录</div>';
+    h += '<div class="placeholder">工程日志里还没有关于这一步的记录</div>';
   }
 
   h += '<div class="hint">提示：日志为只追加，这里是该阶段的全部历史条目。</div></div>';
@@ -474,7 +516,7 @@ function renderCaseSelector(list, active){
   var h = "";
   for (var i=0;i<list.length;i++){
     var c = list[i];
-    var label = c.id + "　·　" + (c.current_stage || "—") + "　·　" + c.artifact_count + " 产物";
+    var label = c.id + "　·　" + stageStep(c.current_stage) + "　·　" + c.artifact_count + " 个文件";
     h += '<option value="' + esc(c.id) + '"' + (c.id === active ? ' selected' : '') + '>'
        + esc(label) + '</option>';
   }
@@ -515,7 +557,7 @@ function renderRecent(list){
 }
 
 function renderWatch(w, changes){
-  if (!w){ setHTML("watchlist", '<span class="placeholder">看守未启动</span>'); return; }
+  if (!w){ setHTML("watchlist", '<span class="placeholder">文件监视未启动</span>'); return; }
   el("watchsum").textContent = "监视 " + w.watched_files + " 个文件　·　累计变更 "
     + w.total_changes + " 条　·　历史库 " + w.history_blobs + " 份内容";
 
@@ -530,7 +572,7 @@ function renderWatch(w, changes){
     h += '<span class="placeholder">基线建立后尚无变更记录</span>';
   } else {
     h += '<table><thead><tr><th>时间</th><th>类别</th><th>改动</th><th>文件</th>'
-       + '<th>大小变化</th><th>归因</th><th>谁</th></tr></thead><tbody>';
+       + '<th>大小变化</th><th>日志里有记录吗</th><th>谁</th></tr></thead><tbody>';
     for (var i=0;i<changes.length;i++){
       var c = changes[i];
       var unk = c.attribution === "none";
@@ -556,7 +598,7 @@ function renderWatch(w, changes){
 
 function renderRules(list){
   if (!list || !list.length){
-    el("rules").innerHTML = '<span class="placeholder">没有解析到合同条目</span>';
+    el("rules").innerHTML = '<span class="placeholder">没有解析到规矩条目</span>';
     el("rulecount").textContent = "";
     return;
   }
@@ -573,7 +615,7 @@ function renderRules(list){
          +  '</div></details>';
   }
   setHTML("rules", html);
-  el("rulecount").textContent = list.length + " 条";
+  el("rulecount").textContent = list.length + " 条（每条都写了当初为什么加）";
 }
 
 function apply(s){
@@ -601,6 +643,7 @@ function apply(s){
     selectedStage = pick || s.current_stage || "G0";
   }
 
+  plainInit(s.plain);
   renderTimeline(s.stages, s.current_stage);
   renderStageDetail(s.stage_detail, selectedStage);
 
@@ -608,9 +651,9 @@ function apply(s){
   el("nowsub").textContent = s.activity_detail || "";
 
   renderKV([
-    ["当前阶段", s.current_stage],
-    ["manifest 版本", s.revision],
-    ["产物数量", s.artifact_count],
+    ["走到哪了", stageStep(s.current_stage) + " · " + stageTitle(s.current_stage)],
+    ["文件清单版本", s.revision],
+    ["交出来的文件", s.artifact_count + " 个"],
     ["最近一次改动", s.newest ? (shortPath(s.newest.path) + "　" + fmtAge(s.newest.age_sec)) : null],
     ["日志最后更新", s.log_age_sec === null || s.log_age_sec === undefined ? null : fmtAge(s.log_age_sec)]
   ]);

@@ -58,12 +58,12 @@ except Exception:
 
 DEFAULT_EXTRA_ROOTS = [Path("D:/Project/Research/Ducted-Fan/run")]
 
-# 工程合同文件：人话解释直接从它解析，保证与正式合同同源、不会漂移
+# 规矩文件：人话解释直接从它解析，保证与正式文件同源、不会漂移
 CONTRACTS = ROOT / ".agents" / "skills" / "ducted-fan-aero-design" / "references" / "ducted-fan-contracts.md"
 
 
 def parse_contracts(path=None):
-    """从合同文件里抽出每条的 标题 / 人话 / 当初为什么加 / 来源。"""
+    """从规矩文件里抽出每条的 标题 / 人话 / 当初为什么加 / 来源。"""
     path = Path(path) if path else CONTRACTS
     if not path.is_file():
         return []
@@ -88,6 +88,22 @@ def parse_contracts(path=None):
             "source": re.sub(r"\s+", " ", src.group(1)).strip()[:150] if src else "",
         })
     return rules
+
+
+# 白话对照表：内部术语 → 给人看的话。
+# 界面与 skill 共用同一份，改词只改它 —— 否则又多一个"同一条规则写在两处"的漂移点。
+PLAIN = ROOT / ".agents" / "skills" / "ducted-fan-aero-design" / "references" / "plain-language.json"
+
+
+def plain_language(path=None):
+    """读白话对照表，供界面把 G0-G6 / 闸门 / 规矩 翻译成人话。"""
+    path = Path(path) if path else PLAIN
+    if not path.is_file():
+        return {}
+    try:
+        return json.loads(read_text_safe(path))
+    except Exception:
+        return {}
 
 
 STAGE_DIR = {
@@ -450,6 +466,7 @@ class Aggregator:
             "log_age_sec": log_age,
             "log_tail": log_tail,
             "rules": parse_contracts(),
+            "plain": plain_language(),
             "cases": list_cases(),
             "watch": watch.status(self.case_dir),
             "watch_changes": watch.read_changes(self.case_dir, limit=12)[::-1],
@@ -590,11 +607,11 @@ def case_dir_of(case_id):
 
 # 界面可触发的动作白名单。名字 -> (说明, 参数说明)
 ACTIONS = {
-    "gate":       ("跑阶段闸门", "gate=G0..G6 对应的子命令名"),
+    "gate":       ("跑这一步的检查", "gate=G0..G6 对应的子命令名"),
     "verify":     ("校验案例产物与哈希", ""),
     "preflight":  ("环境预检", ""),
     "replay":     ("回放审计 v7 黄金基准", ""),
-    "audit":      ("判据一致性自检（合同 ↔ 代码）", ""),
+    "audit":      ("规矩自检（规矩文件 ↔ 代码是否对得上）", ""),
 }
 
 
@@ -610,7 +627,7 @@ def run_action(case_id, action, params):
         GATE_MAP = {"G0": "requirements", "G1": "brief", "G2": "scheme", "G3": "geometry",
                     "G4": "mesh", "G5": "solve", "G6": "post"}
         if gate not in GATE_MAP:
-            raise ApiError("闸门参数必须是 G0..G6", 400)
+            raise ApiError("检查参数必须是 G0..G6", 400)
         cmd = [sys.executable, str(HERE / "gate_check.py"), GATE_MAP[gate],
                "--case", str(case_dir), "--no-log"]
     elif action == "verify":
@@ -635,7 +652,7 @@ def run_action(case_id, action, params):
         out, err, code = "", "命令超时（900 秒）", -1
     elapsed = time.time() - started
 
-    # 这里**不写日志**：跑闸门/校验/预检只是看结果，没有改变任何工程内容。
+    # 这里**不写日志**：跑检查/校验/预检只是看结果，没有改变任何工程内容。
     # 看守只记录四类实质变更（设计参数/几何/网格/算例参数），
     # "谁点了哪个按钮"不属于其中 —— 界面控制台里有实时输出就够了。
     return {"ok": code == 0, "exit": code, "elapsed": round(elapsed, 1),
@@ -834,7 +851,9 @@ def main(argv=None):
     print("  案例    : " + str(case_dir))
     print("  监视    : " + "；".join([str(case_dir)] + extra))
     print("  地址    : " + url)
-    print("  合同    : " + str(len(parse_contracts())) + " 条（含人话解释）")
+    print("  规矩    : " + str(len(parse_contracts())) + " 条（含人话解释）")
+    print("  白话对照: " + str(len(plain_language().get("terms", []))) + " 个词 / "
+          + str(len(plain_language().get("stages", []))) + " 个步骤")
     print("  可写    : 是（人工操作走 case_ledger，日志记 操作者=human(web-ui)）")
     print("  停止    : 按 Ctrl+C")
     print("=" * 62)
