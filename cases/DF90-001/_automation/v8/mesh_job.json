@@ -1,0 +1,36 @@
+{
+  "schema": "numeca-autogrid-mesh/v1",
+  "mode": "new-project",
+  "case_name": "mesh-v1",
+  "output_dir": "D:/Project/Research/Ducted-Fan/run/90kg-duct-fan-v8/mesh/mesh-v1",
+  "rows": [
+    {
+      "index": 1,
+      "machine_row": "R1",
+      "geomturbo": "D:/Project/Research/Ducted-Fan/run/90kg-duct-fan-v8/autoblade/R1_13span/R1.geomTurbo",
+      "row_type": "rotor",
+      "rotation_speed_rpm": 5000,
+      "tip_gap": true,
+      "tip_gap_width_m": 0.002,
+      "mesh": {
+        "spanwise_layers": 73
+      }
+    },
+    {
+      "index": 2,
+      "machine_row": "R2",
+      "geomturbo": "D:/Project/Research/Ducted-Fan/run/90kg-duct-fan-v8/autoblade/R2_13span/R2.geomTurbo",
+      "row_type": "stator",
+      "rotation_speed_rpm": 0,
+      "tip_gap": false,
+      "mesh": {
+        "spanwise_layers": 57
+      }
+    }
+  ],
+  "mesh": {
+    "first_cell_height_m": 0.00001,
+    "accuracy": "medium",
+    "grid_levels": 3
+  }
+}

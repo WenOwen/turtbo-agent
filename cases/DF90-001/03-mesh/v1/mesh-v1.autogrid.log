@@ -1,0 +1,408 @@
+Info    : Using USERPROFILE Env.Var.: C:\Users\Administrator\ user name is Administrator
+Info    : AppData is C:\Users\Administrator\AppData\Roaming
+
+
+  <***>   IGG 16.1  -  MS Windows x86-64  -  Feb 19 2021   <***> 
+
+
+Using Parasolid V32.1.222
+PYTHONHOME = D:\NUMECA_SOFTWARE\Fine161\python64
+HDriver
+  type               : MSWindows
+  version            : 1.790
+  planes             : 24
+  colors             : 16777216
+  max colors         : 16777216
+  z buffer depth     : 0
+  hard cutting planes: 0
+  hard lights        : 0
+  hard gouraud       : no
+  hard phong         : no
+  width              : 59.7000007629395 cm
+  height             : 33.5800018310547 cm
+  aspect ratio       : 1.77779996395111
+  max width          : 59.7000007629395 cm
+  max height         : 33.5800018310547 cm
+  width  resolution  : 42.8810005187988 px/cm
+  height resolution  : 42.8810005187988 px/cm
+
+
+ Initialize row wizard images...
+ Initialize row wizard images... Done
+Autogrid : argument D:\NUMECA_SOFTWARE\fine161\bin64\iggx86_64.exe
+Autogrid : argument -autogrid5
+Autogrid : argument -batch
+Autogrid : argument -script
+Autogrid : argument -print
+Generate Flow Paths for Row : row 1
+                               Generation OK
+Generate Flow Paths for Row : row 1
+                               Generation OK
+Generate Flow Paths for Row : row 2
+                               Generation OK
+Generate Flow Paths for Row : row 2
+                               Generation OK
+ Update Mesh Configuration ... : row 1
+ Update Mesh Configuration ... : row 2
+Start Writing : D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v1\mesh-v1.igg
+                Writing Geometry File... 
+                Writing Geometry File... Done
+                Writing Topology File...
+                Writing Topology File... Done
+                Writing CGNS File... 
+                Writing CGNS File... Done
+                Writing Meridional Project... 
+                Writing Meridional Project... Done
+                Writing Configuration File... 
+                Writing Configuration File... Done
+Save png pictures aborted on windows to avoid unexpected crashes
+Write Quality Report :
+                      OK: Quality Report Created
+                      fileName: D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v1\mesh-v1.qualityReport
+Generate Flow Paths for Row : row 1
+                               Generation OK
+Generate Flow Paths for Row : row 2
+                               Generation OK
+Generate Flow Paths for Row : row 1
+                               Generation OK
+Generate Flow Paths for Row : row 2
+                               Generation OK
+Generate Mesh for Row : row 1
+                        Compute Blade(s) & FlowPaths Intersection
+                        Compute Blade(s) & FlowPath Intersection 1%, Layer 1
+                        Compute Blade(s) & FlowPath Intersection 2%, Layer 2
+                        Compute Blade(s) & FlowPath Intersection 4%, Layer 3
+                        Compute Blade(s) & FlowPath Intersection 5%, Layer 4
+                        Compute Blade(s) & FlowPath Intersection 6%, Layer 5
+                        Compute Blade(s) & FlowPath Intersection 8%, Layer 6
+                        Compute Blade(s) & FlowPath Intersection 9%, Layer 7
+                        Compute Blade(s) & FlowPath Intersection 10%, Layer 8
+                        Compute Blade(s) & FlowPath Intersection 12%, Layer 9
+                        Compute Blade(s) & FlowPath Intersection 13%, Layer 10
+                        Compute Blade(s) & FlowPath Intersection 15%, Layer 11
+                        Compute Blade(s) & FlowPath Intersection 16%, Layer 12
+                        Compute Blade(s) & FlowPath Intersection 17%, Layer 13
+                        Compute Blade(s) & FlowPath Intersection 19%, Layer 14
+                        Compute Blade(s) & FlowPath Intersection 20%, Layer 15
+                        Compute Blade(s) & FlowPath Intersection 21%, Layer 16
+                        Compute Blade(s) & FlowPath Intersection 23%, Layer 17
+                        Compute Blade(s) & FlowPath Intersection 24%, Layer 18
+                        Compute Blade(s) & FlowPath Intersection 26%, Layer 19
+                        Compute Blade(s) & FlowPath Intersection 27%, Layer 20
+                        Compute Blade(s) & FlowPath Intersection 28%, Layer 21
+                        Compute Blade(s) & FlowPath Intersection 30%, Layer 22
+                        Compute Blade(s) & FlowPath Intersection 31%, Layer 23
+                        Compute Blade(s) & FlowPath Intersection 32%, Layer 24
+                        Compute Blade(s) & FlowPath Intersection 34%, Layer 25
+                        Compute Blade(s) & FlowPath Intersection 35%, Layer 26
+                        Compute Blade(s) & FlowPath Intersection 36%, Layer 27
+                        Compute Blade(s) & FlowPath Intersection 38%, Layer 28
+                        Compute Blade(s) & FlowPath Intersection 39%, Layer 29
+                        Compute Blade(s) & FlowPath Intersection 41%, Layer 30
+                        Compute Blade(s) & FlowPath Intersection 42%, Layer 31
+                        Compute Blade(s) & FlowPath Intersection 43%, Layer 32
+                        Compute Blade(s) & FlowPath Intersection 45%, Layer 33
+                        Compute Blade(s) & FlowPath Intersection 46%, Layer 34
+                        Compute Blade(s) & FlowPath Intersection 47%, Layer 35
+                        Compute Blade(s) & FlowPath Intersection 49%, Layer 36
+                        Compute Blade(s) & FlowPath Intersection 50%, Layer 37
+                        Compute Blade(s) & FlowPath Intersection 52%, Layer 38
+                        Compute Blade(s) & FlowPath Intersection 53%, Layer 39
+                        Compute Blade(s) & FlowPath Intersection 54%, Layer 40
+                        Compute Blade(s) & FlowPath Intersection 56%, Layer 41
+                        Compute Blade(s) & FlowPath Intersection 57%, Layer 42
+                        Compute Blade(s) & FlowPath Intersection 58%, Layer 43
+                        Compute Blade(s) & FlowPath Intersection 60%, Layer 44
+                        Compute Blade(s) & FlowPath Intersection 61%, Layer 45
+                        Compute Blade(s) & FlowPath Intersection 63%, Layer 46
+                        Compute Blade(s) & FlowPath Intersection 64%, Layer 47
+                        Compute Blade(s) & FlowPath Intersection 65%, Layer 48
+                        Compute Blade(s) & FlowPath Intersection 67%, Layer 49
+                        Compute Blade(s) & FlowPath Intersection 68%, Layer 50
+                        Compute Blade(s) & FlowPath Intersection 69%, Layer 51
+                        Compute Blade(s) & FlowPath Intersection 71%, Layer 52
+                        Compute Blade(s) & FlowPath Intersection 72%, Layer 53
+                        Compute Blade(s) & FlowPath Intersection 73%, Layer 54
+                        Compute Blade(s) & FlowPath Intersection 75%, Layer 55
+                        Compute Blade(s) & FlowPath Intersection 76%, Layer 56
+                        Compute Blade(s) & FlowPath Intersection 78%, Layer 57
+                        Compute Blade(s) & FlowPath Intersection 79%, Layer 58
+                        Compute Blade(s) & FlowPath Intersection 80%, Layer 59
+                        Compute Blade(s) & FlowPath Intersection 82%, Layer 60
+                        Compute Blade(s) & FlowPath Intersection 83%, Layer 61
+                        Compute Blade(s) & FlowPath Intersection 84%, Layer 62
+                        Compute Blade(s) & FlowPath Intersection 86%, Layer 63
+                        Compute Blade(s) & FlowPath Intersection 87%, Layer 64
+                        Compute Blade(s) & FlowPath Intersection 89%, Layer 65
+                        Compute Blade(s) & FlowPath Intersection 90%, Layer 66
+                        Compute Blade(s) & FlowPath Intersection 91%, Layer 67
+                        Compute Blade(s) & FlowPath Intersection 93%, Layer 68
+                        Compute Blade(s) & FlowPath Intersection 94%, Layer 69
+                        Compute Blade(s) & FlowPath Intersection 95%, Layer 70
+                        Compute Blade(s) & FlowPath Intersection 97%, Layer 71
+                        Compute Blade(s) & FlowPath Intersection 98%, Layer 72
+                        Compute Blade(s) & FlowPath Intersection 100%, Layer 73
+                        Blade(s) & FlowPaths Intersections OK
+                        Compute Mesh Layers 1%, Layer 1
+                        Compute Mesh Layers 2%, Layer 2
+                        Compute Mesh Layers 4%, Layer 3
+                        Compute Mesh Layers 5%, Layer 4
+                        Compute Mesh Layers 6%, Layer 5
+                        Compute Mesh Layers 8%, Layer 6
+                        Compute Mesh Layers 9%, Layer 7
+                        Compute Mesh Layers 10%, Layer 8
+                        Compute Mesh Layers 12%, Layer 9
+                        Compute Mesh Layers 13%, Layer 10
+                        Compute Mesh Layers 15%, Layer 11
+                        Compute Mesh Layers 16%, Layer 12
+                        Compute Mesh Layers 17%, Layer 13
+                        Compute Mesh Layers 19%, Layer 14
+                        Compute Mesh Layers 20%, Layer 15
+                        Compute Mesh Layers 21%, Layer 16
+                        Compute Mesh Layers 23%, Layer 17
+                        Compute Mesh Layers 24%, Layer 18
+                        Compute Mesh Layers 26%, Layer 19
+                        Compute Mesh Layers 27%, Layer 20
+                        Compute Mesh Layers 28%, Layer 21
+                        Compute Mesh Layers 30%, Layer 22
+                        Compute Mesh Layers 31%, Layer 23
+                        Compute Mesh Layers 32%, Layer 24
+                        Compute Mesh Layers 34%, Layer 25
+                        Compute Mesh Layers 35%, Layer 26
+                        Compute Mesh Layers 36%, Layer 27
+                        Compute Mesh Layers 38%, Layer 28
+                        Compute Mesh Layers 39%, Layer 29
+                        Compute Mesh Layers 41%, Layer 30
+                        Compute Mesh Layers 42%, Layer 31
+                        Compute Mesh Layers 43%, Layer 32
+                        Compute Mesh Layers 45%, Layer 33
+                        Compute Mesh Layers 46%, Layer 34
+                        Compute Mesh Layers 47%, Layer 35
+                        Compute Mesh Layers 49%, Layer 36
+                        Compute Mesh Layers 50%, Layer 37
+                        Compute Mesh Layers 52%, Layer 38
+                        Compute Mesh Layers 53%, Layer 39
+                        Compute Mesh Layers 54%, Layer 40
+                        Compute Mesh Layers 56%, Layer 41
+                        Compute Mesh Layers 57%, Layer 42
+                        Compute Mesh Layers 58%, Layer 43
+                        Compute Mesh Layers 60%, Layer 44
+                        Compute Mesh Layers 61%, Layer 45
+                        Compute Mesh Layers 63%, Layer 46
+                        Compute Mesh Layers 64%, Layer 47
+                        Compute Mesh Layers 65%, Layer 48
+                        Compute Mesh Layers 67%, Layer 49
+                        Compute Mesh Layers 68%, Layer 50
+                        Compute Mesh Layers 69%, Layer 51
+                        Compute Mesh Layers 71%, Layer 52
+                        Compute Mesh Layers 72%, Layer 53
+                        Compute Mesh Layers 73%, Layer 54
+                        Compute Mesh Layers 75%, Layer 55
+                        Compute Mesh Layers 76%, Layer 56
+                        Compute Mesh Layers 78%, Layer 57
+                        Compute Mesh Layers 79%, Layer 58
+                        Compute Mesh Layers 80%, Layer 59
+                        Compute Mesh Layers 82%, Layer 60
+                        Compute Mesh Layers 83%, Layer 61
+                        Compute Mesh Layers 84%, Layer 62
+                        Compute Mesh Layers 86%, Layer 63
+                        Compute Mesh Layers 87%, Layer 64
+                        Compute Mesh Layers 89%, Layer 65
+                        Compute Mesh Layers 90%, Layer 66
+                        Compute Mesh Layers 91%, Layer 67
+                        Compute Mesh Layers 93%, Layer 68
+                        Compute Mesh Layers 94%, Layer 69
+                        Compute Mesh Layers 95%, Layer 70
+                        Compute Mesh Layers 97%, Layer 71
+                        Compute Mesh Layers 98%, Layer 72
+                        Compute Mesh Layers 100%, Layer 73
+                        Mesh Generation For row 1 OK
+Generate Mesh for Row : row 2
+                        Compute Blade(s) & FlowPaths Intersection
+                        Compute Blade(s) & FlowPath Intersection 1%, Layer 1
+                        Compute Blade(s) & FlowPath Intersection 3%, Layer 2
+                        Compute Blade(s) & FlowPath Intersection 5%, Layer 3
+                        Compute Blade(s) & FlowPath Intersection 7%, Layer 4
+                        Compute Blade(s) & FlowPath Intersection 8%, Layer 5
+                        Compute Blade(s) & FlowPath Intersection 10%, Layer 6
+                        Compute Blade(s) & FlowPath Intersection 12%, Layer 7
+                        Compute Blade(s) & FlowPath Intersection 14%, Layer 8
+                        Compute Blade(s) & FlowPath Intersection 15%, Layer 9
+                        Compute Blade(s) & FlowPath Intersection 17%, Layer 10
+                        Compute Blade(s) & FlowPath Intersection 19%, Layer 11
+                        Compute Blade(s) & FlowPath Intersection 21%, Layer 12
+                        Compute Blade(s) & FlowPath Intersection 22%, Layer 13
+                        Compute Blade(s) & FlowPath Intersection 24%, Layer 14
+                        Compute Blade(s) & FlowPath Intersection 26%, Layer 15
+                        Compute Blade(s) & FlowPath Intersection 28%, Layer 16
+                        Compute Blade(s) & FlowPath Intersection 29%, Layer 17
+                        Compute Blade(s) & FlowPath Intersection 31%, Layer 18
+                        Compute Blade(s) & FlowPath Intersection 33%, Layer 19
+                        Compute Blade(s) & FlowPath Intersection 35%, Layer 20
+                        Compute Blade(s) & FlowPath Intersection 36%, Layer 21
+                        Compute Blade(s) & FlowPath Intersection 38%, Layer 22
+                        Compute Blade(s) & FlowPath Intersection 40%, Layer 23
+                        Compute Blade(s) & FlowPath Intersection 42%, Layer 24
+                        Compute Blade(s) & FlowPath Intersection 43%, Layer 25
+                        Compute Blade(s) & FlowPath Intersection 45%, Layer 26
+                        Compute Blade(s) & FlowPath Intersection 47%, Layer 27
+                        Compute Blade(s) & FlowPath Intersection 49%, Layer 28
+                        Compute Blade(s) & FlowPath Intersection 50%, Layer 29
+                        Compute Blade(s) & FlowPath Intersection 52%, Layer 30
+                        Compute Blade(s) & FlowPath Intersection 54%, Layer 31
+                        Compute Blade(s) & FlowPath Intersection 56%, Layer 32
+                        Compute Blade(s) & FlowPath Intersection 57%, Layer 33
+                        Compute Blade(s) & FlowPath Intersection 59%, Layer 34
+                        Compute Blade(s) & FlowPath Intersection 61%, Layer 35
+                        Compute Blade(s) & FlowPath Intersection 63%, Layer 36
+                        Compute Blade(s) & FlowPath Intersection 64%, Layer 37
+                        Compute Blade(s) & FlowPath Intersection 66%, Layer 38
+                        Compute Blade(s) & FlowPath Intersection 68%, Layer 39
+                        Compute Blade(s) & FlowPath Intersection 70%, Layer 40
+                        Compute Blade(s) & FlowPath Intersection 71%, Layer 41
+                        Compute Blade(s) & FlowPath Intersection 73%, Layer 42
+                        Compute Blade(s) & FlowPath Intersection 75%, Layer 43
+                        Compute Blade(s) & FlowPath Intersection 77%, Layer 44
+                        Compute Blade(s) & FlowPath Intersection 78%, Layer 45
+                        Compute Blade(s) & FlowPath Intersection 80%, Layer 46
+                        Compute Blade(s) & FlowPath Intersection 82%, Layer 47
+                        Compute Blade(s) & FlowPath Intersection 84%, Layer 48
+                        Compute Blade(s) & FlowPath Intersection 85%, Layer 49
+                        Compute Blade(s) & FlowPath Intersection 87%, Layer 50
+                        Compute Blade(s) & FlowPath Intersection 89%, Layer 51
+                        Compute Blade(s) & FlowPath Intersection 91%, Layer 52
+                        Compute Blade(s) & FlowPath Intersection 92%, Layer 53
+                        Compute Blade(s) & FlowPath Intersection 94%, Layer 54
+                        Compute Blade(s) & FlowPath Intersection 96%, Layer 55
+                        Compute Blade(s) & FlowPath Intersection 98%, Layer 56
+                        Compute Blade(s) & FlowPath Intersection 100%, Layer 57
+                        Blade(s) & FlowPaths Intersections OK
+                        Compute Mesh Layers 1%, Layer 1
+                        Compute Mesh Layers 3%, Layer 2
+                        Compute Mesh Layers 5%, Layer 3
+                        Compute Mesh Layers 7%, Layer 4
+                        Compute Mesh Layers 8%, Layer 5
+                        Compute Mesh Layers 10%, Layer 6
+                        Compute Mesh Layers 12%, Layer 7
+                        Compute Mesh Layers 14%, Layer 8
+                        Compute Mesh Layers 15%, Layer 9
+                        Compute Mesh Layers 17%, Layer 10
+                        Compute Mesh Layers 19%, Layer 11
+                        Compute Mesh Layers 21%, Layer 12
+                        Compute Mesh Layers 22%, Layer 13
+                        Compute Mesh Layers 24%, Layer 14
+                        Compute Mesh Layers 26%, Layer 15
+                        Compute Mesh Layers 28%, Layer 16
+                        Compute Mesh Layers 29%, Layer 17
+                        Compute Mesh Layers 31%, Layer 18
+                        Compute Mesh Layers 33%, Layer 19
+                        Compute Mesh Layers 35%, Layer 20
+                        Compute Mesh Layers 36%, Layer 21
+                        Compute Mesh Layers 38%, Layer 22
+                        Compute Mesh Layers 40%, Layer 23
+                        Compute Mesh Layers 42%, Layer 24
+                        Compute Mesh Layers 43%, Layer 25
+                        Compute Mesh Layers 45%, Layer 26
+                        Compute Mesh Layers 47%, Layer 27
+                        Compute Mesh Layers 49%, Layer 28
+                        Compute Mesh Layers 50%, Layer 29
+                        Compute Mesh Layers 52%, Layer 30
+                        Compute Mesh Layers 54%, Layer 31
+                        Compute Mesh Layers 56%, Layer 32
+                        Compute Mesh Layers 57%, Layer 33
+                        Compute Mesh Layers 59%, Layer 34
+                        Compute Mesh Layers 61%, Layer 35
+                        Compute Mesh Layers 63%, Layer 36
+                        Compute Mesh Layers 64%, Layer 37
+                        Compute Mesh Layers 66%, Layer 38
+                        Compute Mesh Layers 68%, Layer 39
+                        Compute Mesh Layers 70%, Layer 40
+                        Compute Mesh Layers 71%, Layer 41
+                        Compute Mesh Layers 73%, Layer 42
+                        Compute Mesh Layers 75%, Layer 43
+                        Compute Mesh Layers 77%, Layer 44
+                        Compute Mesh Layers 78%, Layer 45
+                        Compute Mesh Layers 80%, Layer 46
+                        Compute Mesh Layers 82%, Layer 47
+                        Compute Mesh Layers 84%, Layer 48
+                        Compute Mesh Layers 85%, Layer 49
+                        Compute Mesh Layers 87%, Layer 50
+                        Compute Mesh Layers 89%, Layer 51
+                        Compute Mesh Layers 91%, Layer 52
+                        Compute Mesh Layers 92%, Layer 53
+                        Compute Mesh Layers 94%, Layer 54
+                        Compute Mesh Layers 96%, Layer 55
+                        Compute Mesh Layers 98%, Layer 56
+                        Compute Mesh Layers 100%, Layer 57
+                        Mesh Generation For row 2 OK
+ Update Mesh Configuration ... : row 1
+ Update Mesh Configuration ... : row 2
+Compute Grid Quality for : row 1
+                           Compute Wall Distance
+                           Compute Orthogonality
+                           Compute Spanwise Skewness Angle
+                           Compute Spanwise Expansion Ratio
+                           Compute Aspect Ratio
+                           Compute Expansion Ratio
+                           Compute Negative Cells in Float Precision
+                           OK: No Negative Cells Detected in Float Precision
+                           Compute Negative Cells in Double Precision
+                           OK: No Negative Cells Detected in Double Precision
+Compute Grid Quality for : row 2
+                           Compute Wall Distance
+                           Compute Orthogonality
+                           Compute Spanwise Skewness Angle
+                           Compute Spanwise Expansion Ratio
+                           Compute Aspect Ratio
+                           Compute Expansion Ratio
+                           Compute Negative Cells in Float Precision
+                           OK: No Negative Cells Detected in Float Precision
+                           Compute Negative Cells in Double Precision
+                           OK: No Negative Cells Detected in Double Precision
+Write Quality Report :
+                      OK: Quality Report Created
+                      fileName: D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v1\mesh-v1.qualityReport
+ Update Mesh Configuration ... : row 1
+ Update Mesh Configuration ... : row 2
+Start Writing : D:/Project/Research/Ducted-Fan/run/90kg-duct-fan-v8/mesh/mesh-v1/mesh-v1.igg
+                Writing Geometry File... 
+                Writing Geometry File... Done
+                Writing Topology File...
+                Writing Topology File... Done
+                Writing CGNS File... 
+                Writing CGNS File... Done
+                Writing Meridional Project... 
+                Writing Meridional Project... Done
+                Writing Configuration File... 
+                Writing Configuration File... Done
+ Update Mesh Configuration ... : row 1
+ Update Mesh Configuration ... : row 2
+Project file D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v1\mesh-v1.trb Already Exist in DataBase, Overwrite it
+Project File D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v1\mesh-v1.trb Already Exist in DataBase
+ Update Mesh Configuration ... : row 1
+ Update Mesh Configuration ... : row 2
+Start Writing : D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v1\mesh-v1.igg
+                Writing Geometry File... 
+                Writing Geometry File... Done
+                Writing Topology File...
+                Writing Topology File... Done
+                Writing CGNS File... 
+                Writing CGNS File... Done
+                Writing Meridional Project... 
+                Writing Meridional Project... Done
+                Writing Configuration File... 
+                Writing Configuration File... Done
+Save png pictures aborted on windows to avoid unexpected crashes
+Write Quality Report :
+                      OK: Quality Report Created
+                      fileName: D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v1\mesh-v1.qualityReport
+
+
+  <***> Exit IGG Background Session <***> 
+
+
+AUTOGRID_JOB_BEGIN
+ROW_COUNT_AFTER_INIT 1
+ROW_CONFIGURED 1
+ROW_CONFIGURED 2
+AUTOGRID_JOB_DONE

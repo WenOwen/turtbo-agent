@@ -1,0 +1,1 @@
+D:\NUMECA_SOFTWARE\Fine161\bin64\euranusx86_64.exe "D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\fine\v8-optimized\v8-optimized_n05000_p104130\v8-optimized_n05000_p104130.run" -steering "D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\fine\v8-optimized\v8-optimized_n05000_p104130\v8-optimized_n05000_p104130.steering" -niversion "161" -seq 

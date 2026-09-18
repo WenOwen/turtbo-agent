@@ -1,0 +1,51 @@
+{
+ "run": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.run",
+ "run_bytes": 268415,
+ "grid_file": [
+  "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg"
+ ],
+ "grid_binds_v8_mesh": true,
+ "static_pressure_entries": [
+  "101325"
+ ],
+ "start_from_initial_solution_file": [
+  "no"
+ ],
+ "initial_solution_file": [
+  "unknown",
+  "C:\\Users\\Administrator\\unknown"
+ ],
+ "rotation_speeds_rpm": [
+  0.0,
+  523.598775571636
+ ],
+ "force_surfaces_selected": [
+  "row_1_flux_1_Main_Blade_downStream__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_down__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_inlet__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_outlet__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_shroudgap1_tip_gap_identifier_rotating",
+  "row_1_flux_1_Main_Blade_shroudgap2_tip_gap_identifier_rotating",
+  "row_1_flux_1_Main_Blade_skin__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_skin_blade_(aap-ps)_rotating",
+  "row_1_flux_1_Main_Blade_skin_blade_(aap-ss)_rotating",
+  "row_1_flux_1_Main_Blade_upStream__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_up__hub_identifier__rotating"
+ ],
+ "force_surfaces_expected": [
+  "row_1_flux_1_Main_Blade_downStream__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_down__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_inlet__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_outlet__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_shroudgap1_tip_gap_identifier_rotating",
+  "row_1_flux_1_Main_Blade_shroudgap2_tip_gap_identifier_rotating",
+  "row_1_flux_1_Main_Blade_skin__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_skin_blade_(aap-ps)_rotating",
+  "row_1_flux_1_Main_Blade_skin_blade_(aap-ss)_rotating",
+  "row_1_flux_1_Main_Blade_upStream__hub_identifier__rotating",
+  "row_1_flux_1_Main_Blade_up__hub_identifier__rotating"
+ ],
+ "force_surfaces_exact_match": true,
+ "expected_nonzero_speed_rad_s": 523.5987755982989,
+ "passed": true
+}

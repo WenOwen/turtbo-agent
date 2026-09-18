@@ -1,0 +1,22 @@
+{
+  "schema": "numeca-autogrid-optimize/v1",
+  "source_trb": "D:/Project/Research/Ducted-Fan/run/90kg-duct-fan-v8/mesh/mesh-v1/mesh-v1.trb",
+  "mesh_root": "D:/Project/Research/Ducted-Fan/run/90kg-duct-fan-v8/mesh",
+  "control": {
+    "row_index": 1,
+    "name": "streamwise_blade_upper_points",
+    "candidates": [
+      89,
+      93,
+      97,
+      101,
+      105
+    ]
+  },
+  "acceptance": {
+    "min_skewness_angle_deg": 15,
+    "max_expansion_ratio": 3,
+    "max_point_increase_percent": 10,
+    "max_aspect_increase_percent": 15
+  }
+}

@@ -1,0 +1,32 @@
+
+
+
+  <***>   FINEBATCH 16.1  -  Feb 20 2021 <***> 
+NIBCDataBase::clear lists 
+NIBCDataBase::read: 
+Reading outputs database from resource file: D:\NUMECA_SOFTWARE\Fine161\bin\euranus_outputs.def
+NIFineBatch::merge_mesh, ...
+Start checking the mesh topology ... 
+ Start checking Grid ... 
+ . checking project type ...  OK.
+ . checking Number Of Grid Level I ...  NOT CONSISTENT.
+
+The mesh file "D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\mesh\mesh-v2\mesh-v2.igg"
+and the project "D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\fine\v8-optimized\v8-optimized.iec"
+do not have the same topology
+.
+ TURBO_order: row 0 connection found to row 1 nb RS down 1 up 0
+ TURBO_order: row 0 is in order 0
+ TURBO_order: row 1 is in order 1
+memoryEstimation(), pid_min 0, pid_max: 0
+=======================================
+= Output file(s) successfully written !
+=======================================
+
+memoryEstimation(), pid_min 0, pid_max: 0
+=======================================
+= Output file(s) successfully written !
+=======================================
+
+'chmod' is not recognized as an internal or external command,
+operable program or batch file.

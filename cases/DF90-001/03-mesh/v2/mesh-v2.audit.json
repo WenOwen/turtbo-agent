@@ -1,0 +1,226 @@
+{
+  "mesh_dir": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2",
+  "stem": "mesh-v2",
+  "artifacts": {
+    ".trb": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.trb",
+      "exists": true,
+      "size": 35983
+    },
+    ".igg": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+      "exists": true,
+      "size": 483468
+    },
+    ".cgns": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.cgns",
+      "exists": true,
+      "size": 56197120
+    },
+    ".bcs": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.bcs",
+      "exists": true,
+      "size": 15990
+    },
+    ".config": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.config",
+      "exists": true,
+      "size": 13326
+    },
+    ".qualityReport": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.qualityReport",
+      "exists": true,
+      "size": 4442
+    },
+    ".geomTurbo": {
+      "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.geomTurbo",
+      "exists": true,
+      "size": 353830
+    }
+  },
+  "quality": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.qualityReport",
+    "mesh_validity": "OK  (No Overlapping Cells Generated)",
+    "negative_cell_ok": true,
+    "number_of_points": 1779880,
+    "number_of_rows": 2,
+    "entire": {
+      "min_skewness_angle": 16.406,
+      "max_aspect_ratio": 1078.7,
+      "max_expansion_ratio": 2.5335,
+      "min_wall_distance": 9.61e-06
+    },
+    "rows": {
+      "row 1": {
+        "main_blades": 9,
+        "points": 1071769,
+        "layers": 73,
+        "min_skewness_angle": 16.406,
+        "max_aspect_ratio": 1078.7,
+        "max_expansion_ratio": 2.5335,
+        "min_wall_distance": 9.61e-06,
+        "location_skewness_angle": "row_1_flux_1_Main_Blade_skin I,J,K:0,26,31",
+        "location_aspect_ratio": "row_1_flux_1_Main_Blade_skin I,J,K:0,20,111",
+        "location_expansion_ratio": "row_1_flux_1_Main_Blade_down I,J,K:15,71,55",
+        "location_wall_distance": "row_1_flux_1_Main_Blade_skin I,J,K:9,0,105"
+      },
+      "row 2": {
+        "main_blades": 11,
+        "points": 708111,
+        "layers": 57,
+        "min_skewness_angle": 34.462,
+        "max_aspect_ratio": 1021.7,
+        "max_expansion_ratio": 2.0626,
+        "min_wall_distance": 9.904e-06,
+        "location_skewness_angle": "row_2_flux_1_Main_Blade_skin I,J,K:4,53,274",
+        "location_aspect_ratio": "row_2_flux_1_Main_Blade_skin I,J,K:0,20,190",
+        "location_expansion_ratio": "row_2_flux_1_Main_Blade_skin I,J,K:6,55,250",
+        "location_wall_distance": "row_2_flux_1_Main_Blade_upStream I,J,K:26,0,6"
+      }
+    }
+  },
+  "geomturbo": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.geomTurbo",
+    "channel": {
+      "hub": {
+        "point_count": 100,
+        "sha256": "f83f5e76f4f60e5ff0d00e67b8f2ff112cc7d9153f3aca08265b84817591ac5e",
+        "first_zr_m": [
+          0.0,
+          0.08
+        ],
+        "last_zr_m": [
+          0.3,
+          0.113178491592407
+        ]
+      },
+      "shroud": {
+        "point_count": 100,
+        "sha256": "f5a65d39907fbc723d2402d314724469367a90cddc9b380c2cf75876314037f2",
+        "first_zr_m": [
+          0.0,
+          0.3
+        ],
+        "last_zr_m": [
+          0.3,
+          0.3
+        ]
+      }
+    },
+    "rows": {
+      "row 1": {
+        "periodicity": 9,
+        "has_main_blade": true,
+        "has_tip_gap": true
+      },
+      "row 2": {
+        "periodicity": 11,
+        "has_main_blade": true,
+        "has_tip_gap": false
+      }
+    }
+  },
+  "config": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.config",
+    "inlet_rows": [
+      "row 1"
+    ],
+    "outlet_rows": [
+      "row 2"
+    ],
+    "rs_pairs": [
+      [
+        1,
+        2
+      ]
+    ],
+    "rotation_speed_rpm": {
+      "row 1": 5000.0,
+      "row 2": 0.0
+    },
+    "tip_gap_mentions": 14
+  },
+  "bcs": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.bcs",
+    "counts": {
+      "INL": 1,
+      "OUT": 1,
+      "ROT": 2,
+      "SOL": 36,
+      "PER": 12,
+      "PERNM": 0,
+      "CON": 78,
+      "NMB": 0
+    },
+    "row_blade_counts": {
+      "row 2": [
+        11
+      ],
+      "row 1": [
+        9
+      ]
+    }
+  },
+  "trb": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.trb",
+    "number_of_grid_levels": 3,
+    "first_cell_widths": [
+      1e-05,
+      1e-05
+    ],
+    "skin_clustering": [
+      1e-05,
+      1e-05
+    ],
+    "accuracy": [
+      2,
+      2
+    ],
+    "rows": {
+      "row 1": {
+        "type": "rotor",
+        "tip_gap": true,
+        "tip_gap_width_le_m": 0.002,
+        "tip_gap_width_te_m": 0.002,
+        "b2b_controls": {
+          "boundary_layer_points": 17,
+          "gap_boundary_layer_points": 17,
+          "streamwise_inlet_points": 17,
+          "streamwise_outlet_points": 17,
+          "streamwise_blade_upper_points": 97,
+          "streamwise_blade_lower_points": 97,
+          "azimuthal_inlet_points": 17,
+          "azimuthal_outlet_points": 17
+        }
+      },
+      "row 2": {
+        "type": "stator",
+        "tip_gap": false,
+        "tip_gap_width_le_m": 0.01103104787102334,
+        "tip_gap_width_te_m": 0.01103104787102334,
+        "b2b_controls": {
+          "boundary_layer_points": 17,
+          "gap_boundary_layer_points": 17,
+          "streamwise_inlet_points": 17,
+          "streamwise_outlet_points": 17,
+          "streamwise_blade_upper_points": 169,
+          "streamwise_blade_lower_points": 81,
+          "azimuthal_inlet_points": 17,
+          "azimuthal_outlet_points": 17
+        }
+      }
+    }
+  },
+  "log": {
+    "path": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.autogrid.log",
+    "required": true,
+    "exists": true,
+    "sentinel_ok": true
+  },
+  "issues": []
+}

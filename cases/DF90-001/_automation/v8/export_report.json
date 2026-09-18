@@ -1,0 +1,71 @@
+{
+ "hub": [
+  [
+   0.0,
+   0.08
+  ],
+  [
+   0.0336314179003239,
+   0.0845526084303856
+  ],
+  [
+   0.0675213560461998,
+   0.0906867310404778
+  ],
+  [
+   0.103044547140598,
+   0.094
+  ],
+  [
+   0.187,
+   0.094
+  ],
+  [
+   0.213288903236389,
+   0.0960029810667038
+  ],
+  [
+   0.236971020698547,
+   0.100910276174545
+  ],
+  [
+   0.258611589670181,
+   0.106226518750191
+  ],
+  [
+   0.277802258729935,
+   0.110724866390228
+  ],
+  [
+   0.3,
+   0.113178491592407
+  ]
+ ],
+ "shroud": [
+  [
+   0.0,
+   0.3
+  ],
+  [
+   0.3,
+   0.3
+  ]
+ ],
+ "rows": {
+  "R1": {
+   "ok": true,
+   "geomTurbo": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\autoblade\\R1_13span\\R1.geomTurbo",
+   "xmt": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\autoblade\\xmt\\R1-model.xmt_txt",
+   "geom_bytes": 204473,
+   "xmt_bytes": 930694
+  },
+  "R2": {
+   "ok": true,
+   "geomTurbo": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\autoblade\\R2_13span\\R2.geomTurbo",
+   "xmt": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\autoblade\\xmt\\R2-model.xmt_txt",
+   "geom_bytes": 202807,
+   "xmt_bytes": 94744
+  }
+ },
+ "reopen_ok": true
+}

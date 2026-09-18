@@ -166,3 +166,146 @@
 - 结论：INFO
 - 备注：已运行的 turbo-flow attempt-1 输入及其 result.json/designed_project.json 保留原描述字符串，作为历史运行记录不复写（符合本账本「只追加、不复写」合同）。看板已重生成并原地换版。
 
+## 2026-09-18T22:20:51+08:00 | G3 叶片造型 | PASS
+- 动作：v8 几何重建：13 截面 + 10 点 hub + 手工调整后重导出
+- 实测：R1/R2 各 13 截面；hub P4=(0.103045,0.094) P5=(0.187,0.094) |P5-P4|=83.96mm；转子负向/静子正向与 v7 一致；重开 2/2 通过
+- 判据：截面数=13（硬）| hub 控制点=10、|P5-P4|=84mm、P4-P5 直径=188mm（硬）| 转静切向缠绕方向与 v7 交付 geomTurbo 一致（硬）| 工程 ab_project_open 重开通过（硬）
+- 结论：PASS
+- 备注：产物在 Ducted-Fan/run/90kg-duct-fan-v8/autoblade/{R1_13span,R2_13span,xmt}；R1.par 由用户手工调整，R2 流道按用户要求逐点复制 R1；尚未登记进 manifest（路径不在案例目录下，待用户确认是否入库）
+
+## 2026-09-18T22:20:51+08:00 | G4 网格 | PASS
+- 动作：v8 网格：new-project 基线 + row1 流向单因素优化
+- 实测：mesh-v1 基线 1686584 点/9.4508deg/2.0682；候选 89->12.919deg、93->14.544deg、97->16.406deg；选定 mesh-v2 1779880 点/16.406deg/2.5335/长宽比 1078.7 不变，点数 +5.53%
+- 判据：负单元=0（硬）| 最小偏斜角>=15deg（沿袭 v7 工程合同）| 最大膨胀率<=3（沿袭）| 点数增幅<=10%
+- 结论：PASS
+- 备注：流道变化后必须 new-project，禁止 template-replace；v7 的候选值不可套用，需重扫。产物 mesh/mesh-v2
+
+## 2026-09-18T22:20:51+08:00 | G5 求解 | INFO
+- 动作：v8 求解布置：单网格 IEC + 57 工况物化 + 预启动审计
+- 实测：57/57 computation；iec_build_audit passed；scan_prelaunch_audit passed；project_sync_audit 全 0（未登记/未物化/布局错位/重名）
+- 判据：一网格一 IEC（硬）| IEC 登记数与计划一致（硬）| 每个 .run 的 GRID_FILE 指向本次网格（硬）| 11 个转子载荷面精确匹配（硬）| 冷启动工况为 START_FROM=no（硬）
+- 结论：INFO
+- 备注：锚点 n05000_p101325 正在迭代；其余 56 点未启动。仅代表 running，未做收敛验收
+
+## 2026-09-18T22:20:51+08:00 | G3 叶片造型 | PASS
+- 动作：阶段状态 -> done
+- 判据：（阶段状态变更）
+- 结论：PASS
+
+## 2026-09-18T22:20:51+08:00 | G4 网格 | PASS
+- 动作：阶段状态 -> done
+- 判据：（阶段状态变更）
+- 结论：PASS
+
+## 2026-09-18T23:06:12+08:00 | G3 叶片造型 | WARN
+- 动作：登记产物 02-geometry/v8/PROVENANCE.md
+- 输入：02-geometry/v8/PROVENANCE.md  sha256=f41a2e7f37d9dd70  bytes=4697
+- 上游：01-scheme/v1/叶片几何参数表.csv
+- 产物：02-geometry/v8/PROVENANCE.md  sha256=f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5
+- 判据：手工调整声明：R1 轮毂 10 点由用户按电机包络(EMRAX 188 = Ø188mm x 79mm)调整；13 截面；LEAN_BETA=3度。G3-7「由参数表导出」不成立。
+- 结论：WARN
+- 备注：同时记录 build-par/v8_build_manifest.json 已过期（hub 与 lean 均与交付不符）
+
+## 2026-09-18T23:06:12+08:00 | G3 叶片造型 | WARN
+- 动作：登记产物 02-geometry/v8/autoblade/R1_13span/R1.geomTurbo
+- 输入：02-geometry/v8/autoblade/R1_13span/R1.geomTurbo  sha256=32abbbf639c150ad  bytes=204473
+- 上游：02-geometry/v8/PROVENANCE.md
+- 产物：02-geometry/v8/autoblade/R1_13span/R1.geomTurbo  sha256=32abbbf639c150adf47a66db20d083ff347728a46f948a0fe473b06ab695a0d4
+- 判据：13 截面导出件；含人工调整的轮毂型线与弯掠，不可由参数表复现
+- 结论：WARN
+- 备注：转子；REVERSE_THETA=0，导出后负向，与 v7 交付件方向一致
+
+## 2026-09-18T23:06:12+08:00 | G3 叶片造型 | WARN
+- 动作：登记产物 02-geometry/v8/autoblade/R2_13span/R2.geomTurbo
+- 输入：02-geometry/v8/autoblade/R2_13span/R2.geomTurbo  sha256=ce0768ab5b2e04ff  bytes=202807
+- 上游：02-geometry/v8/PROVENANCE.md
+- 产物：02-geometry/v8/autoblade/R2_13span/R2.geomTurbo  sha256=ce0768ab5b2e04ffb06add624cdfc3800fb0c7e071f95786149ee774e5257dd8
+- 判据：13 截面；流道逐点复制为与 R1 一致，其余参数不动
+- 结论：WARN
+- 备注：静子；REVERSE_THETA=0，导出后正向
+
+## 2026-09-18T23:06:12+08:00 | G4 网格 | PASS
+- 动作：登记产物 03-mesh/v2/mesh-v2.igg
+- 输入：03-mesh/v2/mesh-v2.igg  sha256=433150fa56c18eca  bytes=483468
+- 上游：02-geometry/v8/autoblade/R1_13span/R1.geomTurbo
+- 产物：03-mesh/v2/mesh-v2.igg  sha256=433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d
+- 判据：最小偏斜角 16.406度 (>=10)；1,779,880 点；new-project 模式；单因素扫描 89->93->97 的首个通过项
+- 结论：PASS
+- 备注：交付网格。网格身份 SHA256 433150fa...fac3d（见 README-v8）
+
+## 2026-09-18T23:06:12+08:00 | G4 网格 | PASS
+- 动作：登记产物 03-mesh/v2/mesh-v2.qualityReport
+- 输入：03-mesh/v2/mesh-v2.qualityReport  sha256=5b12a8079755b3c5  bytes=4442
+- 上游：03-mesh/v2/mesh-v2.igg
+- 产物：03-mesh/v2/mesh-v2.qualityReport  sha256=5b12a8079755b3c569cebb4fede061211073242c297658efd6c229ba8ca62784
+- 判据：质量报告存在且非空
+- 结论：PASS
+
+## 2026-09-18T23:06:12+08:00 | G4 网格 | PASS
+- 动作：登记产物 03-mesh/v2/mesh-v2.optimization.json
+- 输入：03-mesh/v2/mesh-v2.optimization.json  sha256=b9114d1520433722  bytes=3124
+- 上游：无
+- 产物：03-mesh/v2/mesh-v2.optimization.json  sha256=b9114d1520433722645ad9391e4a036659eab2546502c8a35c0fbe754f50f682
+- 判据：单因素扫描记录 89/93/97 -> 12.919/14.544/16.406 度
+- 结论：PASS
+- 备注：注：脚本在产物写完后抛 UnicodeEncodeError，产物完整
+
+## 2026-09-18T23:06:12+08:00 | G4 网格 | WARN
+- 动作：登记产物 03-mesh/v1/mesh-v1.qualityReport
+- 输入：03-mesh/v1/mesh-v1.qualityReport  sha256=4c849541dafa1215  bytes=4473
+- 上游：02-geometry/v8/autoblade/R1_13span/R1.geomTurbo
+- 产物：03-mesh/v1/mesh-v1.qualityReport  sha256=4c849541dafa12150cb4312c92db54e24a8b8bb2da1ed461329edfd8489e91c6
+- 判据：基线网格最小偏斜角 9.4508度，低于 10 度阈值；保留作为优化来源与证据
+- 结论：WARN
+- 备注：new-project 基线，非交付件
+
+## 2026-09-18T23:06:12+08:00 | G5 求解 | PASS
+- 动作：登记产物 04-solve/v1/iec_build_audit.json
+- 输入：04-solve/v1/iec_build_audit.json  sha256=7b717db31d854649  bytes=13116
+- 上游：无
+- 产物：04-solve/v1/iec_build_audit.json  sha256=7b717db31d8546497d128ac2486833eb68f49e8fefabada1f700fd45b459efc3
+- 判据：57/57 通过：转速、出口静压、11 个转子载荷面
+- 结论：PASS
+
+## 2026-09-18T23:06:12+08:00 | G5 求解 | PASS
+- 动作：登记产物 04-solve/v1/scan_prelaunch_audit.json
+- 输入：04-solve/v1/scan_prelaunch_audit.json  sha256=25ffd4d1ad2746c3  bytes=53528
+- 上游：无
+- 产物：04-solve/v1/scan_prelaunch_audit.json  sha256=25ffd4d1ad2746c37ebaea8f0b2f29697ca536b97489eec340274d51feb57478
+- 判据：57/57 通过；冷启动锚点识别为 cold_start
+- 结论：PASS
+
+## 2026-09-18T23:06:12+08:00 | G5 求解 | PASS
+- 动作：登记产物 04-solve/v1/project_sync_audit.json
+- 输入：04-solve/v1/project_sync_audit.json  sha256=6d0334e35e9d6fc1  bytes=57169
+- 上游：无
+- 产物：04-solve/v1/project_sync_audit.json  sha256=6d0334e35e9d6fc1a67d845d3007b4bae1bad80ab3418568b9a36252957c2d38
+- 判据：project_without_run=0、run_not_registered=0、layout_mismatch=0、无重名、网格一致（C-007 双向同步）
+- 结论：PASS
+
+## 2026-09-18T23:06:12+08:00 | G5 求解 | INFO
+- 动作：登记产物 04-solve/v1/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.std
+- 输入：04-solve/v1/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.std  sha256=349a129c968ea5d4  bytes=45056
+- 上游：无
+- 产物：04-solve/v1/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.std  sha256=349a129c968ea5d45ef1ddd88c30bb3e14a0d23a31bb159df51370c421d72270
+- 判据：锚点正在迭代中 —— 仅代表 running。未做收敛验收（C-002 判据未执行）
+- 结论：INFO
+- 备注：其余 56 点未启动；本条目不得被解读为 accepted
+
+## 2026-09-18T23:06:12+08:00 | G5 求解 | INFO
+- 动作：登记产物 _external/v8-large-binaries.json
+- 输入：_external/v8-large-binaries.json  sha256=f03c9f6d0c70e79f  bytes=3685
+- 上游：无
+- 产物：_external/v8-large-binaries.json  sha256=f03c9f6d0c70e79f89e692a7856aa90be2145d48a456189fc43f1a6ce2247ef2
+- 判据：10 个大二进制（355.5 MB）的外部路径 + sha256 索引：.iec 23.8MB、.cgns x3 (162.8/50.6/94.9MB)、.geom x2、.adf、.res、.mf、.xmf
+- 结论：INFO
+- 备注：按账本合同「只索引不复制」处理；含 n05000_p101325.cgns 162.84 MB，说明锚点已写出解
+
+## 2026-09-18T23:06:57+08:00 | G3 叶片造型 | WARN
+- 动作：v8 归位入案例（361 文件 / 23MB）+ 手工调整溯源声明
+- 实测：R1 轮毂 10 点人工调整（P4-P5 = Ø188mm x 83.96mm，对应 EMRAX 188 电机包络）；LEAN_BETA 3 度；13 截面（参数表为 5 截面）；build-par/v8_build_manifest.json 已过期
+- 产物：02-geometry/v8/PROVENANCE.md  sha256=f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5
+- 判据：G3-7「几何由参数表导出」不成立；其余自查可判
+- 结论：WARN
+- 备注：10 个大二进制 (355.5MB) 按只索引不复制登记在 _external/v8-large-binaries.json。根因：电机几何包络未进 requirements.yaml，G2 无法表达该约束，只能在 G3 手工满足。已把该字段补进 requirements-interview.md Q5。
+
