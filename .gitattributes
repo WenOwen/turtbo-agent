@@ -1,0 +1,15 @@
+# 案例产物按字节保管 —— 禁止 git 做行尾转换。
+#
+# 为什么：manifest.json 里登记的 sha256 是对**工作区字节**算的。
+# git 的 autocrlf 会在 checkout 时把 LF 转成 CRLF，字节一变哈希就对不上，
+# verify 会报"哈希不符"。本轮实测踩到：git checkout 还原 PROVENANCE.md 后
+# 文件从 4697 涨到 4815 字节（多出 118 个 CRLF），verify 直接失败。
+#
+# 结论：**还原已登记产物只能用内容寻址历史库，不能用 git。**
+#   python tools/case_watch.py --case <案例> --restore <路径> --sha <哈希>
+#
+# -text 关闭行尾转换，同时让 git 按二进制处理合并（产物本来也不该三方合并）。
+cases/** -text
+
+# 看守与历史库是内容寻址存储，必须逐字节一致
+cases/**/_watch/** -text

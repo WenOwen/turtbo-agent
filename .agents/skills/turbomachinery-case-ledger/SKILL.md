@@ -153,6 +153,34 @@ python tools/case_ledger.py add `
 
 ---
 
+## 三点五、还原已登记的产物：只能用内容寻址历史库，不能用 git
+
+**合同**：`manifest.json` 里登记的 `sha256` 是对**工作区字节**算的。
+任何会改变字节的操作都会让 `verify` 失败 —— **git 就是其中之一**。
+
+```powershell
+# 正确：按字节还原，哈希自校验，不自洽就拒绝执行
+python tools/case_watch.py --case cases/<ID> --restore <相对路径> --sha <完整 sha256>
+```
+
+**反例（实测踩到）**：用 `git checkout -- <文件>` 还原 `PROVENANCE.md`，
+仓库开着 `autocrlf`，checkout 把 LF 转成 CRLF，文件从 **4697 涨到 4815 字节**
+（多出 118 个 CRLF），`verify` 立刻报"哈希不符"。
+
+已加 `.gitattributes` 的 `cases/** -text` 关闭转换，但**这不能使 git 成为还原手段** ——
+历史提交里的字节与登记时的字节本来就可能不同。
+
+**两条硬规则**：
+1. 还原产物走 `case_watch --restore`，不要走 git。
+2. 内容寻址存储（`_watch/history/`）**必须按字节读写**。
+   用 `read_text` + `encode` 往返会把 CRLF 规范化成 LF，哈希必然对不上。
+   这个 bug 本轮也踩到过，是哈希自校验把它挡下来的。
+
+**来源**：2026-09-19 实测（本轮连续三次 CRLF 事故）
+**适用边界**：所有对已登记产物做写回/还原的操作；所有内容寻址存储。
+
+---
+
 ## 四、memory.md：经验沉淀与晋升
 
 ### 条目格式
