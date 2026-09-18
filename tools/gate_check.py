@@ -37,11 +37,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import case_ledger as ledger  # noqa: E402
 
-EXIT_OK = 0
-EXIT_USAGE = 2
-EXIT_PRECONDITION = 3
-EXIT_VERIFY = 4
-EXIT_INTERNAL = 5
+# 退出码语义：让"查不了"和"过了"在机器眼里也不是一回事。
+# 以前 PASS/WARN/SKIP 一律 exit 0，JSON 里写着 "ok": false，进程照样报成功 ——
+# 任何用退出码判断的脚本/CI/agent 都会把"还查不了"读成"过了"。
+EXIT_OK = 0            # 全部通过
+EXIT_USAGE = 2         # 用法错误
+EXIT_PRECONDITION = 3  # 前置条件不满足（案例目录不存在等）
+EXIT_VERIFY = 4        # 有检查没通过
+EXIT_WARN = 5          # 有注意项（能走，但挂着已知问题）
+EXIT_SKIP = 6          # 有必查项还查不了
+EXIT_INTERNAL = 7      # 工具自身出错
 
 LF = chr(10)
 BT = chr(96)
@@ -158,6 +163,17 @@ MANDATORY_REQUIREMENT_PATHS = [
 ]
 
 
+# 这些检查"没数据"就是没做完，不能算通过。
+# 判别标准：它查的是**本步骤必须交付的东西**，而不是"有就顺便看一眼"。
+REQUIRED_CHECKS = {
+    "G0-1", "G0-2", "G0-3", "G0-4",          # 需求基线：没有它后面全是空中楼阁
+    "G1-1", "G1-2",                           # 设计大纲
+    "G4-1", "G4-2", "G4-3", "G4-4",          # 网格六件套 + 负单元
+    "G5-1", "G5-2", "G5-3", "G5-4", "G5-5",  # 求解：没跑就没跑
+    "G6-1", "G6-2", "G6-3",                  # 交付：三表 + 推力闭合
+}
+
+
 class Result:
     # 所有实际跑过的 check id 都记在这里，供 --audit 与合同比对
     SEEN = set()
@@ -168,6 +184,11 @@ class Result:
 
     def add(self, cid, title, criteria, measured, verdict, source, detail=None):
         Result.SEEN.add(cid)
+        # 必查项没有数据 = 没做完。以前这里原样记 SKIP，然后 verdict 把 SKIP
+        # 整个忽略掉 —— 结果就是"最关键的推力闭合判据恒 SKIP，时间线却显示绿灯"。
+        if verdict == "SKIP" and cid in REQUIRED_CHECKS:
+            verdict = "FAIL"
+            measured = str(measured) + "　→ 本项必查，缺数据即未完成"
         self.items.append({
             "id": cid, "title": title, "criteria": criteria,
             "measured": measured, "verdict": verdict, "source": source,
@@ -194,6 +215,9 @@ class Result:
             return "WARN"
         if self.skips and len(self.skips) == len(self.items):
             return "SKIP"
+        if self.skips:
+            # 还有查不了的项 —— 能往下走，但绝不能显示成"通过"。
+            return "WARN"
         return "PASS"
 
 
@@ -370,9 +394,57 @@ def external_index(case):
     return out
 
 
+SIG_KEYS = ("blocks", "block_signature", "block_signatures",
+            "grid_blocks", "block_dims", "block_table")
+
+
+def igg_block_signature(igg):
+    """直接从 .igg 里数块 —— 它才是求解器真正读的那份网格。
+
+    IGG 文件 98.7% 可打印，块记录长这样：
+        Block 0
+        1 row_1_flux_1_Main_Blade_downStream domain1  6 89 73 33 ...
+    即 "Block <序号>" 后跟块数、块名，再接 IMAX/JMAX/KMAX。
+    审计 JSON 里没记块签名时这里能补上 —— 比"记不了"有用。
+    """
+    if igg is None:
+        return None
+    try:
+        raw = igg.read_bytes()
+    except Exception:
+        return None
+    if len(raw) > 64 * 1024 * 1024:
+        return None
+    text = raw.decode("latin-1", errors="replace")
+    blocks = []
+    for m in re.finditer(
+            r"Block\s+(\d+)\s*\r?\n\s*(\d+)\s+(\S+)\s+(\S+)\s+"
+            r"(\d+)\s+(\d+)\s+(\d+)", text):
+        blocks.append({
+            "index": int(m.group(1)), "name": m.group(3), "domain": m.group(4),
+            "imax": int(m.group(5)), "jmax": int(m.group(6)), "kmax": int(m.group(7)),
+        })
+    return blocks or None
+
+
+def latest_version(parent: Path, fallback="v1"):
+    """取版本号最大的那一版（v10 > v9 > v2 > v1，按数字比不是按字符串比）。
+
+    默认查最旧那版是危险的：案例当前是 v2，默认却汇报 v1 的结论，还不告警。
+    """
+    if not parent.is_dir():
+        return fallback
+    vs = [p.name for p in parent.iterdir()
+          if p.is_dir() and re.fullmatch(r"v\d+", p.name)]
+    if not vs:
+        return fallback
+    return max(vs, key=lambda s: int(s[1:]))
+
+
 def gate_mesh(case: Path, args) -> Result:
     r = Result("G4")
-    root = case / "03-mesh" / args.version
+    version = args.version or latest_version(case / "03-mesh")
+    root = case / "03-mesh" / version
     if not root.is_dir():
         r.add("G4-1", "网格目录存在", "03-mesh/<version>/ 必须存在",
               "缺失：" + str(root), "SKIP", "gates.md#G4")
@@ -435,8 +507,6 @@ def gate_mesh(case: Path, args) -> Result:
     # 块签名（若有 mesh_audit.json）
     # 块签名审计文件的实际命名随工具而变（mesh_audit.json / <stem>.audit.json），
     # 所以按后缀找，不要写死文件名 —— 否则检查在但永远不触发（实测踩过）。
-    SIG_KEYS = ("blocks", "block_signature", "block_signatures",
-                "grid_blocks", "block_dims", "block_table")
     audits = sorted(root.glob("*.audit.json")) + sorted(root.glob("mesh_audit.json"))
     audits = [a for a in dict.fromkeys(audits) if a.is_file()]
     if audits:
@@ -455,14 +525,31 @@ def gate_mesh(case: Path, args) -> Result:
                   found_sig[0] + "　keys=" + str(list(found_sig[1].keys())[:6]),
                   "PASS", "C-007")
         else:
-            r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
-                  "找到 " + str([a.name for a in audits])
-                  + "，但没有块签名字段（查过 " + "/".join(SIG_KEYS) + "）。"
-                  + "C-007 要求记录块数 + 每块 IMAX/JMAX/KMAX —— 需在网格审计里补上",
-                  "WARN", "C-007")
+            igg = next(iter(sorted(root.glob("*.igg"))), None)
+            sig = igg_block_signature(igg) if igg else None
+            if sig:
+                r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
+                      "%s　%d 块　%s" % (igg.name, len(sig),
+                                         " ".join("%s:%dx%dx%d" % (b["name"][:14], b["imax"],
+                                                                   b["jmax"], b["kmax"])
+                                                  for b in sig[:3])),
+                      "PASS", "C-007", {"blocks": sig})
+            else:
+                r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
+                      "找到 " + str([a.name for a in audits])
+                      + "，但没有块签名字段（查过 " + "/".join(SIG_KEYS) + "）；"
+                      + "也没能从 .igg 里解析出块记录",
+                      "WARN", "C-007")
     else:
-        r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
-              root.name + " 下无 *.audit.json", "SKIP", "C-007")
+        igg = next(iter(sorted(root.glob("*.igg"))), None)
+        sig = igg_block_signature(igg) if igg else None
+        if sig:
+            r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
+                  "无审计 JSON；从 %s 直接解析出 %d 块" % (igg.name, len(sig)),
+                  "PASS", "C-007", {"blocks": sig})
+        else:
+            r.add("G4-5", "块签名已记录", criteria_of("G4-5", "必须含块签名"),
+                  root.name + " 下既无 *.audit.json 也无可用 .igg", "SKIP", "C-007")
     return r
 
 
@@ -471,7 +558,11 @@ def gate_solve(case: Path, args) -> Result:
     r = Result("G5")
     summary_path = Path(args.summary) if args.summary else None
     if summary_path is None:
-        cands = sorted((case / "04-solve").glob("**/sweep_summary.csv")) if (case / "04-solve").is_dir() else []
+        cands = []
+        for sub in ("04-solve", "_replay", "05-post"):
+            d = case / sub
+            if d.is_dir():
+                cands += sorted(d.glob("**/sweep_summary.csv"))
         summary_path = cands[-1] if cands else None
     if summary_path is None or not Path(summary_path).is_file():
         r.add("G5-1", "工况汇总存在", "sweep_summary.csv 必须存在（或用 --summary 指定）",
@@ -538,15 +629,19 @@ DELIVERY_BANNED = ["CFD质量状态", "质量状态", "警告", "D:\\", "C:\\", 
 
 def gate_post(case: Path, args) -> Result:
     r = Result("G6")
-    root = case / "06-delivery" / args.version
+    version = args.version or latest_version(case / "06-delivery")
+    root = case / "06-delivery" / version
     if not root.is_dir():
         r.add("G6-1", "交付目录存在", "06-delivery/<version>/ 必须存在", "缺失", "SKIP", "gates.md#G6")
         return r
     # .html 是看板交付物；.png/.svg 是图；都算交付文件。
+    # 但"交付三表"是硬要求：CSV 一个都没有 = 这步没做完。
     tables = [p for p in root.iterdir()
               if p.suffix.lower() in (".csv", ".xlsx", ".md", ".html", ".png", ".svg")]
-    r.add("G6-1", "交付文件存在", "交付目录必须有表格/说明文件",
-          "files=" + str(len(tables)), "PASS" if tables else "FAIL", "gates.md#G6")
+    csvs = [p for p in tables if p.suffix.lower() in (".csv", ".xlsx")]
+    r.add("G6-1", "交付表存在", "交付目录必须有 CSV/XLSX 交付表（三表是硬要求）",
+          "files=%d　其中表=%d" % (len(tables), len(csvs)),
+          "PASS" if csvs else "FAIL", "gates.md#G6")
 
     banned = param("G6-2", "banned", [])            # 禁用字段来自 C-003
     if not isinstance(banned, list):
@@ -554,24 +649,66 @@ def gate_post(case: Path, args) -> Result:
     check_drive = bool(param("G6-2", "banned_drive_prefix", True))
     drive_re = re.compile(r"[A-Za-z]:[\\/]")
     dirty = []
+    # 以前这里 continue 掉所有非 .csv —— 于是唯一的交付物 dashboard.html
+    # 里明晃晃的 D:\ 路径和 sha256 全部免检通过。交付物就是交付物，不看后缀。
     for p in tables:
-        if p.suffix.lower() != ".csv":
+        try:
+            text = p.read_text(encoding="utf-8", errors="replace")
+        except Exception:
             continue
-        text = p.read_text(encoding="utf-8", errors="replace")
         for token in banned:
             if token and token in text:
                 dirty.append({"file": p.name, "token": token})
         if check_drive and drive_re.search(text):
             dirty.append({"file": p.name, "token": "（磁盘绝对路径）"})
-    r.add("G6-2", "交付表无禁用字段",
-          criteria_of("G6-2") + "　禁用 " + str(len(banned)) + " 个字段 + 磁盘路径",
+    r.add("G6-2", "交付物无禁用字段",
+          criteria_of("G6-2") + "　禁用 " + str(len(banned)) + " 个字段 + 磁盘路径"
+          + "（覆盖 " + str(len(tables)) + " 个交付文件，不限后缀）",
           "dirty=%d" % len(dirty), "PASS" if not dirty else "FAIL", "C-003", {"dirty": dirty})
 
-    thrust_files = [p for p in root.glob("*.csv") if "thrust" in p.name.lower() or "推力" in p.name]
-    r.add("G6-3", "静推力闭合已记录",
-          "static_thrust = momentum_thrust + pressure_thrust，容差 1e-6 相对",
-          "candidates=" + str([p.name for p in thrust_files]),
-          "SKIP", "C-004")
+    # G6-3：真的去找推力闭合数据，找不到就是 FAIL（它在 REQUIRED_CHECKS 里）。
+    tol = float(param("G6-3", "closure_tol_rel", 1e-6))
+    cands = [p for p in root.rglob("*.csv")
+             if any(k in p.name.lower() for k in ("thrust", "推力", "closure", "闭合"))]
+    if not cands:
+        cands = [p for p in root.rglob("*.csv")]
+    checked, worst, bad = 0, 0.0, []
+    for p in cands:
+        try:
+            with p.open("r", encoding="utf-8-sig", newline="") as fh:
+                for row in csv.DictReader(fh):
+                    keys = {k.strip().lower(): (v or "").strip() for k, v in row.items() if k}
+                    def num(*names):
+                        for n in names:
+                            if n in keys:
+                                try:
+                                    return float(keys[n])
+                                except ValueError:
+                                    return None
+                        return None
+                    total = num("static_thrust_n", "static_thrust", "静推力_n", "静推力")
+                    mom = num("momentum_thrust_n", "momentum_thrust", "动量推力_n")
+                    pres = num("pressure_thrust_n", "pressure_thrust", "压力推力_n")
+                    if total is None or mom is None or pres is None:
+                        continue
+                    checked += 1
+                    denom = max(abs(total), 1e-12)
+                    err = abs(total - (mom + pres)) / denom
+                    worst = max(worst, err)
+                    if err > tol:
+                        bad.append({"file": p.name, "static": total,
+                                    "sum": mom + pres, "rel_err": err})
+        except Exception:
+            continue
+    if checked == 0:
+        r.add("G6-3", "静推力闭合",
+              criteria_of("G6-3"), "交付表里找不到 静推力/动量推力/压力推力 三列",
+              "SKIP", "C-004")
+    else:
+        r.add("G6-3", "静推力闭合",
+              criteria_of("G6-3") + "　容差 %.0e（来自合同机读块）" % tol,
+              "checked=%d　worst_rel_err=%.3e" % (checked, worst),
+              "PASS" if not bad else "FAIL", "C-004", {"bad": bad})
     return r
 
 
@@ -730,7 +867,8 @@ def main(argv=None):
     p = argparse.ArgumentParser(prog="gate_check.py", description="阶段闸门判定")
     p.add_argument("gate", choices=list(GATES.keys()) + ["all", "audit"])
     p.add_argument("--case", required=True)
-    p.add_argument("--version", default="v1")
+    p.add_argument("--version", default=None,
+                   help="版本目录名，如 v1/v2；不给就取最新版")
     p.add_argument("--summary", default=None)
     p.add_argument("--no-log", dest="log", action="store_false", default=True)
     p.add_argument("--json", action="store_true")
@@ -778,7 +916,9 @@ def main(argv=None):
 
     if args.json:
         print(json.dumps({
-            "ok": overall in ("PASS", "SKIP"),
+            "ok": overall == "PASS",
+            "exit_code": {"PASS": EXIT_OK, "FAIL": EXIT_VERIFY,
+                          "WARN": EXIT_WARN, "SKIP": EXIT_SKIP}[overall],
             "overall": overall,
             "gates": [{"gate": r.gate, "verdict": r.verdict, "items": r.items}
                       for _, r in results],
@@ -788,7 +928,13 @@ def main(argv=None):
             print(render(result))
         print("总体：" + overall)
 
-    return EXIT_OK if overall in ("PASS", "WARN", "SKIP") else EXIT_VERIFY
+    if overall == "PASS":
+        return EXIT_OK
+    if overall == "FAIL":
+        return EXIT_VERIFY
+    if overall == "WARN":
+        return EXIT_WARN
+    return EXIT_SKIP
 
 
 if __name__ == "__main__":

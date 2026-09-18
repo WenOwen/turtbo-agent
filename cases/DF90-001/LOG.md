@@ -413,3 +413,52 @@
 - 判据：static_thrust = momentum_thrust + pressure_thrust，容差 1e-6 相对 | 交付目录必须有表格/说明文件 | 见合同 C-003「交付参数表是工程表，不是审计日志」　禁用 4 个字段 + 磁盘路径
 - 结论：PASS
 
+## 2026-09-19T01:41:44+08:00 | G0 需求 | PASS
+- 动作：闸门判定 G0
+- 命令：python tools/gate_check.py G0 --case cases/DF90-001
+- 实测：G0-1=PASS; G0-2=PASS; G0-3=PASS; G0-4=PASS; G0-5=PASS
+- 判据：requirements.yaml 必须存在 | source=open/assumed 的字段必须在 open_questions.md 有对应条目 | thrust.unit 必须是 kgf/N/kN/lbf 之一 | 推力目标 / 环境条件 / 桨盘直径 / 转速上限 必须齐全且带单位 | 见合同 C-004「整机静推力只认控制体口径」　允许 control_volume/wall_axial_force
+- 结论：PASS
+
+## 2026-09-19T01:41:44+08:00 | G1 设计大纲 | PASS
+- 动作：闸门判定 G1
+- 命令：python tools/gate_check.py G1 --case cases/DF90-001
+- 实测：G1-1=PASS; G1-2=PASS; G1-3=PASS; G1-4=PASS
+- 判据：00-brief/design_brief.md 必须存在 | 大纲中不得出现「保证/一定/必然达到」等断言 | 大纲必须包含 物理链 / 变量与约束 / 自检 三部分 | 盘载荷 0.5-20 kPa 且诱导速度 5-120 m/s
+- 结论：PASS
+
+## 2026-09-19T01:41:44+08:00 | G4 网格 | WARN
+- 动作：闸门判定 G4
+- 命令：python tools/gate_check.py G4 --case cases/DF90-001
+- 实测：G4-1=PASS; G4-2=PASS; G4-3=PASS; G4-4=PASS; G4-5=WARN
+- 判据：.qualityReport 必须存在且非空 | .trb/.igg/.cgns/.qualityReport 必须齐全；大二进制可在 _external 索引中 | 网格不得有负体积单元 | 至少一套同名的网格文件 | 见合同 C-007「一个唯一网格 ↔ 一个独立 `.iec`」
+- 结论：WARN
+
+## 2026-09-19T01:41:44+08:00 | G5 求解 | FAIL
+- 动作：闸门判定 G5
+- 命令：python tools/gate_check.py G5 --case cases/DF90-001
+- 实测：G5-1=FAIL
+- 判据：sweep_summary.csv 必须存在（或用 --summary 指定）
+- 结论：FAIL
+
+## 2026-09-19T01:41:44+08:00 | G6 后处理与交付 | FAIL
+- 动作：闸门判定 G6
+- 命令：python tools/gate_check.py G6 --case cases/DF90-001
+- 实测：G6-1=FAIL; G6-2=FAIL; G6-3=FAIL
+- 判据：交付目录必须有 CSV/XLSX 交付表（三表是硬要求） | 见合同 C-003「交付参数表是工程表，不是审计日志」　禁用 4 个字段 + 磁盘路径（覆盖 1 个交付文件，不限后缀） | 见合同 C-004「整机静推力只认控制体口径」
+- 结论：FAIL
+
+## 2026-09-19T01:45:14+08:00 | G5 求解 | WARN
+- 动作：闸门判定 G5
+- 命令：python tools/gate_check.py G5 --case cases/DF90-001
+- 实测：G5-1=PASS; G5-2=PASS; G5-3=PASS; G5-4=PASS; G5-5=WARN
+- 判据：sweep_summary.csv 必须存在 | 必须含 case/rpm/state/mass_error_pct | 振荡侧边界的 state 必须被记录；rejected（策略）与 stopped（人为）语义不同，不得混为一谈 | 每个 stopped/rejected 点必须记录 reason | 见合同 C-002「出口静压扫点：末段质量流量稳定性是主判据」　阈值 1.0%
+- 结论：WARN
+
+## 2026-09-19T01:46:57+08:00 | G4 网格 | PASS
+- 动作：闸门判定 G4
+- 命令：python tools/gate_check.py G4 --case cases/DF90-001
+- 实测：G4-1=PASS; G4-2=PASS; G4-3=PASS; G4-4=PASS; G4-5=PASS
+- 判据：.qualityReport 必须存在且非空 | .trb/.igg/.cgns/.qualityReport 必须齐全；大二进制可在 _external 索引中 | 网格不得有负体积单元 | 至少一套同名的网格文件 | 见合同 C-007「一个唯一网格 ↔ 一个独立 `.iec`」
+- 结论：PASS
+
