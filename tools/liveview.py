@@ -590,10 +590,34 @@ def build_views(case_id, force=False):
     except Exception as exc:
         groups.append({"kind": "mesh", "title": "网格", "error": repr(exc), "views": []})
 
+    try:
+        import cfd_view
+        sums = cfd_view.find_summaries(case)
+        views = []
+        with _VIEW_LOCK:
+            for t in sums:
+                sub = out_root / ("cfd-" + t.parent.name)
+                if not _stamp_ok(sub, _sig_of(t), force):
+                    cfd_view.build(t, sub)
+                    (sub / ".source.json").write_text(json.dumps(_sig_of(t)), encoding="utf-8")
+                rel = sub.relative_to(ROOT).as_posix()
+                views.append({
+                    "name": t.parent.name, "dir": rel,
+                    "images": [{"title": t_, "note": n_, "path": rel + "/" + f_}
+                               for f_, t_, n_ in (
+                                   ("map.svg", "性能曲线", "只连已验收点，未验收画 ×"),
+                                   ("sweep.svg", "扫点状态", "每格一个工况"),
+                                   ("convergence.svg", "收敛情况", "步数 vs 质量不平衡"))],
+                })
+        if views:
+            groups.append({"kind": "cfd", "title": "CFD 结果", "hint": "性能曲线与扫点", "views": views})
+    except Exception as exc:
+        groups.append({"kind": "cfd", "title": "CFD 结果", "error": repr(exc), "views": []})
+
     live = [g for g in groups if g["views"]]
     if not live:
         return {"ok": True, "available": False, "groups": groups,
-                "reason": "本案例还没有几何或网格产物（第 4、5 步的产物）"}
+                "reason": "本案例还没有几何、网格或求解产物"}
     return {"ok": True, "available": True, "groups": groups}
 
 
