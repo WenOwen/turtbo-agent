@@ -507,6 +507,60 @@ def resolve_in_root(rel):
     return candidate
 
 
+# ── 几何可视化 ─────────────────────────────────────────────────────────────
+# 原则：**每次请求都重新生成**，不缓存。
+# 理由：agent 改完几何，人切回页面就该看到新的 —— 这正是"一边操作一边看得见"。
+# 生成一套 SVG 大约 0.2 秒，比缓存失效的复杂度便宜得多。
+_VIEW_LOCK = threading.Lock()
+
+
+def build_views(case_id, force=False):
+    """生成（或复用）该案例的几何视图，返回可用的视图清单。"""
+    case = case_dir_of(case_id)
+    try:
+        import geom_view
+    except Exception as exc:
+        raise ApiError("几何可视化模块不可用：" + repr(exc), 500)
+
+    geoms = geom_view.find_geomturbo(case)
+    if not geoms:
+        return {"ok": True, "available": False,
+                "reason": "本案例还没有 .geomTurbo 几何文件（第 4 步的产物）",
+                "views": []}
+
+    out_root = case / "_view"
+    views = []
+    with _VIEW_LOCK:
+        for g in geoms:
+            sub = out_root / g.stem
+            # 源文件没改就跳过重算：几何文件通常几百 KB，比较 mtime 很便宜
+            stamp = sub / ".source.json"
+            sig = {"path": str(g), "mtime": g.stat().st_mtime, "size": g.stat().st_size}
+            if not force and stamp.is_file():
+                try:
+                    if json.loads(stamp.read_text(encoding="utf-8")) == sig:
+                        views.append(_view_entry(case, sub, g))
+                        continue
+                except Exception:
+                    pass
+            geom_view.build(g, sub)
+            stamp.write_text(json.dumps(sig), encoding="utf-8")
+            views.append(_view_entry(case, sub, g))
+    return {"ok": True, "available": True, "views": views}
+
+
+def _view_entry(case, sub, g):
+    rel = sub.relative_to(ROOT).as_posix()
+    return {
+        "name": g.stem,
+        "dir": rel,
+        "images": [{"title": t, "note": n, "path": rel + "/" + f}
+                   for f, t, n in (("meridional.svg", "子午面", "流道轮廓 + 叶片径向位置"),
+                                   ("cascade.svg", "叶栅展开", "每个截面的剖面形状"),
+                                   ("blade3d.svg", "轴测", "叶片与涵道的立体关系"))],
+    }
+
+
 def read_file_payload(rel):
     p = resolve_in_root(rel)
     if not p.is_file():
@@ -761,7 +815,12 @@ class Handler(BaseHTTPRequestHandler):
 
         if path in ("/", "/index.html"):
             # 令牌随页面下发：页面拿得到，别的站的页面拿不到（读不到响应体）。
-            html = self.ui_bytes.replace(b"__DSH_TOKEN__", self.token.encode("ascii") or b"")
+            # 每次都读盘 —— 改了界面不该要求重启服务，否则调试时永远在看旧页面。
+            try:
+                raw = UI.read_bytes()
+            except Exception:
+                raw = self.ui_bytes
+            html = raw.replace(b"__DSH_TOKEN__", self.token.encode("ascii") or b"")
             self._send(200, html, "text/html; charset=utf-8")
         elif path == "/api/cases":
             try:
@@ -788,6 +847,30 @@ class Handler(BaseHTTPRequestHandler):
                            "application/json; charset=utf-8")
             except Exception as exc:
                 self._send(500, json.dumps({"error": repr(exc)}).encode("utf-8"),
+                           "application/json; charset=utf-8")
+        elif path == "/api/views":
+            try:
+                payload = json.dumps(build_views(case_id or self.default_case.name),
+                                     ensure_ascii=False).encode("utf-8")
+                self._send(200, payload, "application/json; charset=utf-8")
+            except ApiError as exc:
+                self._send(exc.status, json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8"),
+                           "application/json; charset=utf-8")
+            except Exception as exc:
+                self._send(500, json.dumps({"error": repr(exc)}, ensure_ascii=False).encode("utf-8"),
+                           "application/json; charset=utf-8")
+        elif path == "/api/asset":
+            # 只送工作区内的图片类文件，且只读 —— 页面用 <img src> 直接引用
+            try:
+                rel = (qs.get("path") or [""])[0]
+                p = resolve_in_root(rel)
+                if not p.is_file() or p.suffix.lower() not in (".svg", ".png", ".jpg", ".jpeg"):
+                    raise ApiError("不是可展示的图片：" + rel, 404)
+                ctype = {".svg": "image/svg+xml", ".png": "image/png",
+                         ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}[p.suffix.lower()]
+                self._send(200, p.read_bytes(), ctype + "; charset=utf-8")
+            except ApiError as exc:
+                self._send(exc.status, json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8"),
                            "application/json; charset=utf-8")
         elif path == "/api/actions":
             payload = json.dumps({"actions": [{"id": k, "label": v[0], "params": v[1]}

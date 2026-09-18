@@ -115,6 +115,16 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
 .pathlink{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;
   text-underline-offset:3px}
 .pathlink:hover{color:var(--run)}
+.viewgrid{display:grid;gap:14px}
+.viewbox{background:#0a0d11;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.viewbox h3{font-size:12.5px;margin:0;padding:8px 12px;color:var(--dim2);
+  border-bottom:1px solid var(--line);font-weight:600}
+.viewbox h3 span{color:var(--dim);font-weight:400;margin-left:8px}
+.viewbox img{width:100%;display:block}
+.viewtabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.viewtab{font-size:12px;padding:4px 12px;border:1px solid var(--line);border-radius:99px;
+  cursor:pointer;background:var(--panel2);color:var(--dim)}
+.viewtab.on{border-color:var(--run);color:var(--run)}
 </style>
 </head>
 <body>
@@ -146,6 +156,15 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   </div>
 
   <div id="stagedetail"></div>
+
+  <div class="card" id="view-card" style="display:none">
+    <h2>看几何 · <span id="viewsum" style="color:var(--dim2);font-weight:400"></span>
+      <button class="btn ghost small" style="float:right" onclick="loadViews(true)">重新生成</button>
+    </h2>
+    <p class="hint">agent 每改一次几何，这里就跟着变 —— 不用打开 NUMECA。
+      三张图分别是子午面（流道长什么样）、叶栅展开（叶片剖面长什么样）、轴测（立体关系）。</p>
+    <div id="views"></div>
+  </div>
 
   <div class="card" id="console-card">
     <h2>操作台 · 人工操控</h2>
@@ -621,6 +640,50 @@ function renderWatch(w, changes){
   setHTML("watchlist", h);
 }
 
+// ── 几何视图 ───────────────────────────────────────────────────────────────
+var viewState = { data: null, which: 0 };
+
+function loadViews(force){
+  var q = "/api/views?case=" + encodeURIComponent(currentCase || "");
+  if (force) q += "&force=1";
+  el("viewsum").textContent = "正在生成…";
+  apiFetch(q).then(function(r){ return r.json(); }).then(function(j){
+    viewState.data = j;
+    if (!j.available){
+      el("view-card").style.display = "none";
+      return;
+    }
+    el("view-card").style.display = "";
+    el("viewsum").textContent = j.views.length + " 套几何　·　" +
+      j.views.reduce(function(a,v){ return a + v.images.length; }, 0) + " 张图";
+    renderViews();
+  }).catch(function(e){
+    el("viewsum").textContent = "生成失败：" + e;
+  });
+}
+
+function renderViews(){
+  var j = viewState.data;
+  if (!j || !j.available) return;
+  var tabs = "";
+  for (var i=0;i<j.views.length;i++){
+    tabs += '<span class="viewtab' + (i===viewState.which?' on':'') + '" onclick="pickView(' + i + ')">'
+         + esc(j.views[i].name) + '</span>';
+  }
+  var v = j.views[viewState.which] || j.views[0];
+  var html = '<div class="viewtabs">' + tabs + '</div><div class="viewgrid">';
+  for (var k=0;k<v.images.length;k++){
+    var im = v.images[k];
+    html += '<div class="viewbox"><h3>' + esc(im.title) + '<span>' + esc(im.note) + '</span></h3>'
+         +  '<img src="/api/asset?path=' + encodeURIComponent(im.path) + '&t=' + Date.now()
+         +  '" alt="' + attrEsc(im.title) + '"></div>';
+  }
+  html += '</div>';
+  setHTML("views", html);
+}
+
+function pickView(i){ viewState.which = i; renderViews(); }
+
 function renderRules(list){
   if (!list || !list.length){
     el("rules").innerHTML = '<span class="placeholder">没有解析到规矩条目</span>';
@@ -700,6 +763,7 @@ function apply(s){
   }
 
   renderRules(s.rules);
+  if (s.case_id !== viewState.caseId){ viewState.caseId = s.case_id; viewState.which = 0; loadViews(); }
   renderWatch(s.watch, s.watch_changes);
 }
 

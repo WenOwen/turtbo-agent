@@ -66,3 +66,6 @@ hub
 Thumbs.db
 desktop.ini
 ~$*
+
+# 几何可视化是派生文件，随时可从 .geomTurbo 重算
+cases/**/_view/
