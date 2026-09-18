@@ -33,6 +33,7 @@ import hashlib
 import json
 import os
 import re
+import secrets
 import socket
 import subprocess
 import sys
@@ -688,11 +689,56 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         pass
 
+    # ── 本地写接口的三道门 ──────────────────────────────────────────────
+    # 背景：服务绑在 127.0.0.1 是对的，但"本机"不等于"本服务的页面"。
+    # 任何在浏览器里打开的网页都能对本机端口发简单请求（text/plain 不触发预检），
+    # 而写接口能改整个工作区 —— 包括闸门阈值的唯一真源和校验器本身。
+    # 三道门：Host 必须是本机、跨站请求一律拒绝、写操作要带会话令牌。
+    ALLOWED_HOSTS = {"127.0.0.1", "localhost", "[::1]"}
+    token = ""          # main() 启动时随机生成并注入页面
+
+    def _host_ok(self):
+        host = (self.headers.get("Host") or "").strip().lower()
+        if not host:
+            return False
+        name = host.rsplit(":", 1)[0] if not host.startswith("[") else host.split("]")[0] + "]"
+        return name in self.ALLOWED_HOSTS
+
+    def _cross_site(self):
+        """浏览器主动告诉我们的跨站信号 —— 有就拒，不看别的。"""
+        site = (self.headers.get("Sec-Fetch-Site") or "").strip().lower()
+        if site and site not in ("same-origin", "same-site", "none"):
+            return True
+        origin = (self.headers.get("Origin") or "").strip()
+        if origin and origin != "null":
+            from urllib.parse import urlparse as _up
+            o = _up(origin)
+            if (o.hostname or "") not in ("127.0.0.1", "localhost", "::1"):
+                return True
+            if o.port and self.server.server_address[1] and o.port != self.server.server_address[1]:
+                return True
+        return False
+
+    def _guard(self, need_token):
+        if not self._host_ok():
+            raise ApiError("Host 不是本机地址", 403)
+        if self._cross_site():
+            raise ApiError("拒绝跨站请求", 403)
+        if need_token and self.token:
+            got = (self.headers.get("X-DSH-Token") or "").strip()
+            if got != self.token:
+                raise ApiError("缺少或错误的会话令牌（页面刷新即可）", 403)
+
     def _send(self, code, body, ctype):
         self.send_response(code)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Content-Security-Policy",
+                         "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
+                         "connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'")
         self.end_headers()
         try:
             self.wfile.write(body)
@@ -706,8 +752,17 @@ class Handler(BaseHTTPRequestHandler):
         qs = parse_qs(parsed.query)
         case_id = (qs.get("case") or [None])[0]
 
+        try:
+            self._guard(need_token=False)
+        except ApiError as exc:
+            self._send(exc.status, json.dumps({"error": str(exc)}, ensure_ascii=False).encode("utf-8"),
+                       "application/json; charset=utf-8")
+            return
+
         if path in ("/", "/index.html"):
-            self._send(200, self.ui_bytes, "text/html; charset=utf-8")
+            # 令牌随页面下发：页面拿得到，别的站的页面拿不到（读不到响应体）。
+            html = self.ui_bytes.replace(b"__DSH_TOKEN__", self.token.encode("ascii") or b"")
+            self._send(200, html, "text/html; charset=utf-8")
         elif path == "/api/cases":
             try:
                 payload = json.dumps({"cases": list_cases()}, ensure_ascii=False).encode("utf-8")
@@ -745,6 +800,11 @@ class Handler(BaseHTTPRequestHandler):
             self._send(404, b"not found", "text/plain; charset=utf-8")
 
     def _read_json_body(self):
+        # 强制 application/json：跨站简单请求只能用 text/plain / form-urlencoded，
+        # 要求 json 就等于强制预检 —— 而预检会被上面的 Origin 检查拦掉。
+        ctype = (self.headers.get("Content-Type") or "").split(";")[0].strip().lower()
+        if ctype != "application/json":
+            raise ApiError("Content-Type 必须是 application/json", 415)
         try:
             length = int(self.headers.get("Content-Length") or 0)
         except ValueError:
@@ -761,6 +821,7 @@ class Handler(BaseHTTPRequestHandler):
         from urllib.parse import urlparse
         path = urlparse(self.path).path
         try:
+            self._guard(need_token=True)
             body = self._read_json_body()
             if path == "/api/file":
                 result = write_file_payload(body.get("path"), body.get("content"),
@@ -826,6 +887,8 @@ def main(argv=None):
 
     Handler.default_case = case_dir
     Handler.extra_roots = extra
+    # 会话令牌：每次启动重新生成。写接口要求带上它，页面从自己那份 HTML 里读。
+    Handler.token = secrets.token_urlsafe(24)
     Handler.ui_bytes = UI.read_bytes()
 
     # 看守后台线程：不依赖有没有人开页面，服务在跑就在看守。

@@ -235,6 +235,18 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
 </div>
 
 <script>
+// 会话令牌由服务端注入本页面；写接口必须带上它。
+// 别的网站的页面读不到我们这份 HTML，因此拿不到令牌。
+var DSH_TOKEN = "__DSH_TOKEN__";
+
+// 所有请求统一走这里：自动带令牌、统一错误处理。
+function apiFetch(url, opts){
+  opts = opts || {};
+  opts.cache = "no-store";
+  opts.headers = Object.assign({}, opts.headers || {}, {"X-DSH-Token": DSH_TOKEN});
+  return fetch(url, opts);
+}
+
 var lastOk = 0;
 var currentCase = null;
 var selectedStage = null;
@@ -253,8 +265,21 @@ function setHTML(id, html){
 
 function esc(s){
   return String(s === null || s === undefined ? "" : s)
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
 }
+
+// 属性位置专用：esc() 会产出 &quot; 这类实体，放进 onclick="..." 里语义会变。
+// 属性值一律走这里 —— 文件名、案例号都可能带引号（它们来自可写文件）。
+function attrEsc(s){
+  return String(s === null || s === undefined ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#39;")
+    .replace(/\\/g,"&#92;");
+}
+
+// 内联事件里传字符串一律用这个：转成 data-* 索引，不把值拼进 JS 源码。
+function q(s){ return attrEsc(s); }
 
 function fmtAge(sec){
   if (sec === null || sec === undefined) return "—";
@@ -297,7 +322,7 @@ function plainInit(p){
     var cur = sel.value, opts = "";
     for (var j=0;j<p.stages.length;j++){
       var s = p.stages[j];
-      opts += '<option value="' + esc(s.id) + '">第 ' + s.step + ' 步 · ' + esc(s.title) + '</option>';
+      opts += '<option value="' + attrEsc(s.id) + '">第 ' + s.step + ' 步 · ' + esc(s.title) + '</option>';
     }
     sel.innerHTML = opts;
     if (cur) sel.value = cur;
@@ -321,7 +346,7 @@ function renderTimeline(stages, current){
     var cls = STAGE_CLASS[status] || "pending";
     var txt = STAGE_TEXT[status] || status;
     html += '<div class="st ' + cls + (g === selectedStage ? ' sel' : '') + '"'
-         +  ' onclick="selectStage(&quot;' + g + '&quot;)" title="点击看这一步交出了什么、中间做了什么决定">'
+         +  ' onclick="selectStage(&quot;' + attrEsc(g) + '&quot;)" title="点击看这一步交出了什么、中间做了什么决定">'
          +  '<div class="g">' + esc(stageStep(g)) + '</div>'
          +  '<span class="gid">' + esc(g) + '</span>'
          +  '<div class="n">' + esc(stageTitle(g)) + '</div>'
@@ -368,8 +393,8 @@ function renderStageDetail(detail, sel){
       var a = d.artifacts[i];
       h += '<tr><td><span class="v v-' + esc(a.verdict) + '">' + esc(a.verdict) + '</span></td>'
          + '<td class="mono">' + esc(a.version) + '</td>'
-         + '<td class="mono"><span class="pathlink" title="点击查看/编辑：' + esc(a.path)
-         + '" onclick="openFile(&quot;' + esc(a.path) + '&quot;)">' + esc(a.path) + '</span></td>'
+         + '<td class="mono"><span class="pathlink" title="点击查看/编辑：' + attrEsc(a.path)
+         + '" onclick="openFile(&quot;' + attrEsc(a.path) + '&quot;)">' + esc(a.path) + '</span></td>'
          + '<td class="mono">' + esc(fmtBytes(a.bytes)) + '</td>'
          + '<td class="mono">' + esc(a.sha256) + '</td>'
          + '<td class="mono">' + esc(a.from || "—") + '</td></tr>';
@@ -423,7 +448,7 @@ function runAction(action){
   var params = {};
   if (action === "gate") params.gate = el("gatesel").value;
   conWrite("▶ " + action + (params.gate ? (" " + params.gate) : "") + "  …");
-  fetch("/api/run", {
+  apiFetch("/api/run", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({case: currentCase, action: action, params: params})
@@ -445,7 +470,7 @@ function runAction(action){
 var edState = {path: null, sha256: null};
 
 function openFile(path){
-  fetch("/api/file?path=" + encodeURIComponent(path), {cache:"no-store"})
+  apiFetch("/api/file?path=" + encodeURIComponent(path))
     .then(function(r){ return r.json(); })
     .then(function(j){
       if (j.error){ alert("打不开：" + j.error); return; }
@@ -471,7 +496,7 @@ function saveFile(){
   var st = el("ed-status");
   st.className = "edstatus";
   st.textContent = "保存中…";
-  fetch("/api/file", {
+  apiFetch("/api/file", {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({path: edState.path, content: el("ed-text").value,
@@ -517,7 +542,7 @@ function renderCaseSelector(list, active){
   for (var i=0;i<list.length;i++){
     var c = list[i];
     var label = c.id + "　·　" + stageStep(c.current_stage) + "　·　" + c.artifact_count + " 个文件";
-    h += '<option value="' + esc(c.id) + '"' + (c.id === active ? ' selected' : '') + '>'
+    h += '<option value="' + attrEsc(c.id) + '"' + (c.id === active ? ' selected' : '') + '>'
        + esc(label) + '</option>';
   }
   sel.innerHTML = h;
@@ -550,7 +575,7 @@ function renderRecent(list){
     html += '<div style="padding:3px 0;font-size:12px">'
          +  '<span style="color:var(--dim2);font-family:ui-monospace,Consolas,monospace">'
          +  esc(fmtAge(f.age_sec)) + '</span>&nbsp;&nbsp;'
-         +  '<span style="font-family:ui-monospace,Consolas,monospace" title="' + esc(f.path) + '">' + esc(shortPath(f.path)) + '</span>'
+         +  '<span style="font-family:ui-monospace,Consolas,monospace" title="' + attrEsc(f.path) + '">' + esc(shortPath(f.path)) + '</span>'
          +  ' <span style="color:var(--dim2)">' + esc(fmtBytes(f.bytes)) + '</span></div>';
   }
   setHTML("recent", html);
@@ -581,7 +606,7 @@ function renderWatch(w, changes){
          + '<td class="mono">' + esc(when) + '</td>'
          + '<td>' + esc(c.category || "—") + '</td>'
          + '<td class="mono">' + esc(c.kind) + '</td>'
-         + '<td class="mono" title="' + esc(c.path) + '">' + esc(c.path) + '</td>'
+         + '<td class="mono" title="' + attrEsc(c.path) + '">' + esc(c.path) + '</td>'
          + '<td class="mono">' + esc(c.size_before) + ' → ' + esc(c.size) + '</td>'
          + '<td>' + (unk ? '<span class="v v-WARN">unknown</span>'
                          : '<span class="v v-PASS">' + esc(c.attribution) + '</span>') + '</td>'
@@ -687,7 +712,7 @@ function fail(msg){
 
 function tick(){
   var url = "/api/state" + (currentCase ? ("?case=" + encodeURIComponent(currentCase)) : "");
-  fetch(url, {cache:"no-store"})
+  apiFetch(url)
     .then(function(r){ if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(apply)
     .catch(function(e){ fail(String(e)); });
