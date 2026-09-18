@@ -336,16 +336,31 @@ def build_rows(case: Path):
                         % (rec["beta%s_par_root" % which], rec["beta%s_par_tip" % which])
                         + ("" if ok else "差 %.2f° —— 两者血缘不同" % delta),
             })
-        # 叶尖间隙：设计表写了，几何里也有，必须比 —— 这是审核点名的漏项
+        # 叶尖间隙。
+        # **静子不该有叶尖间隙块** —— 它不转，没有叶尖泄漏。参数表却给 S1 也写了
+        # 0.0005 m。第一版见到"几何里没有间隙块"就判 FAIL，那是**假警报**：
+        # 报不该报的 FAIL 比漏报更伤信任。判据要按类型分：
+        #   转子：必须有间隙块，且与设计值比
+        #   静子：几何没有间隙块是对的；参数表写间隙是表自己的定义问题
         tg_d = fnum(r.get("叶尖间隙(m)"))
         tg_g = rec.get("tip_gap_geom")
+        is_rotor = (r.get("类型", "").strip().lower() == "rotor")
         if tg_d is not None:
-            if tg_g is None:
+            if tg_g is None and not is_rotor:
+                out["items"].append({
+                    "row": n, "what": "叶尖间隙 (m)",
+                    "design": "%.4f（参数表）" % tg_d,
+                    "actual": "几何无间隙块",
+                    "verdict": "PASS",
+                    "note": "静子不转、没有叶尖泄漏，几何没有间隙块是对的。"
+                            "参数表给静子写间隙值属于表本身的定义不清。",
+                })
+            elif tg_g is None:
                 out["items"].append({
                     "row": n, "what": "叶尖间隙 (m)",
                     "design": "%.4f" % tg_d, "actual": "几何里没有间隙块",
                     "verdict": "FAIL",
-                    "note": "设计表要求有间隙，几何里没有 —— 转子没间隙会刮蹭",
+                    "note": "转子必须有叶尖间隙，几何里没有 —— 会刮蹭",
                 })
             else:
                 dev = (tg_g - tg_d) / tg_d if tg_d else 0
@@ -357,16 +372,27 @@ def build_rows(case: Path):
                     "note": "" if v == "PASS" else "差 %.1f 倍" % (tg_g / tg_d if tg_d else 0),
                 })
 
-        # 轴向位置：设计表给了站位，几何有实际 z 范围 —— 对不上说明不是同一台机器
+        # 轴向位置：设计表的"轴向坐标"含义没注明（进口？出口？重心？），
+        # 所以**不能武断判 FAIL** —— 只报重叠情况，让人自己判断。
         z_d = fnum(r.get("轴向坐标(m)"))
         if z_d is not None and rec.get("z_min") is not None:
             inside = rec["z_min"] - 0.005 <= z_d <= rec["z_max"] + 0.005
+            gap = 0.0
+            if z_d < rec["z_min"]:
+                gap = rec["z_min"] - z_d
+            elif z_d > rec["z_max"]:
+                gap = z_d - rec["z_max"]
+            note = ""
+            if not inside:
+                note = ("设计站位在几何 z 范围外 %.3f m。参数表那一列没写清是"
+                        "进口/出口/重心，所以这不一定表示错位，"
+                        "但两排的轴向关系值得确认。") % gap
             out["items"].append({
                 "row": n, "what": "轴向位置 (m)",
-                "design": "%.4f" % z_d,
+                "design": "%.4f（含义未注明）" % z_d,
                 "actual": "%.4f … %.4f" % (rec["z_min"], rec["z_max"]),
-                "verdict": "PASS" if inside else "FAIL",
-                "note": "" if inside else "设计站位落在几何 z 范围之外 —— 两排不是同一台机器",
+                "verdict": "PASS" if inside else "WARN",
+                "note": note,
             })
 
         # 几何估计 vs .par 真值：验证"画出来的形状"与"参数文件"一致
