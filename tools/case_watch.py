@@ -681,6 +681,69 @@ def write_heartbeat(case_dir):
         pass
 
 
+def gc(case_dir, apply=False):
+    """清理历史库里不再被引用的 blob。
+
+    **默认只报告，不删**（apply=False）。历史库是"变了之后还能拿回变之前"的
+    兜底能力，删错了就真没了 —— 所以默认安全，要删得显式加 --apply。
+
+    什么算"还被引用"：
+      1. 监视范围内某个文件**当前的内容**哈希
+      2. changes.jsonl 里出现过的 sha256 / sha256_before
+    其余就是历史残留。内容寻址天然去重，残留主要来自"同一个文件改了很多版"。
+    """
+    case_dir = Path(case_dir).resolve()
+    wp = watch_paths(case_dir)
+    hist = wp["history"]
+    if not hist.is_dir():
+        return {"ok": True, "blobs": 0, "live": 0, "dead": 0, "freed_bytes": 0,
+                "removed": [], "applied": False}
+
+    live = set()
+    for rel in scan(case_dir):
+        p = case_dir / rel
+        try:
+            if p.stat().st_size <= HISTORY_MAX_BYTES:
+                live.add(sha256_bytes(p.read_bytes()))
+        except Exception:
+            pass
+    for rec in read_changes(case_dir):
+        for k in ("sha256", "sha256_before"):
+            v = rec.get(k)
+            if v:
+                live.add(v)
+
+    blobs, dead, freed = [], [], 0
+    for f in hist.rglob("*"):
+        if not f.is_file():
+            continue
+        blobs.append(f)
+        if f.name not in live:
+            dead.append(f)
+            try:
+                freed += f.stat().st_size
+            except Exception:
+                pass
+
+    removed = []
+    if apply:
+        for f in dead:
+            try:
+                f.unlink()
+                removed.append(f.name)
+            except Exception:
+                pass
+        for d in sorted([p for p in hist.rglob("*") if p.is_dir()],
+                        key=lambda p: -len(p.parts)):
+            try:
+                if not any(d.iterdir()):
+                    d.rmdir()
+            except Exception:
+                pass
+    return {"ok": True, "blobs": len(blobs), "live": len(live), "dead": len(dead),
+            "freed_bytes": freed, "removed": removed[:20], "applied": bool(apply)}
+
+
 def status(case_dir):
     case_dir = Path(case_dir).resolve()
     wp = watch_paths(case_dir)
@@ -715,6 +778,10 @@ def main(argv=None):
     ap.add_argument("--status", action="store_true", help="打印看守状态")
     ap.add_argument("--restore", metavar="PATH", help="从历史库还原该文件")
     ap.add_argument("--sha", help="与 --restore 配合：要还原到的 sha256")
+    ap.add_argument("--gc", action="store_true",
+                    help="报告历史库里不再被引用的 blob（默认不删）")
+    ap.add_argument("--apply", action="store_true",
+                    help="与 --gc 配合：真的删。不加就只报告")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
 
@@ -729,6 +796,19 @@ def main(argv=None):
         sys.stdout.reconfigure(line_buffering=True)
     except Exception:
         pass
+
+    if args.gc:
+        r = gc(case_dir, apply=args.apply)
+        if args.json:
+            print(json.dumps(r, ensure_ascii=False, indent=2))
+        else:
+            print("历史库清理" + ("（已执行）" if r["applied"] else "（只报告，未删）"))
+            print("  blob 总数   : %d" % r["blobs"])
+            print("  仍被引用    : %d" % r["live"])
+            print("  可清理      : %d 份，%.1f MB" % (r["dead"], r["freed_bytes"] / 1048576))
+            if not r["applied"] and r["dead"]:
+                print("  真要删就加 --apply。删掉的是历史版本，删了拿不回来。")
+        return 0
 
     if args.status:
         st = status(case_dir)

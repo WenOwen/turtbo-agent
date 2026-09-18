@@ -226,9 +226,11 @@ def pts_attr(seq):
 
 
 def esc(t):
-    return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-
+    """SVG/HTML 转义。**必须转义引号** —— 只转 & < > 的话，
+    属性位置（title="..."、x="..."）里一个引号就能破边界，
+    把后面的内容变成新属性甚至新元素（审核实测过）。"""
+    return (str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            .replace('"', "&quot;").replace("'", "&#39;"))
 def svg_open(w, h, title, subtitle=""):
     s = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" '
          'viewBox="0 0 %d %d" font-family="ui-monospace,Consolas,monospace">' % (w, h, w, h),

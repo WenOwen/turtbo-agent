@@ -374,5 +374,72 @@
         "from_sha256": "f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5"
       }
     }
+  ],
+  "supporting": [
+    {
+      "path": "_automation/v8/audit_run.py",
+      "sha256": "90759e7b8b5b72f084ae77df538fc83c78365d18245e5774b18887207d9fdef3",
+      "bytes": 3202
+    },
+    {
+      "path": "_automation/v8/build_scan_plan.py",
+      "sha256": "d97077b5547b24ff9e088478f460d88c8d27d0e01c9287c526527effefe96bb2",
+      "bytes": 2656
+    },
+    {
+      "path": "_automation/v8/compare_run_surfaces.py",
+      "sha256": "8e78e1c8aa4c40f89305b75d3364de3c72fe431a4a3f2d1b9b195dca7cccea34",
+      "bytes": 2312
+    },
+    {
+      "path": "_automation/v8/export_v8.py",
+      "sha256": "3765749e9c9dccbaf9152487b3aea9ecd5184521f5c56351648c289777a378ad",
+      "bytes": 5376
+    },
+    {
+      "path": "_automation/v8/materialize_runs.py",
+      "sha256": "73b77866f2f537121e9ede7d089f13fbbebcd1cf1e448cc3fbaf1244e34d9299",
+      "bytes": 4477
+    },
+    {
+      "path": "_automation/v8/v8_ab_lib.py",
+      "sha256": "0407ed55270eeafd8804f07c8551115d27171739b71f7f21c3f850ea4f5410e9",
+      "bytes": 10647
+    },
+    {
+      "path": "_automation/v8/v8_audit2.py",
+      "sha256": "29a9d4255f55d42f559b097d970617c79d08a65b047330d277df971e275378d2",
+      "bytes": 5635
+    },
+    {
+      "path": "_automation/v8/v8_build_par.py",
+      "sha256": "a526b17d7b8d32c1b71a10229db763828fcff4e2ae41a22bc81669db7e15ec1b",
+      "bytes": 12489
+    },
+    {
+      "path": "_automation/v8/v8_extract_v7.py",
+      "sha256": "8b83f1118067fcfb7229a527e43519b177e84a4814cdc5a9af30e4e71280343b",
+      "bytes": 8055
+    },
+    {
+      "path": "_automation/v8/v8_figures_py2.py",
+      "sha256": "8087e402908574732d8dba9df7c39970aec60b04482ca5f7929d9ba8c37772df",
+      "bytes": 7332
+    },
+    {
+      "path": "_automation/v8/v8_final_audit.py",
+      "sha256": "013441d5afa3d5efac8cbad7e580ab5ef7b9e2e3ed01445409d8819ccbc2d815",
+      "bytes": 5538
+    },
+    {
+      "path": "_automation/v8/v8_leansweep_delta.py",
+      "sha256": "bea5728b0de2f9c70f3d188735116b7a0ee58824fbdde8600ce0f6aaf073496d",
+      "bytes": 2583
+    },
+    {
+      "path": "_automation/v8/v8_winding_check.py",
+      "sha256": "71e804f520cc5280188804adebd5ee0cda21babb2e4e1054b1da126aca1c6478",
+      "bytes": 831
+    }
   ]
 }

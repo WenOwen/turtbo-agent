@@ -11,7 +11,10 @@
 *.std
 *.err.log
 *.steering
+*.steering.binary
 *.geom
+# NUMECA 批处理包装：cd /d ... && finebatch ...，平台相关，不入库
+*.bat
 
 # ── 保留的文本型工程文件（体积小、可 diff） ─────────────────────
 !*.trb
@@ -72,3 +75,6 @@ cases/**/_view/
 
 # 子 agent / 脚本把工作目录解析失败时，会在仓库里落一个字面量目录
 undefined/
+
+# liveview 的单实例锁（防止开两个跑两套看守线程）
+.liveview.lock

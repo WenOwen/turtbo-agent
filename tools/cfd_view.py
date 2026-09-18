@@ -58,9 +58,11 @@ STATE_COLOR = {"accepted": OK, "stopped": WARN, "rejected": BAD}
 
 
 def esc(t):
-    return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-
+    """SVG/HTML 转义。**必须转义引号** —— 只转 & < > 的话，
+    属性位置（title="..."、x="..."）里一个引号就能破边界，
+    把后面的内容变成新属性甚至新元素（审核实测过）。"""
+    return (str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            .replace('"', "&quot;").replace("'", "&#39;"))
 def num(v):
     try:
         f = float(v)

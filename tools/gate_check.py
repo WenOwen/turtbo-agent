@@ -26,6 +26,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import csv
 import hashlib
 import json
@@ -62,7 +63,7 @@ CONTRACTS = (ROOT / ".agents" / "skills" / "ducted-fan-aero-design"
 
 # 没有合同可依据的纯过程判据（文件存在性之类）。显式列出来，不假装它们有合同。
 BUILTIN_CHECK_IDS = {
-    "G0-1", "G0-2", "G0-3", "G0-5",
+    "G0-1", "G0-2", "G0-3", "G0-5", "G0-6",
     "G1-1", "G1-2", "G1-3", "G1-4",
     "G4-1", "G4-2", "G4-3", "G4-4",
     "G5-1", "G5-2", "G5-4",
@@ -166,7 +167,7 @@ MANDATORY_REQUIREMENT_PATHS = [
 # 这些检查"没数据"就是没做完，不能算通过。
 # 判别标准：它查的是**本步骤必须交付的东西**，而不是"有就顺便看一眼"。
 REQUIRED_CHECKS = {
-    "G0-1", "G0-2", "G0-3", "G0-4",          # 需求基线：没有它后面全是空中楼阁
+    "G0-1", "G0-2", "G0-3", "G0-4", "G0-6",  # 需求基线：没有它后面全是空中楼阁
     "G1-1", "G1-2",                           # 设计大纲
     "G4-1", "G4-2", "G4-3", "G4-4",          # 网格六件套 + 负单元
     "G5-1", "G5-2", "G5-3", "G5-4", "G5-5",  # 求解：没跑就没跑
@@ -307,6 +308,28 @@ def gate_requirements(case: Path, args) -> Result:
           "definition=" + str(definition),
           "PASS" if definition in allowed else "FAIL",
           "ducted-fan-contracts.md#C-004")
+
+    # 推力数值自洽：value_n 是手填的，必须等于 value × 换算系数。
+    # 为什么单列一条：G1-3 的盘载荷/诱导速度全靠 value_n 算，
+    # 它一旦和 value 不一致，后面所有量级判断都建在错数上，而没有任何检查会发现。
+    unit = str(flat.get("thrust.unit") or "").strip().lower()
+    val = numeric(flat.get("thrust.value"))
+    val_n = numeric(flat.get("thrust.value_n"))
+    KGF = 9.80665
+    factor = {"kgf": KGF, "n": 1.0, "kn": 1000.0, "lbf": 4.4482216152605}.get(unit)
+    if val is None or val_n is None:
+        r.add("G0-6", "推力数值自洽", "value_n 必须等于 value × 单位换算系数",
+              "value=%s value_n=%s" % (val, val_n), "SKIP", "gates.md#G0")
+    elif factor is None:
+        r.add("G0-6", "推力数值自洽", "value_n 必须等于 value × 单位换算系数",
+              "单位 %s 没有换算系数，无法校验" % unit, "WARN", "gates.md#G0")
+    else:
+        want = val * factor
+        err = abs(val_n - want) / want if want else 1.0
+        r.add("G0-6", "推力数值自洽",
+              "value_n == value × %.5f（%s→N），相对误差 <= 0.1%%" % (factor, unit or "?"),
+              "value_n=%.4f　应为 %.4f　相对误差 %.4f%%" % (val_n, want, err * 100),
+              "PASS" if err <= 1e-3 else "FAIL", "gates.md#G0")
 
     # 未决项覆盖率：source 为 open/assumed 的字段必须出现在 open_questions.md
     openq = case / "00-brief" / "open_questions.md"
@@ -722,10 +745,33 @@ def cmd_audit(args):
 
     # 静态扫源码取"实际实现了哪些检查" —— 不能靠跑一遍收集：
     # 闸门在数据缺失时会提前 return，那些检查就没跑，会被误报成"没实现"。
-    src = Path(__file__).read_text(encoding="utf-8")
-    used = set(re.findall(r'r\.add\(\s*"(G\d+-\d+)"', src))
+    #
+    # 用 AST 而不是正则：正则只认 r.add("G5-3" 这一种写法，
+    # 换成单引号、中间加注释、跨行，就会**静默漏报**（漏报比误报危险 ——
+    # 它会让人以为"合同与代码一致"）。AST 认的是语法结构，不是字符。
+    used = set()
+    try:
+        tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            fn = node.func
+            if not (isinstance(fn, ast.Attribute) and fn.attr == "add"):
+                continue
+            if not node.args:
+                continue
+            a0 = node.args[0]
+            if isinstance(a0, ast.Constant) and isinstance(a0.value, str) \
+                    and re.fullmatch(r"G\d+-\d+", a0.value):
+                used.add(a0.value)
+    except SyntaxError as exc:
+        problems_pre = [{"kind": "gate_check.py 语法错误，判据自检无法进行",
+                         "check": str(exc), "contract": ""}]
+        used = set()
+    else:
+        problems_pre = []
     bound = set(specs.keys())
-    problems = []
+    problems = list(problems_pre)
 
     for cid in sorted(bound - used):
         problems.append({"kind": "合同声明了检查，代码里没有实现",

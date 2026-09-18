@@ -481,7 +481,37 @@ class Aggregator:
 #       这样审计链不会因为"是人点的"而断掉。
 
 MAX_EDIT_BYTES = 2 * 1024 * 1024
-WRITE_DENY_PARTS = {".git", "_memfix", "node_modules", "__pycache__", ".venv"}
+
+# 界面能写哪里 —— **用白名单，不用黑名单**。
+#
+# 为什么改：原来是黑名单（.git/_memfix/...），结果是 tools/ 和
+# cases/*/_automation/ 都能通过界面写。那些是**可执行代码** ——
+# 改掉 tools/case_ledger.py 或 _automation/v8/*.py，下一次跑就被 hijack。
+# 黑名单永远漏一条，白名单默认拒绝。
+WRITE_ALLOW_PATTERNS = [
+    r"^cases/[^/]+/(00-brief|01-scheme|02-geometry|03-mesh|04-solve|05-post|06-delivery)/",
+    r"^cases/[^/]+/(LOG\.md|STATE\.json|memory\.md|manifest\.json|requirements\.yaml)$",
+    r"^cases/[^/]+/_automation/.*\.(json|csv|md|txt|log)$",   # 数据可以，脚本不行
+    r"^cases/[^/]+/_external/.*\.json$",
+]
+WRITE_DENY_PARTS = {".git", "_memfix", "node_modules", "__pycache__", ".venv", "_watch"}
+WRITE_DENY_SUFFIX = (".py", ".ps1", ".cmd", ".bat", ".exe", ".dll", ".sh")
+
+
+def _write_allowed(rel_posix):
+    """这个路径允许通过界面写吗？返回 (bool, 原因)。"""
+    for part in rel_posix.split("/"):
+        if part in WRITE_DENY_PARTS:
+            return False, "该目录不允许通过界面修改：" + part
+    if rel_posix.endswith(WRITE_DENY_SUFFIX):
+        return False, ("可执行文件不允许通过界面修改（"
+                       + rel_posix.rsplit("/", 1)[-1] + "）—— 改了它等于改了工具本身")
+    for pat in WRITE_ALLOW_PATTERNS:
+        if re.match(pat, rel_posix):
+            return True, ""
+    return False, ("只允许改案例的工程内容；" + rel_posix + " 不在允许范围内。"
+                   "工具与 skill 请用编辑器直接改。")
+
 TEXT_SUFFIXES = {".md", ".json", ".yaml", ".yml", ".csv", ".txt", ".py", ".ps1", ".cmd", ".html",
                  ".trb", ".bcs", ".config", ".info", ".qualityReport", ".geomTurbo", ".log", ".std"}
 
@@ -493,7 +523,12 @@ class ApiError(Exception):
 
 
 def resolve_in_root(rel):
-    """把相对路径解析成 ROOT 内的绝对路径；越界、目录、黑名单一律拒绝。"""
+    """把相对路径解析成 ROOT 内的绝对路径。**只做越界检查，不管能不能写。**
+
+    读和写的边界不一样：读只需要"在工作区内"（界面要能看 _view/ 下自己生成的
+    SVG、能看 tools/ 下的脚本）；写才需要白名单。早先把两者混在一个函数里，
+    结果是把读也一起锁死了 —— 所以拆成两个。
+    """
     if not rel or not isinstance(rel, str):
         raise ApiError("缺少路径")
     candidate = (ROOT / rel.replace("\\", "/")).resolve()
@@ -502,8 +537,17 @@ def resolve_in_root(rel):
     except ValueError:
         raise ApiError("路径越界，只允许工作区内的文件", 403)
     for part in candidate.relative_to(ROOT).parts:
-        if part in WRITE_DENY_PARTS:
-            raise ApiError("该目录不允许通过界面修改：" + part, 403)
+        if part in (".git", "node_modules", "__pycache__", ".venv"):
+            raise ApiError("该目录不提供访问：" + part, 403)
+    return candidate
+
+
+def resolve_writable(rel):
+    """写专用：在 resolve_in_root 之上再加白名单。"""
+    candidate = resolve_in_root(rel)
+    ok, why = _write_allowed(candidate.relative_to(ROOT).as_posix())
+    if not ok:
+        raise ApiError(why, 403)
     return candidate
 
 
@@ -667,7 +711,7 @@ def read_file_payload(rel):
 
 def write_file_payload(rel, content, expected_sha256, case=None):
     """乐观锁：调用方必须带回它读到的 sha256。不一致就拒绝，防止覆盖别人的改动。"""
-    p = resolve_in_root(rel)
+    p = resolve_writable(rel)
     if not p.is_file():
         raise ApiError("文件不存在：" + rel, 404)
     old_raw = p.read_bytes()
@@ -891,6 +935,28 @@ class Handler(BaseHTTPRequestHandler):
         except Exception:
             pass
 
+    # UI 文件的基线哈希。token 是注入到 UI 里的，所以 UI 一旦被改，
+    # 改的人就能让页面把 token 发给别人。启动时记一份哈希，页面被改就重置 token。
+    ui_sha = ""
+    token_reset_at = 0.0
+
+    def _ui_fresh(self):
+        """读 UI 文件；如果哈希和启动时不一致，重置 token 并记时间。"""
+        try:
+            raw = UI.read_bytes()
+        except Exception:
+            return self.ui_bytes, False
+        sha = hashlib.sha256(raw).hexdigest()
+        if self.ui_sha and sha != self.ui_sha:
+            # 文件被改过 —— 旧 token 可能已经被读走了，换一个
+            self.token = secrets.token_urlsafe(24)
+            self.ui_sha = sha
+            self.token_reset_at = time.time()
+            return raw, True
+        if not self.ui_sha:
+            self.ui_sha = sha
+        return raw, False
+
     def do_GET(self):
         from urllib.parse import urlparse, parse_qs
         parsed = urlparse(self.path)
@@ -908,12 +974,13 @@ class Handler(BaseHTTPRequestHandler):
         if path in ("/", "/index.html"):
             # 令牌随页面下发：页面拿得到，别的站的页面拿不到（读不到响应体）。
             # 每次都读盘 —— 改了界面不该要求重启服务，否则调试时永远在看旧页面。
-            try:
-                raw = UI.read_bytes()
-            except Exception:
-                raw = self.ui_bytes
+            raw, rotated = self._ui_fresh()
             html = raw.replace(b"__DSH_TOKEN__", self.token.encode("ascii") or b"")
-            self._send(200, html, "text/html; charset=utf-8")
+            extra = {}
+            if rotated:
+                # 让页面知道发生了什么，而不是默默换掉令牌导致写操作 403
+                extra["X-DSH-Notice"] = "ui-changed-token-rotated"
+            self._send(200, html, "text/html; charset=utf-8", extra)
         elif path == "/api/cases":
             try:
                 payload = json.dumps({"cases": list_cases()}, ensure_ascii=False).encode("utf-8")
@@ -1074,6 +1141,31 @@ def main(argv=None):
     Handler.token = secrets.token_urlsafe(24)
     Handler.ui_bytes = UI.read_bytes()
 
+    # 单实例锁：两个 liveview 会跑两套看守线程，双倍扫盘（审核实测过）。
+    # 端口探测只是"找个空位"，不是"独占" —— 所以需要单独的锁文件。
+    lock = ROOT / ".liveview.lock"
+    try:
+        if lock.is_file():
+            old = lock.read_text(encoding="utf-8").strip()
+            pid_txt = old.split()[0] if old else ""
+            alive = False
+            if pid_txt.isdigit():
+                import subprocess as _sp
+                out = _sp.run(["tasklist", "/FI", "PID eq " + pid_txt, "/NH"],
+                              capture_output=True, text=True,
+                              creationflags=getattr(_sp, "CREATE_NO_WINDOW", 0))
+                alive = pid_txt in (out.stdout or "")
+            if alive:
+                print("  已经有一个 liveview 在跑（pid %s）。" % pid_txt)
+                print("  同时开两个会跑两套看守线程、双倍扫盘。")
+                print("  要强制再开一个，先删掉 " + str(lock))
+                return 3
+        lock.write_text("%d %s\n" % (os.getpid(), now_iso()), encoding="utf-8")
+    except SystemExit:
+        raise
+    except Exception as exc:
+        print("  单实例锁写不了（不影响使用）：" + repr(exc))
+
     # 看守后台线程：不依赖有没有人开页面，服务在跑就在看守。
     def _watch_loop():
         interval = 3.0
@@ -1108,6 +1200,15 @@ def main(argv=None):
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()
 
     httpd = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+    import atexit
+
+    def _drop_lock():
+        try:
+            if lock.is_file() and lock.read_text(encoding="utf-8").startswith(str(os.getpid())):
+                lock.unlink()
+        except Exception:
+            pass
+    atexit.register(_drop_lock)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

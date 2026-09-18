@@ -87,7 +87,7 @@ def find_scheme_dir(case: Path, version=None):
     return vs[-1] if vs else None
 
 
-def build(case: Path, row_name: str, n_sections: int, version=None):
+def build(case: Path, row_name: str, n_sections: int, version=None, geometry_id=""):
     scheme = find_scheme_dir(case, version)
     if scheme is None:
         raise SystemExit("找不到 01-scheme 目录：" + str(case))
@@ -144,7 +144,7 @@ def build(case: Path, row_name: str, n_sections: int, version=None):
             "span_fraction": round(sp, 10),
             "radius_m": round(r, 10),
             "chord_m": round(chord, 10),
-            "geometry_id": "",
+            "geometry_id": geometry_id,
             "stagger_deg": round(stagger_deg, 6),
             "axial_offset_m": 0.0,
             "tangential_offset_m": 0.0,
@@ -176,8 +176,9 @@ def build(case: Path, row_name: str, n_sections: int, version=None):
         "| radius_m | 推算：由流道尺寸表在 z=%.4f 处插值得 hub=%.6f / shroud=%.6f，"
         "再按余弦展向律分配 |" % (axial_z or 0.0, hub_r, shroud_r),
         "| span_fraction | 推算：余弦展向律，%d 个截面 |" % n_sections,
-        "| geometry_id | **空占位**。真实值由 cascade-forge 的 dataset 决定，"
-        "需在 build-blade 之后回填 |",
+        "| geometry_id | %s —— 由 --geometry-id 传入，工具不猜。"
+        "早先留空占位是错的：空 id 会让 schedule 通过 schema 校验、"
+        "然后在 build_blade 第一步 KeyError |" % (geometry_id or "**未提供**"),
         "| axial_offset_m / lean_m / sweep_m | 参数表里没有，取 0 |",
         "",
         "**为什么截面数不是 1：** 参数表一个叶排只有一行，而 SectionSchedule 要求 >=2 个截面。",
@@ -196,11 +197,28 @@ def main(argv=None):
     ap.add_argument("--sections", type=int, default=13)
     ap.add_argument("--version", default=None)
     ap.add_argument("--out", default=None)
+    ap.add_argument("--geometry-id", default=None,
+                    help="cascade-forge dataset 里的翼型 id（必填）")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
 
+    # geometry_id 是**必填**的。早先留空占位，结果：
+    #   SectionSchedule 校验通过 -> build_blade 立刻 KeyError '找不到 Geometry_ID: '
+    # schema 过了、端到端立刻死。这种"看起来跑通了"比直接报错更坏。
+    if not args.geometry_id:
+        print("缺少 --geometry-id，拒绝生成。", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("为什么必填：cascade-forge 的 build_blade 会拿每个截面的 geometry_id", file=sys.stderr)
+        print("去 dataset 里取翼型（blade3d.py 的 _resolve）。空 id 会让 schedule", file=sys.stderr)
+        print("通过 schema 校验，然后在 build_blade 第一步就 KeyError。", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("先查 dataset 里有哪些 id（geometries_v2 若是 0 行，得先 ingest 锚点翼型）：", file=sys.stderr)
+        print("  python -c \"import duckdb; con=duckdb.connect(r'<dataset>/catalog.duckdb',", file=sys.stderr)
+        print("      read_only=True); print(con.execute('SELECT count(*) FROM geometries_v2').fetchone())\"", file=sys.stderr)
+        return 2
+
     case = Path(args.case).resolve()
-    r = build(case, args.row, args.sections, args.version)
+    r = build(case, args.row, args.sections, args.version, args.geometry_id)
     out = Path(args.out) if args.out else case / "_automation" / "g3"
     out.mkdir(parents=True, exist_ok=True)
     jp = out / ("schedule-%s.json" % args.row)

@@ -449,9 +449,41 @@ def cmd_verify(args):
         if a.get("stage") not in ("G0", "G1") and not a.get("provenance")
     ]
 
+    # 支撑脚本也要算哈希 —— 它们不在闸门里，但**改了脚本会改全套结果**。
+    # 案例里的 _automation/*.py 就是这种：13 个脚本驱动几何/网格/求解，
+    # 改一个没人发现，产物的哈希却全都对（因为产物确实没动过）。
+    # 这里把它们登记成 supporting，只算哈希、不参与闸门判定。
+    support = []
+    for pat in ("_automation/**/*.py", "_automation/**/*.ps1", "_replay/**/*.py"):
+        for p in sorted(case.glob(pat)):
+            if p.is_file():
+                support.append({"path": p.relative_to(case).as_posix(),
+                                "sha256": sha256_file(p),
+                                "bytes": p.stat().st_size})
+    support_bad = []
+    recorded = {s["path"]: s.get("sha256") for s in (manifest.get("supporting") or [])}
+    if recorded:
+        for s in support:
+            was = recorded.get(s["path"])
+            if was and was != s["sha256"]:
+                support_bad.append("脚本变了：" + s["path"])
+        for rel in recorded:
+            if rel not in {s["path"] for s in support}:
+                support_bad.append("脚本没了：" + rel)
+    manifest["supporting"] = support
+    try:
+        write_json_atomic(manifest_path(case), manifest)
+    except Exception:
+        pass
+
+    if support_bad:
+        problems += support_bad
+
     payload = {
         "ok": not problems,
         "case_id": manifest.get("case_id"),
+        "supporting_count": len(support),
+        "supporting_changed": support_bad,
         "checked": checked,
         "problems": problems,
         "artifacts_without_provenance": missing_prov,

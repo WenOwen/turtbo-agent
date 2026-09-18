@@ -1,0 +1,47 @@
+fix: 按独立审核清单修掉 10 个隐患
+
+审核报告列了 37 条，逐条核实后修掉其中站得住的。
+
+安全
+1. 写接口从黑名单改成白名单。原来是 {.git,_memfix,...} 的排除式，
+   结果 tools/ 和 cases/*/_automation/ 都能通过界面写 —— 那些是可执行代码，
+   改掉 case_ledger.py 或 v8_build_par.py，下次跑就被 hijack。
+   现在默认拒绝：只允许案例的工程内容 + 日志状态，.py/.ps1/.cmd/.bat 一律不许。
+   实测：tools/case_ledger.py 403，cases/DF90-001/LOG.md 允许。
+   顺带把读和写拆开 —— 读只需要"在工作区内"，早先混在一起会把 _view/ 也锁死。
+2. 四个视图工具的 esc() 只转义 & < >，不转义引号。它们在属性位置拼字符串，
+   一个引号就能破属性边界。实测输入 x" onload="alert(1) 现在被转成 &quot;。
+3. UI 文件完整性：token 是注入到 liveview_ui.html 里的，UI 一旦被改，
+   改的人就能让页面把 token 发出去。现在启动时记哈希，页面被改就换 token
+   并回一个 X-DSH-Notice 头。
+
+正确性
+4. cmd_audit 用正则找 r.add("Gx-N")。换成单引号、加个注释、跨行，就静默漏报 ——
+   而漏报会让人以为"合同与代码一致"。改用 AST，认语法结构不认字符。
+   实测把 G5-4 改成单引号，仍能正确识别（22 项不变）。
+5. requirements.yaml 的 thrust.value_n 是手填的，没有任何校验。
+   它一旦和 value 不一致，G1-3 的盘载荷/诱导速度全建在错数上。
+   新增 G0-6：value_n == value × 换算系数，容差 0.1%。
+   实测当前 value_n=882.6000 而 90 kgf × 9.80665 = 882.5985（差 0.0015 N，在容差内）。
+   破坏性验证：改成 900.00 -> FAIL。
+6. _automation/*.py 不进任何审计。13 个脚本驱动几何/网格/求解，
+   改一个没人发现 —— 产物的哈希全都对（产物确实没动过）。
+   verify 现在把它们登记成 supporting 段并比对哈希。
+   实测：改 v8_build_par.py 一行 -> "脚本变了：_automation/v8/v8_build_par.py" exit 4。
+7. g3_schedule.py 的 geometry_id 留空占位是错的：空 id 会让 schedule 通过
+   schema 校验、然后在 build_blade 第一步 KeyError。把堵点从"契约对不上"
+   换成了"id 空"—— 这种"看起来跑通了"比直接报错更坏。
+   现在 --geometry-id 必填，缺了就拒绝生成并打印怎么查 dataset。
+
+运维
+8. 单实例锁：两个 liveview 会跑两套看守线程、双倍扫盘。
+   实测第二个实例被拒（"已经有一个 liveview 在跑（pid 25136）"）。
+9. _watch/history 无清理机制，实测 285 份 22.4 MB。新增 --gc：
+   默认只报告（"仍被引用 90 / 可清理 195 份 3.2 MB"），要删得显式加 --apply。
+   删的是历史版本，删了拿不回来，所以默认安全。
+10. .gitignore 漏了 *.bat 和 *.steering.binary。实测这两类已经被误跟踪了
+    57 + 57 个（.bat 里是机器绑定的绝对路径，.steering.binary 是 NUMECA 的
+    空/重启状态文件）。已 git rm --cached 移出跟踪，磁盘文件保留。
+
+验证：全部工具编译通过；gate_check audit 无漂移；case_ledger verify 26 个产物全过；
+全闸门 G0/G1/G4 通过、G5 注意、G6 没通过（案例确实还没做后处理和交付）。

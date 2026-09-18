@@ -53,9 +53,11 @@ BAD = "#f85149"
 
 
 def esc(t):
-    return str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-
+    """SVG/HTML 转义。**必须转义引号** —— 只转 & < > 的话，
+    属性位置（title="..."、x="..."）里一个引号就能破边界，
+    把后面的内容变成新属性甚至新元素（审核实测过）。"""
+    return (str(t).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+            .replace('"', "&quot;").replace("'", "&#39;"))
 def svg_open(w, h, title, subtitle=""):
     s = ['<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" '
          'viewBox="0 0 %d %d" font-family="ui-monospace,Consolas,monospace">' % (w, h, w, h),
@@ -152,6 +154,7 @@ def geom_metal_angles(geomturbo: Path):
 def build_rows(case: Path):
     """产出逐项对照。每项：名称 / 设计值 / 实测值 / 偏离 / 结论。"""
     tbl = read_table(case / "01-scheme" / "v1" / "叶片几何参数表.csv")
+    annulus_rows = read_table(case / "01-scheme" / "v1" / "流道尺寸表.csv")
     geoms = {}
     for p in sorted((case / "02-geometry").glob("**/*.geomTurbo")):
         if ".bak" not in p.name.lower():
@@ -221,6 +224,10 @@ def build_rows(case: Path):
                "blades_design": blades_design, "chord_design": chord_design,
                "beta1_design": b1d, "beta2_design": b2d,
                "solidity_design": solidity_design,
+               # 设计表的整行也存进来。**不要靠外层循环变量 r** ——
+               # 结论循环是 for rec in out["rows"]，r 是建表循环遗留的最后一行（S1），
+               # 用它会让每一行都拿 S1 的设计值去比（实测踩过，R1 轴向位置报成 0.1376）。
+               "design_row": dict(r),
                "blades_geom": None, "chord_geom": None,
                "beta1_geom": None, "beta2_geom": None,
                "beta1_par": None, "beta2_par": None,
@@ -228,9 +235,51 @@ def build_rows(case: Path):
                "beta1_par_tip": None, "beta2_par_tip": None,
                "solidity_geom": None, "geom_file": gt.name if gt else None}
 
+        # 设计流道站位（z, hub, shroud），来自流道尺寸表
+        rec["r_design_mid"] = None
+        z_sel = fnum(r.get("轴向坐标(m)"))
+        if z_sel is not None:
+            best = min(annulus_rows,
+                       key=lambda a: abs((fnum(a.get("轴向坐标(m)")) or 1e9) - z_sel),
+                       default=None)
+            if best is not None:
+                rec["r_design_mid"] = fnum(best.get("中径半径(m)"))
+                rec["r_design_station"] = best.get("站位")
+
+        rec["annulus_design"] = []
+        for a in annulus_rows:
+            z_ = fnum(a.get("轴向坐标(m)"))
+            h_ = fnum(a.get("轮毂半径(m)"))
+            s_ = fnum(a.get("机匣半径(m)"))
+            if z_ is not None and h_ is not None and s_ is not None:
+                rec["annulus_design"].append((z_, h_, s_))
+
         if gt:
             import geom_view
             g = geom_view.parse_geomturbo(gt)
+            # 几何流道曲线（geomTurbo 里本来就有，之前根本没读）
+            ch = g.get("channel") or {}
+            if ch.get("hub") and ch.get("shroud"):
+                hp, sp = ch["hub"], ch["shroud"]
+
+                def annulus_at(zq, hp=hp, sp=sp):
+                    """在几何流道曲线上按 z 线性插值出 hub / shroud 半径。"""
+                    def interp(pts):
+                        pts = sorted(pts)
+                        if zq <= pts[0][0]:
+                            return pts[0][1]
+                        if zq >= pts[-1][0]:
+                            return pts[-1][1]
+                        for i in range(len(pts) - 1):
+                            z0, r0 = pts[i]
+                            z1, r1 = pts[i + 1]
+                            if z0 <= zq <= z1 and z1 > z0:
+                                return r0 + (r1 - r0) * (zq - z0) / (z1 - z0)
+                        return pts[-1][1]
+                    return interp(hp), interp(sp)
+
+                rec["annulus_geom"] = {"hub_pts": len(hp), "shroud_pts": len(sp)}
+                rec["annulus_at"] = annulus_at
             if g["rows"]:
                 row = g["rows"][0]
                 rec["blades_geom"] = row["periodicity"]
@@ -277,14 +326,34 @@ def build_rows(case: Path):
         if pr["geom"] is None:
             out["notes"].append("参数表里的 %s 在 02-geometry 下找不到对应几何 —— "
                                 "这一行没有比过，不代表一致。" % pr["table"])
-        elif pr["matched_by"] == "按顺序":
-            out["notes"].append("参数表叫 %s，几何文件叫 %s —— 名字不同，"
-                                "按流向顺序配对。这种血缘差异必须让接手的人知道。"
-                                % (pr["table"], pr["geom"]))
+        elif pr["matched_by"].startswith("按顺序") or pr["matched_by"].startswith("按叶片数"):
+            out["notes"].append("参数表叫 %s，几何文件叫 %s —— **名字不同**，按「%s」配对。"
+                                "这种血缘差异必须让接手的人知道。"
+                                % (pr["table"], pr["geom"], pr["matched_by"]))
 
-    # 结论
+    # 参数表自洽检查 —— **比"设计 vs 几何"更靠前的一步**。
+    # 表自己就矛盾的话，拿它当基准去判几何是错的。
+    # 实测：S1 行 弦长 0.0900 与 稠度 0.700 在 v1 流道 S1_EXIT 中径 0.210276 处
+    # 自相矛盾 6.6%；而几何实测弦长 0.08379 代进去恰好自洽到 0.3%。
+    # 也就是说那条"S1 弦长 -6.9%"的 WARN 很可能是**参数表抄错了**，不是几何错。
     for rec in out["rows"]:
         n = rec["name"]
+        if rec.get("chord_design") and rec.get("solidity_design") and rec.get("r_design_mid"):
+            blades = rec["blades_design"]
+            if blades:
+                implied = rec["chord_design"] * blades / (2 * math.pi * rec["r_design_mid"])
+                dev = (implied - rec["solidity_design"]) / rec["solidity_design"]
+                if abs(dev) > 0.02:
+                    out["items"].append({
+                        "row": n, "what": "参数表自洽（σ=chord·Z/2πr）",
+                        "design": "稠度列写 %.3f" % rec["solidity_design"],
+                        "actual": "由弦长列算得 %.3f" % implied,
+                        "verdict": "FAIL" if abs(dev) > 0.05 else "WARN",
+                        "dev_pct": dev * 100,
+                        "note": "参数表自己这一行对不上（差 %.1f%%）。"
+                                "拿它当基准判几何之前，先确认是弦长抄错还是稠度抄错。"
+                                % (dev * 100),
+                    })
         if rec["blades_design"] is not None and rec["blades_geom"] is not None:
             ok = int(rec["blades_design"]) == int(rec["blades_geom"])
             out["items"].append({
@@ -305,14 +374,22 @@ def build_rows(case: Path):
                 "note": "几何实测 %.1f–%.1f mm" % (rec.get("chord_min", 0) * 1000,
                                                     rec.get("chord_max", 0) * 1000),
             })
-        if rec["solidity_design"] and rec.get("solidity_geom"):
-            dev = (rec["solidity_geom"] - rec["solidity_design"]) / rec["solidity_design"]
+        # 稠度：σ = chord/(2πr/Z) ∝ 1/r —— **两边必须用同一半径**。
+        # 之前几何侧用各截面平均半径（R1 0.19435），设计侧定义在流道中径（0.20173），
+        # 半径差 3.8% 直接变成 +3.6% 的假偏差；同半径算只有 -0.15%。
+        # 这条合同我自己刚写进 memory.md，工具却没做（审核指出）。
+        if rec["solidity_design"] and rec.get("chord_geom") and rec.get("r_design_mid"):
+            blades = rec["blades_design"] or rec["blades_geom"]
+            sigma_same_r = rec["chord_geom"] * blades / (2 * math.pi * rec["r_design_mid"])
+            dev = (sigma_same_r - rec["solidity_design"]) / rec["solidity_design"]
             v = "PASS" if abs(dev) <= 0.10 else ("WARN" if abs(dev) <= 0.25 else "FAIL")
             out["items"].append({
-                "row": n, "what": "中径稠度",
+                "row": n, "what": "稠度（同半径）",
                 "design": "%.3f" % rec["solidity_design"],
-                "actual": "%.3f" % rec["solidity_geom"],
-                "verdict": v, "dev_pct": dev * 100, "note": "由几何弦长与中径回算",
+                "actual": "%.3f" % sigma_same_r,
+                "verdict": v, "dev_pct": dev * 100,
+                "note": "两边都用设计中径 r=%.5f m 算（σ∝1/r，不同半径不能直接比）"
+                        % rec["r_design_mid"],
             })
         # 金属角：**必须拿中径截面比**，不能拿 [root, tip] 区间比。
         # 审核实测：R1 跨度 22°、S1 跨度 25°，"落在区间内 ±1°" 任何中间值都 PASS，
@@ -342,9 +419,10 @@ def build_rows(case: Path):
         # 报不该报的 FAIL 比漏报更伤信任。判据要按类型分：
         #   转子：必须有间隙块，且与设计值比
         #   静子：几何没有间隙块是对的；参数表写间隙是表自己的定义问题
-        tg_d = fnum(r.get("叶尖间隙(m)"))
+        drow = rec.get("design_row") or {}
+        tg_d = fnum(drow.get("叶尖间隙(m)"))
         tg_g = rec.get("tip_gap_geom")
-        is_rotor = (r.get("类型", "").strip().lower() == "rotor")
+        is_rotor = (rec.get("type", "").strip().lower() == "rotor")
         if tg_d is not None:
             if tg_g is None and not is_rotor:
                 out["items"].append({
@@ -372,28 +450,39 @@ def build_rows(case: Path):
                     "note": "" if v == "PASS" else "差 %.1f 倍" % (tg_g / tg_d if tg_d else 0),
                 })
 
-        # 轴向位置：设计表的"轴向坐标"含义没注明（进口？出口？重心？），
-        # 所以**不能武断判 FAIL** —— 只报重叠情况，让人自己判断。
-        z_d = fnum(r.get("轴向坐标(m)"))
-        if z_d is not None and rec.get("z_min") is not None:
-            inside = rec["z_min"] - 0.005 <= z_d <= rec["z_max"] + 0.005
-            gap = 0.0
-            if z_d < rec["z_min"]:
-                gap = rec["z_min"] - z_d
-            elif z_d > rec["z_max"]:
-                gap = z_d - rec["z_max"]
-            note = ""
-            if not inside:
-                note = ("设计站位在几何 z 范围外 %.3f m。参数表那一列没写清是"
-                        "进口/出口/重心，所以这不一定表示错位，"
-                        "但两排的轴向关系值得确认。") % gap
-            out["items"].append({
-                "row": n, "what": "轴向位置 (m)",
-                "design": "%.4f（含义未注明）" % z_d,
-                "actual": "%.4f … %.4f" % (rec["z_min"], rec["z_max"]),
-                "verdict": "PASS" if inside else "WARN",
-                "note": note,
-            })
+        # 流道半径比对 —— 这才是"两套流道能不能比"的实质判据。
+        #
+        # 为什么不用"设计站位落在几何 z 范围内"：设计站位来自 v1 流道（全长 0.180 m），
+        # 几何来自 v8 流道（全长 0.300 m，1.67 倍）。拿某一个站位去比叶片 z 跨度，
+        # 恰好落进去就 PASS —— 没有判别力（审核实测：同 z 处 v8 hub 比 v1 低 22%）。
+        # 直接比 hub/shroud 曲线，才能看出"是不是同一个流道"。
+        ann = rec.get("annulus_geom")
+        if ann:
+            worst_hub = worst_shroud = None
+            for z_d, h_d, s_d in rec.get("annulus_design", []):
+                h_g, s_g = rec.get("annulus_at", lambda z: (None, None))(z_d) \
+                    if callable(rec.get("annulus_at")) else (None, None)
+                if h_g is None:
+                    continue
+                dh = (h_g - h_d) / h_d if h_d else 0
+                ds = (s_g - s_d) / s_d if s_d else 0
+                if worst_hub is None or abs(dh) > abs(worst_hub):
+                    worst_hub = dh
+                if worst_shroud is None or abs(ds) > abs(worst_shroud):
+                    worst_shroud = ds
+            if worst_hub is not None:
+                w = max(abs(worst_hub), abs(worst_shroud or 0))
+                v = "PASS" if w <= 0.02 else ("WARN" if w <= 0.10 else "FAIL")
+                out["items"].append({
+                    "row": n, "what": "流道半径（同 z 处）",
+                    "design": "见流道尺寸表", "actual": "几何 hub/shroud 曲线",
+                    "verdict": v,
+                    "dev_pct": (worst_hub or 0) * 100,
+                    "note": "最大偏差 hub %+.1f%%、shroud %+.1f%%。"
+                            % ((worst_hub or 0) * 100, (worst_shroud or 0) * 100)
+                            + ("" if v == "PASS" else
+                               "两套流道不是同一条曲线 —— 这解释了几何与参数表为何对不上。"),
+                })
 
         # 几何估计 vs .par 真值：验证"画出来的形状"与"参数文件"一致
         if rec["beta1_par"] is not None and rec["beta1_geom"] is not None:
@@ -415,8 +504,11 @@ def view_report(data, w=1160, h=None):
     s = svg_open(w, h, "设计值 vs 几何实测",
                  "左边是 01-scheme 参数表写的，右边是从几何文件实测的　"
                  "结论：PASS 一致 / WARN 有偏离 / FAIL 对不上")
-    colx = [24, 150, 330, 520, 720]
+    colx = [24, 132, 300, 470, 660]
     heads = ["叶排", "项目", "设计值（参数表）", "实测值（几何）", "结论"]
+    # 配对关系必须显示出来 —— 否则"参数表 S1 其实比的是 R2.geomTurbo"
+    # 这件事在界面上完全看不到（审核指出）。
+    pmap = {p["table"]: p for p in (data.get("pairing") or [])}
     y = 92
     for i, hd in enumerate(heads):
         s.append('<text x="%d" y="%d" fill="%s" font-size="11.5" font-weight="700">%s</text>'
@@ -429,8 +521,12 @@ def view_report(data, w=1160, h=None):
         if it["verdict"] == "FAIL":
             s.append('<rect x="16" y="%d" width="%d" height="%d" fill="%s" fill-opacity="0.10" '
                      'rx="4"/>' % (y - 17, w - 32, rowh - 2, BAD))
+        pr = pmap.get(it["row"]) or {}
+        gname = pr.get("geom") or "—"
         s.append('<text x="%d" y="%d" fill="%s" font-size="12">%s</text>'
                  % (colx[0], y, FG, esc(it["row"])))
+        s.append('<text x="%d" y="%d" fill="%s" font-size="10.5">↔ %s</text>'
+                 % (colx[0], y + 13, DIM, esc(gname)))
         s.append('<text x="%d" y="%d" fill="%s" font-size="12">%s</text>'
                  % (colx[1], y, FG, esc(it["what"])))
         s.append('<text x="%d" y="%d" fill="%s" font-size="12">%s</text>'
@@ -505,7 +601,10 @@ def build(case: Path, out_dir: Path):
                  '<img src="design-vs-geom.svg" alt="设计值对照"></div>',
     }, encoding="utf-8", newline="")
     return {"ok": True, "case": str(case), "out_dir": str(out_dir),
-            "counts": n, "items": data["items"], "rows": data["rows"]}
+            "counts": n, "items": data["items"], "rows": data["rows"],
+            # pairing 与 notes 必须进返回值 —— 否则"参数表 S1 其实比的是 R2.geomTurbo"
+            # 这件事在 JSON 和界面上都看不到（审核指出）。
+            "pairing": data.get("pairing", []), "notes": data.get("notes", [])}
 
 
 def main(argv=None):
