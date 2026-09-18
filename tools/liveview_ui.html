@@ -161,9 +161,10 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
     <h2>看设计 · <span id="viewsum" style="color:var(--dim2);font-weight:400"></span>
       <button class="btn ghost small" style="float:right" onclick="loadViews(true)">重新生成</button>
     </h2>
-    <p class="hint">agent 每改一次几何或网格，这里就跟着变 —— 不用打开 NUMECA。
-      几何看三张：子午面（流道长什么样）、叶栅展开（叶片剖面）、轴测（立体关系）。
-      网格看两张：块结构（求解器真正读的块划分）、质量指标（偏斜角/长宽比/膨胀率）。</p>
+    <p class="hint">agent 每改一次几何、网格或算例，这里<b>自动跟着变</b> —— 不用打开 NUMECA，也不用点刷新。
+      四组视图：<b>设计值对照</b>（参数表 vs 几何实测，回答"对不对"）、
+      <b>几何</b>（子午面 / 各截面形状 / 轴测）、<b>网格</b>（块结构 / 质量指标）、
+      <b>CFD 结果</b>（性能曲线 / 扫点状态 / 收敛情况）。</p>
     <div id="views"></div>
   </div>
 
@@ -642,12 +643,25 @@ function renderWatch(w, changes){
 }
 
 // ── 可视化视图（几何 + 网格）───────────────────────────────────────────────
-var viewState = { data: null, group: 0, which: 0 };
+var viewState = { data: null, group: 0, which: 0, fp: null };
+
+// 视图指纹 = 各源文件的 mtime/size 拼起来。
+// 为什么需要它：/api/state 每 1.5 秒刷新一次，如果每次都重新拉 14 张 SVG，
+// 图会不停闪、也没必要。源文件没变就不动，变了就自动重画 ——
+// 这正是"agent 一边操作一边看得见"：它改完几何，界面自己就更新了。
+function viewFingerprint(s){
+  var w = (s.watch_changes || []);
+  var parts = [s.case_id, s.revision, w.length];
+  for (var i=0;i<w.length && i<6;i++) parts.push(w[i].path, w[i].mtime_ns || w[i].size);
+  var n = s.newest ? (s.newest.path + s.newest.age_sec) : "";
+  parts.push(n);
+  return parts.join("|");
+}
 
 function loadViews(force){
   var q = "/api/views?case=" + encodeURIComponent(currentCase || "");
   if (force) q += "&force=1";
-  el("viewsum").textContent = "正在生成…";
+  el("viewsum").textContent = force ? "强制重算中…" : "正在生成…";
   apiFetch(q).then(function(r){ return r.json(); }).then(function(j){
     viewState.data = j;
     var live = (j.groups || []).filter(function(g){ return g.views && g.views.length; });
@@ -785,7 +799,16 @@ function apply(s){
   }
 
   renderRules(s.rules);
-  if (s.case_id !== viewState.caseId){ viewState.caseId = s.case_id; viewState.group = 0; viewState.which = 0; loadViews(); }
+  // 案例换了，或源文件变了 -> 自动重画
+  var fp = viewFingerprint(s);
+  if (s.case_id !== viewState.caseId){
+    viewState.caseId = s.case_id; viewState.group = 0; viewState.which = 0;
+    viewState.fp = fp; loadViews();
+  } else if (viewState.fp !== null && fp !== viewState.fp){
+    viewState.fp = fp; loadViews();
+  } else if (viewState.fp === null){
+    viewState.fp = fp;
+  }
   renderWatch(s.watch, s.watch_changes);
 }
 
