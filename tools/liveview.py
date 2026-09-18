@@ -614,6 +614,30 @@ def build_views(case_id, force=False):
     except Exception as exc:
         groups.append({"kind": "cfd", "title": "CFD 结果", "error": repr(exc), "views": []})
 
+    # 设计值对照放最前面 —— 它回答的是"对不对"，比"长什么样"更重要
+    try:
+        import geom_check
+        sub = out_root / "check"
+        srcs = [case / "01-scheme" / "v1" / "叶片几何参数表.csv"]
+        srcs += sorted((case / "02-geometry").glob("**/*.par"))
+        srcs += sorted((case / "02-geometry").glob("**/*.geomTurbo"))
+        srcs = [p for p in srcs if p.is_file()]
+        sig = {"files": [_sig_of(p) for p in srcs]}
+        if srcs and not _stamp_ok(sub, sig, force):
+            geom_check.build(case, sub)
+            (sub / ".source.json").write_text(json.dumps(sig), encoding="utf-8")
+        if (sub / "design-vs-geom.svg").is_file():
+            rel = sub.relative_to(ROOT).as_posix()
+            groups.append({"kind": "check", "title": "设计值对照",
+                           "hint": "参数表 vs 几何实测", "views": [{
+                               "name": "对照", "dir": rel,
+                               "images": [{"title": "设计值 vs 几何实测",
+                                           "note": "逐项结论，红框是对不上的",
+                                           "path": rel + "/design-vs-geom.svg"}]}]})
+    except Exception as exc:
+        groups.append({"kind": "check", "title": "设计值对照",
+                       "error": repr(exc), "views": []})
+
     live = [g for g in groups if g["views"]]
     if not live:
         return {"ok": True, "available": False, "groups": groups,

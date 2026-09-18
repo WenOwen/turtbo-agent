@@ -72,24 +72,28 @@ def parse_geomturbo(path: Path):
     """
     text = path.read_text(encoding="utf-8", errors="replace")
 
+    # 版本差异（实测）：
+    #   AutoBlade 5.5：点数写 "+100"，缩进用 tab
+    #   AutoGrid  5.9：点数写 "100"（没有加号），缩进用空格
+    # 硬要求 "+" 会让 5.9 的文件静默解析成空 —— 之前就踩了这个坑。
     curves = {}
     for m in re.finditer(r"NAME\s+(\S+)\s*\r?\n\s*DISCRETISATION.*?"
-                         r"NI_BEGIN\s+zrcurve\s*\r?\n\s*ZR\s*\r?\n\s*\+(\d+)\s*\r?\n"
-                         r"(.*?)NI_END\s+zrcurve", text, re.S):
+                         r"NI_BEGIN\s+zrcurve\s*\r?\n\s*ZR\s*\r?\n\s*\+?(\d+)\s*\r?\n"
+                         r"(.*?)NI_END\s+zrcurve", text, re.S | re.I):
         pts = _points(m.group(3), cols=2)
         if pts:
             curves[m.group(1)] = pts
 
     channel = {}
     for m in re.finditer(r"NI_BEGIN\s+channel_curve\s+(\S+)(.*?)NI_END\s+channel_curve",
-                         text, re.S):
+                         text, re.S | re.I):
         which, body = m.group(1).lower(), m.group(2)
         ref = re.search(r"VERTEX\s+CURVE_P\s+(\S+)", body)
         if ref and ref.group(1) in curves:
             channel[which] = curves[ref.group(1)]
 
     rows = []
-    for rm in re.finditer(r"NI_BEGIN\s+NIROW(.*?)NI_END\s+NIROW", text, re.S):
+    for rm in re.finditer(r"NI_BEGIN\s+NIROW(.*?)NI_END\s+NIROW", text, re.S | re.I):
         body = rm.group(1)
 
         def grab(pat, cast=str, default=None):
@@ -99,12 +103,14 @@ def parse_geomturbo(path: Path):
         sides = {}
         for side in ("suction", "pressure"):
             sm = re.search(r"\b" + side + r"\s*\r?\n\s*SECTIONAL\s*\r?\n(.*?)"
-                           r"(?=\b(?:suction|pressure)\s*\r?\n\s*SECTIONAL|\Z)", body, re.S)
+                           r"(?=\b(?:suction|pressure)\s*\r?\n\s*SECTIONAL|\Z)",
+                           body, re.S | re.I)
             if not sm:
                 continue
             got = {}
-            for cm in re.finditer(r"#\s*section\s+(\d+)\s*\r?\n\s*XYZ\s*\r?\n\s*\+(\d+)\s*\r?\n"
-                                  r"(.*?)(?=\r?\n\s*#\s*section|\Z)", sm.group(1), re.S):
+            for cm in re.finditer(r"#\s*section\s+(\d+)\s*\r?\n\s*XYZ\s*\r?\n\s*\+?(\d+)\s*\r?\n"
+                                  r"(.*?)(?=\r?\n\s*#\s*section|\Z)",
+                                  sm.group(1), re.S | re.I):
                 pts = _points(cm.group(3))
                 if len(pts) >= 3:
                     got[int(cm.group(1))] = pts
@@ -131,7 +137,15 @@ def parse_geomturbo(path: Path):
             "sections": sections,
             "tip_gap_m": grab(r"WIDTH_AT_LEADING_EDGE\s+([\d.eE+-]+)", float, None),
         })
-    return {"channel": channel, "rows": rows, "source": str(path)}
+    # 剖面完整性自检：suction 与 pressure 必须成对。
+    # 只有一侧时照样能画出开口折线，看着"像那么回事"—— 所以要显式报出来。
+    warnings = []
+    for row in rows:
+        bad = [s["index"] for s in row["sections"] if s["kind"] != "closed"]
+        if bad:
+            warnings.append("%s 有 %d 个截面只解析出一侧（%s），画出来是开口曲线"
+                            % (row["name"], len(bad), bad[:6]))
+    return {"channel": channel, "rows": rows, "source": str(path), "warnings": warnings}
 
 
 # ── 几何派生 ───────────────────────────────────────────────────────────────
@@ -303,46 +317,65 @@ def view_meridional(geom, w=1160, h=560, pad=70):
 
 # ── 图 2：叶栅展开 ─────────────────────────────────────────────────────────
 def view_cascade(geom, w=1160, h=None, pad=56):
+    """每个截面一张，**共用同一比例尺**。
+
+    早先每张面板各自等比缩放 —— 面板之间就不能比大小了（实测两截面弦长
+    只差 1.6%，画出来却差 5.4%）。共用比例尺是这张图有意义的前提。
+    另外每张只画一个截面，所以叫"截面形状"而不是"叶栅展开"（没有栅距、
+    没有相邻叶片，叫叶栅是误导）。
+    """
     panels = []
     for ri, row in enumerate(geom["rows"]):
         for m in [section_metrics(s) for s in row["sections"]]:
             panels.append((ri, row, m))
     ncol = min(7, max(1, len(panels)))
     nrow = math.ceil(len(panels) / ncol) if panels else 1
-    chh = 168
+    chh = 178
     h = h or (100 + nrow * chh)
-    s = svg_open(w, h, "叶栅展开（每个截面一张）",
-                 "横轴 = 轴向 z (m)　纵轴 = 周向弧长 s = r·θ (m)　共 %d 个截面" % len(panels))
+    s = svg_open(w, h, "叶片各截面形状",
+                 "横轴 = 轴向 z (m)　纵轴 = 周向弧长 s = r·θ (m)　"
+                 "共 %d 个截面，**所有面板同一比例尺**" % len(panels))
     if not panels:
         s.append("</svg>")
         return "\n".join(s)
 
     cw = (w - 2 * pad) / ncol
+    sw, sh = cw - 16, chh - 56
+    # 全局比例尺：所有面板共用
+    allz = [v for _, _, m in panels for v in m["pz"]]
+    alls = [v for _, _, m in panels for v in m["ps"]]
+    z0, z1 = min(allz), max(allz)
+    s0, s1 = min(alls), max(alls)
+    dz, ds = (z1 - z0) or 1e-9, (s1 - s0) or 1e-9
+    # 保持纵横比：取较紧的那个方向
+    k = min((sw - 24) / dz, (sh - 24) / ds)
+
     for i, (ri, row, m) in enumerate(panels):
         cx = pad + (i % ncol) * cw
         cy = 92 + (i // ncol) * chh
-        sw, sh = cw - 16, chh - 46
-        px, ps = m["pz"], m["ps"]
-        mp, _ = make_map(px, ps, sw, sh, 12)
-        shifted = [(cx + a, cy + b) for a, b in (mp(x, y) for x, y in zip(px, ps))]
+        ox = cx + (sw - dz * k) / 2 - z0 * k
+        oy = cy + (sh - ds * k) / 2 - s0 * k
+        shifted = [(ox + z * k, cy + sh - ((s * k + oy) - cy)) for z, s_ in
+                   zip(m["pz"], m["ps"]) for s in [s_]]
         color = BLADE[ri % len(BLADE)]
         s.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s" '
                  'stroke="%s" rx="4"/>' % (cx, cy, sw, sh, PANEL, GRID))
         s.append('<polygon points="%s" fill="%s" fill-opacity="0.18" stroke="%s" '
                  'stroke-width="1.6"/>' % (pts_attr(shifted), color, color))
-        # 前缘点
         le = shifted[0]
         s.append('<circle cx="%.1f" cy="%.1f" r="2.6" fill="%s"/>' % (le[0], le[1], FG))
-        s.append('<text x="%.1f" y="%.1f" fill="%s" font-size="10.5">%s #%d　弦长 %.1f mm　'
+        # 标签分两行，避免横向压字（早先一行 30+ 字符，面板间距只有 150 px）
+        s.append('<text x="%.1f" y="%.1f" fill="%s" font-size="10">%s #%d</text>'
+                 % (cx + 5, cy + sh + 14, DIM, esc(row["name"]), m["index"]))
+        s.append('<text x="%.1f" y="%.1f" fill="%s" font-size="10">弦 %.1f mm　'
                  '安装角 %.1f°</text>'
-                 % (cx + 5, cy + sh + 15, DIM, esc(row["name"]), m["index"],
-                    m["chord_m"] * 1000, m["stagger_deg"]))
+                 % (cx + 5, cy + sh + 26, DIM, m["chord_m"] * 1000, m["stagger_deg"]))
     s.append("</svg>")
     return "\n".join(s)
 
 
 # ── 图 3：轴测 ─────────────────────────────────────────────────────────────
-def view_blade3d(geom, w=900, h=600, pad=60, az_deg=35.0, el_deg=38.0, copies=1):
+def view_blade3d(geom, w=1000, h=620, pad=60, az_deg=35.0, el_deg=38.0, copies=0):
     az, el = math.radians(az_deg), math.radians(el_deg)
     items = []
 
@@ -362,6 +395,8 @@ def view_blade3d(geom, w=900, h=600, pad=60, az_deg=35.0, el_deg=38.0, copies=1)
 
     # 轮毂/涵道画成"几条子午线 + 进出口两个圆环"，而不是整张圆柱网格 ——
     # 满屏网格线会盖住叶片，反而看不清。这是可读性问题，不是几何问题。
+    # items: (名字, 颜色, 点列, 线宽, 不透明度, 是不是叶片)
+    # 用显式布尔量而不是"角度==0"当哨兵 —— 后者在 copies=1 时恒真，是死代码。
     for key, color in (("hub", HUB), ("shroud", SHROUD)):
         if key not in geom["channel"]:
             continue
@@ -369,17 +404,18 @@ def view_blade3d(geom, w=900, h=600, pad=60, az_deg=35.0, el_deg=38.0, copies=1)
         for t_deg in (0, 90, 180, 270):
             th = math.radians(t_deg)
             items.append((key, color, [project(z, r, th) for z, r in curve],
-                          1.3, 0.45, 0.0))
+                          1.3, 0.40, False))
         for z, r in (curve[0], curve[-1]):
             items.append((key, color, [project(z, r, math.radians(t))
                                        for t in range(0, 361, 6)],
-                          1.2, 0.55, 0.0))
+                          1.2, 0.50, False))
 
     for ri, row in enumerate(geom["rows"]):
         color = BLADE[ri % len(BLADE)]
         per = max(1, row["periodicity"])
         metrics = [section_metrics(s) for s in row["sections"]]
-        for c in range(copies):
+        ncopy = per if copies <= 0 else copies   # 默认画满一圈
+        for c in range(ncopy):
             base = 2 * math.pi * c / per
             # 每个截面的三维点（用展开坐标重建：轴向 z 取真实值，周向由弧长 s 换算）
             rings = []
@@ -387,15 +423,15 @@ def view_blade3d(geom, w=900, h=600, pad=60, az_deg=35.0, el_deg=38.0, copies=1)
                 rings.append([project(z, m["rmid"], s_ / m["rmid"] + base)
                               for z, s_ in zip(m["z"], m["s"])])
             for ring in rings:
-                items.append((row["name"], color, ring, 1.5, 0.9, base))
+                items.append((row["name"], color, ring, 1.4, 0.85, True))
             # 展向连线：只画截面轮廓会散成一堆弧，看不出"这是个叶片面"。
             # 把相邻截面同序号的点连起来，才有实体感。
             if len(rings) >= 2:
                 npts = min(len(r) for r in rings)
-                step = max(1, npts // 26)
+                step = max(1, npts // 22)
                 for i in range(0, npts, step):
                     span = [rings[k][i] for k in range(len(rings))]
-                    items.append((row["name"], color, span, 0.7, 0.30, base))
+                    items.append((row["name"], color, span, 0.6, 0.26, True))
 
     if not items:
         return "\n".join(svg_open(w, h, "轴测", "无几何数据") + ["</svg>"])
@@ -404,22 +440,19 @@ def view_blade3d(geom, w=900, h=600, pad=60, az_deg=35.0, el_deg=38.0, copies=1)
     ys = [p[1] for _, _, ring, _, _, _ in items for p in ring]
     mp, _ = make_map(xs, ys, w, h, pad)
 
-    note = "方位角 %.0f°　仰角 %.0f°" % (az_deg, el_deg)
-    if copies == 1:
-        note += "　每排画 1 个叶片（其余按周期对称，画满会互相遮挡）"
-    else:
-        note += "　每排画 %d 个叶片" % copies
-    s = svg_open(w, h, "轴测（叶片 + 涵道）", note)
+    s = svg_open(w, h, "轴测（叶片 + 涵道）",
+                 "方位角 %.0f°　仰角 %.0f°　每排按周期数画满，看得出叶片数"
+                 % (az_deg, el_deg))
 
     # 排序：先把涵道/轮毂（base==0）铺底，再按深度从远到近画叶片。
     # 只按深度排会让半透明的涵道大圆环压住叶片 —— 那是遮挡关系错了，不是审美问题。
     def order(it):
-        return (0 if it[5] == 0.0 else 1,
+        return (0 if not it[5] else 1,          # 涵道/轮毂铺底，叶片画在上面
                 sum(p[2] for p in it[2]) / len(it[2]))
 
-    for name, color, ring, sw_, op, base in sorted(items, key=order, reverse=False):
+    for name, color, ring, sw_, op, is_blade in sorted(items, key=order):
         pts = pts_attr([mp(a, b) for a, b, _ in ring])
-        if base != 0.0:
+        if is_blade:
             # 叶片截面：填充一点颜色，立体感来自重叠而不是线宽
             s.append('<polygon fill="%s" fill-opacity="0.30" stroke="%s" '
                      'stroke-width="%.1f" stroke-opacity="%.2f" points="%s"/>'
@@ -433,14 +466,14 @@ def view_blade3d(geom, w=900, h=600, pad=60, az_deg=35.0, el_deg=38.0, copies=1)
     ly = 74
     for ri, row in enumerate(geom["rows"]):
         color = BLADE[ri % len(BLADE)]
-        s.append('<rect x="%d" y="%d" width="12" height="3" fill="%s"/>' % (w - 220, ly, color))
-        s.append('<text x="%d" y="%d" fill="%s" font-size="12">%s（%d 叶）</text>'
-                 % (w - 200, ly + 5, DIM, esc(row["name"]), row["periodicity"]))
+        s.append('<rect x="%d" y="%d" width="12" height="3" fill="%s"/>' % (w - 230, ly, color))
+        s.append('<text x="%d" y="%d" fill="%s" font-size="12">%s（%d 叶，画满一圈）</text>'
+                 % (w - 210, ly + 5, DIM, esc(row["name"]), row["periodicity"]))
         ly += 20
     for name, color in (("轮毂 hub", HUB), ("涵道 shroud", SHROUD)):
-        s.append('<rect x="%d" y="%d" width="12" height="3" fill="%s"/>' % (w - 220, ly, color))
-        s.append('<text x="%d" y="%d" fill="%s" font-size="12">%s</text>'
-                 % (w - 200, ly + 5, DIM, name))
+        s.append('<rect x="%d" y="%d" width="12" height="3" fill="%s"/>' % (w - 230, ly, color))
+        s.append('<text x="%d" y="%d" fill="%s" font-size="12">%s（子午线 + 进出口环）</text>'
+                 % (w - 210, ly + 5, DIM, name))
         ly += 20
     s.append("</svg>")
     return "\n".join(s)
@@ -468,6 +501,11 @@ INDEX_TMPL = """<!doctype html><html lang="zh"><meta charset="utf-8">
 
 def build(geom_path: Path, out_dir: Path):
     geom = parse_geomturbo(geom_path)
+    # 解析出空结果时必须显式失败 —— 出三张"无数据"的图还报 ok，
+    # 比报错更糟：人以为看过了。（实测踩过：5.9 版的文件被静默解析成空。）
+    if not geom["rows"] and not geom["channel"]:
+        raise ValueError("没能从 %s 解析出任何几何（通道与叶排都是空的）。"
+                         "可能是文件版本差异，请检查格式。" % geom_path.name)
     out_dir.mkdir(parents=True, exist_ok=True)
     written, cards = [], []
     for fname, title, note, fn in (
@@ -507,17 +545,23 @@ def build(geom_path: Path, out_dir: Path):
     }, encoding="utf-8", newline="")
     written.append(str(out_dir / "index.html"))
     return {"ok": True, "source": str(geom_path), "out_dir": str(out_dir), "files": written,
+            "warnings": geom.get("warnings", []),
             "rows": [{"name": r["name"], "periodicity": r["periodicity"],
                       "blades": r["blades"], "sections": len(r["sections"])} for r in geom["rows"]],
             "channel": {k: len(v) for k, v in geom["channel"].items()}}
 
 
 def find_geomturbo(case: Path):
-    for pat in ("02-geometry/**/*.geomTurbo", "**/*.geomTurbo"):
-        hits = sorted(case.glob(pat))
-        if hits:
-            return hits
-    return []
+    """找案例里的叶片几何文件。
+
+    **只认 02-geometry/ 下的**，理由：
+      · 03-mesh/ 里也有同名 .geomTurbo，但那是 AutoGrid 回写的网格侧面几何，
+        不是设计几何；混进来会多出几个标签页，还容易被误读成"设计改了"。
+      · .bak 是备份，不是产物。
+    """
+    hits = [p for p in sorted((case / "02-geometry").glob("**/*.geomTurbo"))
+            if p.is_file() and ".bak" not in p.name.lower()]
+    return hits
 
 
 def main(argv=None):
