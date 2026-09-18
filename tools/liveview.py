@@ -514,51 +514,87 @@ def resolve_in_root(rel):
 _VIEW_LOCK = threading.Lock()
 
 
+def _stamp_ok(sub, sig, force):
+    """源文件没改就跳过重算。几何/网格文件都几百 KB，比 mtime 很便宜。"""
+    if force:
+        return False
+    stamp = sub / ".source.json"
+    if not stamp.is_file():
+        return False
+    try:
+        return json.loads(stamp.read_text(encoding="utf-8")) == sig
+    except Exception:
+        return False
+
+
+def _sig_of(path):
+    st = path.stat()
+    return {"path": str(path), "mtime": st.st_mtime, "size": st.st_size}
+
+
 def build_views(case_id, force=False):
-    """生成（或复用）该案例的几何视图，返回可用的视图清单。"""
+    """生成（或复用）该案例的几何与网格视图。
+
+    原则：**按需生成、源变才重算**。agent 改完几何/网格，人切回页面就该看到新的。
+    """
     case = case_dir_of(case_id)
+    out_root = case / "_view"
+    groups = []
+
     try:
         import geom_view
-    except Exception as exc:
-        raise ApiError("几何可视化模块不可用：" + repr(exc), 500)
-
-    geoms = geom_view.find_geomturbo(case)
-    if not geoms:
-        return {"ok": True, "available": False,
-                "reason": "本案例还没有 .geomTurbo 几何文件（第 4 步的产物）",
-                "views": []}
-
-    out_root = case / "_view"
-    views = []
-    with _VIEW_LOCK:
-        for g in geoms:
-            sub = out_root / g.stem
-            # 源文件没改就跳过重算：几何文件通常几百 KB，比较 mtime 很便宜
-            stamp = sub / ".source.json"
-            sig = {"path": str(g), "mtime": g.stat().st_mtime, "size": g.stat().st_size}
-            if not force and stamp.is_file():
-                try:
-                    if json.loads(stamp.read_text(encoding="utf-8")) == sig:
-                        views.append(_view_entry(case, sub, g))
-                        continue
-                except Exception:
-                    pass
-            geom_view.build(g, sub)
-            stamp.write_text(json.dumps(sig), encoding="utf-8")
-            views.append(_view_entry(case, sub, g))
-    return {"ok": True, "available": True, "views": views}
-
-
-def _view_entry(case, sub, g):
-    rel = sub.relative_to(ROOT).as_posix()
-    return {
-        "name": g.stem,
-        "dir": rel,
-        "images": [{"title": t, "note": n, "path": rel + "/" + f}
-                   for f, t, n in (("meridional.svg", "子午面", "流道轮廓 + 叶片径向位置"),
+        geoms = geom_view.find_geomturbo(case)
+        views = []
+        with _VIEW_LOCK:
+            for g in geoms:
+                sub = out_root / g.stem
+                if not _stamp_ok(sub, _sig_of(g), force):
+                    geom_view.build(g, sub)
+                    (sub / ".source.json").write_text(json.dumps(_sig_of(g)), encoding="utf-8")
+                rel = sub.relative_to(ROOT).as_posix()
+                views.append({
+                    "name": g.stem, "dir": rel,
+                    "images": [{"title": t, "note": n, "path": rel + "/" + f}
+                               for f, t, n in (
+                                   ("meridional.svg", "子午面", "流道轮廓 + 叶片径向位置"),
                                    ("cascade.svg", "叶栅展开", "每个截面的剖面形状"),
                                    ("blade3d.svg", "轴测", "叶片与涵道的立体关系"))],
-    }
+                })
+        if views:
+            groups.append({"kind": "geom", "title": "几何", "hint": "叶片与流道", "views": views})
+    except Exception as exc:
+        groups.append({"kind": "geom", "title": "几何", "error": repr(exc), "views": []})
+
+    try:
+        import mesh_view
+        dirs = mesh_view.find_mesh_dirs(case)
+        views = []
+        with _VIEW_LOCK:
+            for d in dirs:
+                sub = out_root / ("mesh-" + d.name)
+                srcs = sorted(d.glob("*.igg")) + sorted(d.glob("*.qualityReport"))
+                sig = {"dir": str(d), "files": [_sig_of(p) for p in srcs]}
+                if not _stamp_ok(sub, sig, force):
+                    mesh_view.build(d, sub)
+                    (sub / ".source.json").write_text(json.dumps(sig), encoding="utf-8")
+                rel = sub.relative_to(ROOT).as_posix()
+                views.append({
+                    "name": d.name, "dir": rel,
+                    "images": [{"title": t, "note": n, "path": rel + "/" + f}
+                               for f, t, n in (
+                                   ("blocks.svg", "块结构", "从 .igg 解析的真实块拓扑"),
+                                   ("quality.svg", "质量指标", "从 .qualityReport 解析"))],
+                })
+        if views:
+            groups.append({"kind": "mesh", "title": "网格", "hint": "块拓扑与质量", "views": views})
+    except Exception as exc:
+        groups.append({"kind": "mesh", "title": "网格", "error": repr(exc), "views": []})
+
+    live = [g for g in groups if g["views"]]
+    if not live:
+        return {"ok": True, "available": False, "groups": groups,
+                "reason": "本案例还没有几何或网格产物（第 4、5 步的产物）"}
+    return {"ok": True, "available": True, "groups": groups}
 
 
 def read_file_payload(rel):

@@ -158,11 +158,12 @@ pre{background:#0a0d11;border:1px solid var(--line);border-radius:8px;padding:13
   <div id="stagedetail"></div>
 
   <div class="card" id="view-card" style="display:none">
-    <h2>看几何 · <span id="viewsum" style="color:var(--dim2);font-weight:400"></span>
+    <h2>看设计 · <span id="viewsum" style="color:var(--dim2);font-weight:400"></span>
       <button class="btn ghost small" style="float:right" onclick="loadViews(true)">重新生成</button>
     </h2>
-    <p class="hint">agent 每改一次几何，这里就跟着变 —— 不用打开 NUMECA。
-      三张图分别是子午面（流道长什么样）、叶栅展开（叶片剖面长什么样）、轴测（立体关系）。</p>
+    <p class="hint">agent 每改一次几何或网格，这里就跟着变 —— 不用打开 NUMECA。
+      几何看三张：子午面（流道长什么样）、叶栅展开（叶片剖面）、轴测（立体关系）。
+      网格看两张：块结构（求解器真正读的块划分）、质量指标（偏斜角/长宽比/膨胀率）。</p>
     <div id="views"></div>
   </div>
 
@@ -640,8 +641,8 @@ function renderWatch(w, changes){
   setHTML("watchlist", h);
 }
 
-// ── 几何视图 ───────────────────────────────────────────────────────────────
-var viewState = { data: null, which: 0 };
+// ── 可视化视图（几何 + 网格）───────────────────────────────────────────────
+var viewState = { data: null, group: 0, which: 0 };
 
 function loadViews(force){
   var q = "/api/views?case=" + encodeURIComponent(currentCase || "");
@@ -649,13 +650,18 @@ function loadViews(force){
   el("viewsum").textContent = "正在生成…";
   apiFetch(q).then(function(r){ return r.json(); }).then(function(j){
     viewState.data = j;
-    if (!j.available){
+    var live = (j.groups || []).filter(function(g){ return g.views && g.views.length; });
+    if (!j.available || !live.length){
       el("view-card").style.display = "none";
       return;
     }
     el("view-card").style.display = "";
-    el("viewsum").textContent = j.views.length + " 套几何　·　" +
-      j.views.reduce(function(a,v){ return a + v.images.length; }, 0) + " 张图";
+    var imgs = 0;
+    for (var i=0;i<live.length;i++)
+      for (var k=0;k<live[i].views.length;k++) imgs += live[i].views[k].images.length;
+    el("viewsum").textContent = live.map(function(g){
+      return g.title + " " + g.views.length + " 套"; }).join("　·　")
+      + "　·　共 " + imgs + " 张图";
     renderViews();
   }).catch(function(e){
     el("viewsum").textContent = "生成失败：" + e;
@@ -665,15 +671,30 @@ function loadViews(force){
 function renderViews(){
   var j = viewState.data;
   if (!j || !j.available) return;
-  var tabs = "";
-  for (var i=0;i<j.views.length;i++){
-    tabs += '<span class="viewtab' + (i===viewState.which?' on':'') + '" onclick="pickView(' + i + ')">'
-         + esc(j.views[i].name) + '</span>';
+  var live = (j.groups || []).filter(function(g){ return g.views && g.views.length; });
+  if (!live.length) return;
+  if (viewState.group >= live.length) viewState.group = 0;
+  var g = live[viewState.group];
+  if (viewState.which >= g.views.length) viewState.which = 0;
+
+  var html = "";
+  if (live.length > 1){
+    html += '<div class="viewtabs">';
+    for (var i=0;i<live.length;i++){
+      html += '<span class="viewtab' + (i===viewState.group?' on':'')
+           +  '" onclick="pickGroup(' + i + ')">' + esc(live[i].title) + '</span>';
+    }
+    html += '</div>';
   }
-  var v = j.views[viewState.which] || j.views[0];
-  var html = '<div class="viewtabs">' + tabs + '</div><div class="viewgrid">';
-  for (var k=0;k<v.images.length;k++){
-    var im = v.images[k];
+  html += '<div class="viewtabs">';
+  for (var k=0;k<g.views.length;k++){
+    html += '<span class="viewtab' + (k===viewState.which?' on':'')
+         +  '" onclick="pickView(' + k + ')">' + esc(g.views[k].name) + '</span>';
+  }
+  html += '</div><div class="viewgrid">';
+  var v = g.views[viewState.which];
+  for (var m=0;m<v.images.length;m++){
+    var im = v.images[m];
     html += '<div class="viewbox"><h3>' + esc(im.title) + '<span>' + esc(im.note) + '</span></h3>'
          +  '<img src="/api/asset?path=' + encodeURIComponent(im.path) + '&t=' + Date.now()
          +  '" alt="' + attrEsc(im.title) + '"></div>';
@@ -682,6 +703,7 @@ function renderViews(){
   setHTML("views", html);
 }
 
+function pickGroup(i){ viewState.group = i; viewState.which = 0; renderViews(); }
 function pickView(i){ viewState.which = i; renderViews(); }
 
 function renderRules(list){
@@ -763,7 +785,7 @@ function apply(s){
   }
 
   renderRules(s.rules);
-  if (s.case_id !== viewState.caseId){ viewState.caseId = s.case_id; viewState.which = 0; loadViews(); }
+  if (s.case_id !== viewState.caseId){ viewState.caseId = s.case_id; viewState.group = 0; viewState.which = 0; loadViews(); }
   renderWatch(s.watch, s.watch_changes);
 }
 
