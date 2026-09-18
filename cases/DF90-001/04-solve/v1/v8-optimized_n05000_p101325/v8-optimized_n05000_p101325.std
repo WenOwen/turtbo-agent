@@ -1,0 +1,747 @@
+ Batch mode: PVM is deactivated
+SOLVER VERSION 16.1 SINGLE PRECISION 
+NISubTaskChildren::NISubTaskChildren: read steering fileD:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\fine\v8-optimized\v8-optimized_n05000_p101325\v8-optimized_n05000_p101325.steering
+check_feature 'Solver'
+  checking regular version
+MPI VERSION: IMPI 2018.0.0
+STARTING NUMECA FLOW SOLVER
+amainc : PREFIX = D:\Project\Research\Ducted-Fan\run\90kg-duct-fan-v8\fine\v8-optimized\v8-optimized_n05000_p101325\v8-optimized_n05000_p101325
+amainc : MXRVAR, MXIVAR = 216948619,15227694
+amainc : DEFFILE = D:\NUMECA_SOFTWARE\Fine161\bin\euranus.def
+check_feature 'Solver_BASE'
+  checking regular version
+All licenses checked out!
+  Initializing...
+ Variable viscosity from the Sutherland law 
+ Dynamic viscosity is equal to 1.716e-005 (Pa*s) at temperature 293.111 (K)
+ The Sutherland temperature is 110.555 (K)
+ Group 1 (Stator)     : Blocks   1  2  3  4  5  6  7
+ Upstream surfaces for Group 1: ROTOR-STATOR
+ Downstream surfaces for Group 1: OUTLET
+ Group 2 (Rotor)      : Blocks   8  9  10  11  12  13  14  15  16
+ Upstream surfaces for Group 2: INLET
+ Downstream surfaces for Group 2: ROTOR-STATOR
+createControlSurfaceList: number of entries = 10
+createControlSurfaceList: surf blade(s)/row_2/AG5 id 4
+createControlSurfaceList: surf outlet/row_2/AG5 id 0
+createControlSurfaceList: surf blade(s)/row_1/AG5 id 9
+createControlSurfaceList: surf inlet/row_1/AG5 id 8
+createControlSurfaceList: surf shroud/row_2/AG5 id 3
+createControlSurfaceList: surf No_Force_and_Torque id 2
+createControlSurfaceList: surf hub/row_2/AG5 id 1
+createControlSurfaceList: surf shroud/row_1/AG5 id 7
+createControlSurfaceList: surf hub/row_1/AG5 id 5
+createControlSurfaceList: surf Force_and_Torque id 6
+cbcinc: create 0 spaces in NMBSubPatchList
+createBladeList: Blade nr 1 row_2_Main_Blade
+createBladeList: leading edge in block nr 5 at 1 1 1 57 185 185
+createBladeList: trailing edge in block nr 5 at 1 1 1 57 281 281
+createBladeList: Blade nr 2 row_1_Main_Blade
+createBladeList: leading edge in block nr 12 at 1 1 1 57 113 113
+createBladeList: trailing edge in block nr 12 at 1 1 1 57 225 225
+createBladeList: found block 5 5 1
+createBladeList: patch indices 1 1 1 57 185 281
+createBladeList: found block 5 5 2
+createBladeList: patch indices 1 1 1 57 1 185
+createBladeList: found block 12 5 2
+createBladeList: patch indices 1 1 1 57 113 225
+createBladeList: found block 12 5 3
+createBladeList: patch indices 1 1 1 57 1 113
+createBladeList: Blade 1
+createBladeList: block 5 1 1 1 57 185 281 
+createBladeList: block 5 1 1 1 57 1 185 
+createBladeList: Blade 2
+createBladeList: block 12 1 1 1 57 113 225 
+createBladeList: block 12 1 1 1 57 1 113 
+contrSurfDataStructure: controlSurfName = outlet/row_2/AG5
+Candidate solid = hub/row_2/AG5
+contrSurfDataStructure: controlSurfName = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+contrSurfDataStructure: controlSurfName = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+contrSurfDataStructure: controlSurfName = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_2/AG5
+contrSurfDataStructure: controlSurfName = blade(s)/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+contrSurfDataStructure: controlSurfName = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+contrSurfDataStructure: controlSurfName = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+contrSurfDataStructure: controlSurfName = inlet/row_1/AG5
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+contrSurfDataStructure: controlSurfName = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+controlSurfaceDataStructure: n element in dico = 9
+controlSurfaceDataStructure: associated domains = 5 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+blade(s)/row_2/AG5 has ID 4 and is a Solid
+controlSurfaceDataStructure: associated domains = 1 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+outlet/row_2/AG5 has ID 0 and is an Outlet
+controlSurfaceDataStructure: associated domains = 12 15 16 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+blade(s)/row_1/AG5 has ID 9 and is a Solid
+controlSurfaceDataStructure: associated domains = 10 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+inlet/row_1/AG5 has ID 8 and is an Inlet
+controlSurfaceDataStructure: associated domains = 1 2 3 4 5 6 7 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+shroud/row_2/AG5 has ID 3 and is a Solid
+controlSurfaceDataStructure: associated domains = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
+controlSurfaceDataStructure: associated groups = 0 1 
+controlSurfaceDataStructure: associated ranks = 0 
+No_Force_and_Torque has ID 2 and is a Solid
+controlSurfaceDataStructure: associated domains = 1 2 3 4 5 6 7 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+hub/row_2/AG5 has ID 1 and is a Solid
+controlSurfaceDataStructure: associated domains = 8 9 10 11 12 13 14 15 16 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+shroud/row_1/AG5 has ID 7 and is a Solid
+controlSurfaceDataStructure: associated domains = 8 9 10 11 12 13 14 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+hub/row_1/AG5 has ID 5 and is a Solid
+ NUMBER OF ROTOR/STATOR INTERFACES :            1
+
+ INTERFACE NUMBER   1 (INDEX :  10)
+ ------------------------------------
+  MIXING PLANE APPROACH
+ NUMBER OF UPSTREAM   PATCHES :     1
+ NUMBER OF DOWNSTREAM PATCHES :     1
+binit : IRSPAR = 1 not compatible with ICOMP = 0
+      : IRSPAR being set to 0 
+binit : IFNPPP > 0 not compatible with ICOMP = 0
+      : IFNPPP being set to 0 
+No ADF file found for Rotor-Stator FNMB data -> COMPUTING all RS FNMB data
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 1
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 2
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 3
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 4
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 5
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 6
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 7
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 8
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 9
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 10
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 11
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 12
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 13
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 14
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 15
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 16
+  
+ ****************************************** 
+ Rotor/Stator connection # 1 - Grid level 1
+ ****************************************** 
+   
+ Left side - Patch number 1
+ Unpartitioned block 8 - Indices : 1  1  -2  89  73  -2
+  
+ Right side - Patch number 1
+ Unpartitioned block 3 - Indices : 1  1  15  105  57  15
+  
+SEND MESH TO RS STRUCTURE - LEFT SIDE 
+ RSTOL<0 => IT IS SET TO 4.84409e-005
+ HUB-TO-SHROUD DISTANCE 0.2065
+ HUB    (R,Z) 0.0942011  0.13445
+ SHROUD (R,Z) 0.3  0.117443
+  
+DEFINE IMAGE BOUNDARY - LEFT SIDE 
+ REFERENCE RADIUS : 0.197101
+  
+BUILD MESH DENSITY CARD  - LEFT SIDE 
+     Number of nodes in density card 6660
+  
+SEND MESH TO RS STRUCTURE - RIGHT SIDE 
+ RSTOL<0 => IT IS SET TO 4.84264e-005
+ HUB-TO-SHROUD DISTANCE 0.2065
+ HUB    (R,Z) 0.0942011  0.13445
+ SHROUD (R,Z) 0.3  0.117443
+  
+DEFINE IMAGE BOUNDARY - RIGHT SIDE 
+ REFERENCE RADIUS : 0.197101
+  
+BUILD MESH DENSITY CARD  - RIGHT SIDE 
+     Number of nodes in density card 6148
+  
+CONSTRUCT COMMON SPANWISE DISTRIBUTION 
+CONSTRUCT LEFT IMAGE 
+CONSTRUCT RIGHT IMAGE 
+  
+  Number of nodes spanwise  79
+  Number of nodes pitchwise 87   105
+ Connecting patch 1 with image on process 0, please wait.
+ Finished connecting patch 1 with image on process 0
+ Transfer results to the code - left side 
+ Connecting patch 1 with image on process 0, please wait.
+ Finished connecting patch 1 with image on process 0
+ Transfer results to the code - right side 
+Rotor/Stator Pre-processing completed 
+ROTOR/STATOR PRE-PROCESSING COMPLETED ON GRID 1
+Computed Rotor-Stator FNMB data written for grid level 000
+  
+ ****************************************** 
+ Rotor/Stator connection # 1 - Grid level 2
+ ****************************************** 
+   
+ Left side - Patch number 1
+ Unpartitioned block 8 - Indices : 1  1  -2  45  37  -2
+  
+ Right side - Patch number 1
+ Unpartitioned block 3 - Indices : 1  1  9  53  29  9
+  
+SEND MESH TO RS STRUCTURE - LEFT SIDE 
+ RSTOL<0 => IT IS SET TO 0.000116798
+ HUB-TO-SHROUD DISTANCE 0.2065
+ HUB    (R,Z) 0.0942011  0.13445
+ SHROUD (R,Z) 0.3  0.117443
+  
+DEFINE IMAGE BOUNDARY - LEFT SIDE 
+ REFERENCE RADIUS : 0.197101
+  
+BUILD MESH DENSITY CARD  - LEFT SIDE 
+     Number of nodes in density card 1748
+  
+SEND MESH TO RS STRUCTURE - RIGHT SIDE 
+ RSTOL<0 => IT IS SET TO 0.000116798
+ HUB-TO-SHROUD DISTANCE 0.2065
+ HUB    (R,Z) 0.0942011  0.13445
+ SHROUD (R,Z) 0.3  0.117443
+  
+DEFINE IMAGE BOUNDARY - RIGHT SIDE 
+ REFERENCE RADIUS : 0.197101
+  
+BUILD MESH DENSITY CARD  - RIGHT SIDE 
+     Number of nodes in density card 1620
+  
+CONSTRUCT COMMON SPANWISE DISTRIBUTION 
+CONSTRUCT LEFT IMAGE 
+CONSTRUCT RIGHT IMAGE 
+  
+  Number of nodes spanwise  43
+  Number of nodes pitchwise 44   53
+ Connecting patch 1 with image on process 0, please wait.
+ Finished connecting patch 1 with image on process 0
+ Transfer results to the code - left side 
+ Connecting patch 1 with image on process 0, please wait.
+ Finished connecting patch 1 with image on process 0
+ Transfer results to the code - right side 
+Rotor/Stator Pre-processing completed 
+ROTOR/STATOR PRE-PROCESSING COMPLETED ON GRID 2
+Computed Rotor-Stator FNMB data written for grid level 111
+  
+ ****************************************** 
+ Rotor/Stator connection # 1 - Grid level 3
+ ****************************************** 
+   
+ Left side - Patch number 1
+ Unpartitioned block 8 - Indices : 1  1  -2  23  19  -2
+  
+ Right side - Patch number 1
+ Unpartitioned block 3 - Indices : 1  1  6  27  15  6
+  
+SEND MESH TO RS STRUCTURE - LEFT SIDE 
+ RSTOL<0 => IT IS SET TO 0.000349399
+ HUB-TO-SHROUD DISTANCE 0.2065
+ HUB    (R,Z) 0.0942011  0.13445
+ SHROUD (R,Z) 0.3  0.117443
+  
+DEFINE IMAGE BOUNDARY - LEFT SIDE 
+ REFERENCE RADIUS : 0.197101
+  
+BUILD MESH DENSITY CARD  - LEFT SIDE 
+     Number of nodes in density card 480
+  
+SEND MESH TO RS STRUCTURE - RIGHT SIDE 
+ RSTOL<0 => IT IS SET TO 0.000349619
+ HUB-TO-SHROUD DISTANCE 0.2065
+ HUB    (R,Z) 0.0942011  0.13445
+ SHROUD (R,Z) 0.3  0.117443
+  
+DEFINE IMAGE BOUNDARY - RIGHT SIDE 
+ REFERENCE RADIUS : 0.197101
+  
+BUILD MESH DENSITY CARD  - RIGHT SIDE 
+     Number of nodes in density card 448
+  
+CONSTRUCT COMMON SPANWISE DISTRIBUTION 
+CONSTRUCT LEFT IMAGE 
+CONSTRUCT RIGHT IMAGE 
+  
+  Number of nodes spanwise  25
+  Number of nodes pitchwise 23   27
+ Connecting patch 1 with image on process 0, please wait.
+ Finished connecting patch 1 with image on process 0
+ Transfer results to the code - left side 
+ Connecting patch 1 with image on process 0, please wait.
+ Finished connecting patch 1 with image on process 0
+ Transfer results to the code - right side 
+Rotor/Stator Pre-processing completed 
+ROTOR/STATOR PRE-PROCESSING COMPLETED ON GRID 3
+Computed Rotor-Stator FNMB data written for grid level 222
+ PREPARING DATA FOR TURBULENCE
+ SCANNED DATA FOR TURBULENCE
+ NON SCANNED DATA FOR TURBULENCE
+initturbreadcgns : baseName = TurbulentData_000
+ NO TURBULENT DATA FOUND ON GRID            1-> COMPUTING
+initturbwritecgns : baseName = TurbulentData_000
+TURBULENT DATA: DONE   2.04%
+TURBULENT DATA: DONE   2.97%
+TURBULENT DATA: DONE   7.34%
+TURBULENT DATA: DONE   8.26%
+TURBULENT DATA: DONE  23.56%
+TURBULENT DATA: DONE  33.63%
+TURBULENT DATA: DONE  39.78%
+TURBULENT DATA: DONE  51.83%
+TURBULENT DATA: DONE  53.02%
+TURBULENT DATA: DONE  62.14%
+TURBULENT DATA: DONE  63.33%
+TURBULENT DATA: DONE  79.01%
+TURBULENT DATA: DONE  86.89%
+TURBULENT DATA: DONE  94.77%
+TURBULENT DATA: DONE  98.43%
+TURBULENT DATA: DONE 100.00%
+ TURBULENT DATA FOUND ON GRID            2 BUT ITUFIL = 1 -> RECOMPUTING
+initturbwritecgns : baseName = TurbulentData_111
+TURBULENT DATA: DONE   2.10%
+TURBULENT DATA: DONE   3.08%
+TURBULENT DATA: DONE   7.54%
+TURBULENT DATA: DONE   8.51%
+TURBULENT DATA: DONE  23.78%
+TURBULENT DATA: DONE  33.84%
+TURBULENT DATA: DONE  40.01%
+TURBULENT DATA: DONE  51.75%
+TURBULENT DATA: DONE  52.99%
+TURBULENT DATA: DONE  61.97%
+TURBULENT DATA: DONE  63.21%
+TURBULENT DATA: DONE  78.82%
+TURBULENT DATA: DONE  86.69%
+TURBULENT DATA: DONE  94.56%
+TURBULENT DATA: DONE  98.35%
+TURBULENT DATA: DONE 100.00%
+ TURBULENT DATA FOUND ON GRID            3 BUT ITUFIL = 1 -> RECOMPUTING
+initturbwritecgns : baseName = TurbulentData_222
+TURBULENT DATA: DONE   2.22%
+TURBULENT DATA: DONE   3.29%
+TURBULENT DATA: DONE   7.91%
+TURBULENT DATA: DONE   8.98%
+TURBULENT DATA: DONE  24.15%
+TURBULENT DATA: DONE  34.20%
+TURBULENT DATA: DONE  40.39%
+TURBULENT DATA: DONE  51.60%
+TURBULENT DATA: DONE  52.96%
+TURBULENT DATA: DONE  61.67%
+TURBULENT DATA: DONE  63.03%
+TURBULENT DATA: DONE  78.46%
+TURBULENT DATA: DONE  86.31%
+TURBULENT DATA: DONE  94.16%
+TURBULENT DATA: DONE  98.22%
+TURBULENT DATA: DONE 100.00%
+ TURBULENCE DATA READY
+ INITIAL FLOW SOLUTION
+ TURBO_order: row 0 connection found to row 1 nb RS down 1 up 0
+ TURBO_order: row 0 is in order 0
+ TURBO_order: row 1 is in order 1
+Turbomachinery initial solution: begin loop on meridional sectors
+UNABLE TO RESPECT THE MASS FLOW 
+The initial solution is computed on meridional mesh for sector 1
+The initial solution is computed on meridional mesh for sector 2
+BLOCK 1 : Transfer initial solution for turbomachinery
+BLOCK 2 : Transfer initial solution for turbomachinery
+BLOCK 3 : Transfer initial solution for turbomachinery
+BLOCK 4 : Transfer initial solution for turbomachinery
+BLOCK 5 : Transfer initial solution for turbomachinery
+BLOCK 6 : Transfer initial solution for turbomachinery
+BLOCK 7 : Transfer initial solution for turbomachinery
+BLOCK 8 : Transfer initial solution for turbomachinery
+BLOCK 9 : Transfer initial solution for turbomachinery
+BLOCK 10 : Transfer initial solution for turbomachinery
+BLOCK 11 : Transfer initial solution for turbomachinery
+BLOCK 12 : Transfer initial solution for turbomachinery
+BLOCK 13 : Transfer initial solution for turbomachinery
+BLOCK 14 : Transfer initial solution for turbomachinery
+BLOCK 15 : Transfer initial solution for turbomachinery
+BLOCK 16 : Transfer initial solution for turbomachinery
+ APPLY THE BOUNDARY CONDITIONS
+  ITER GL RMS_RES. MAX_RES. DOM  I   J   K    MF_IN     MF_OUT       FORCE      TORQUE
+  ...done in 126.78-sec (Initializing)
+
+ ---------------------
+ FULL MULTIGRID:   100 ITERATIONS ON EACH COARSER LEVEL
+  ITER GL RMS_RES. MAX_RES. DOM  I   J   K    MF_IN     MF_OUT       FORCE      TORQUE
+      0  1   0.0000   1.5890   12   1  56 113  1.4849E+01  1.4487E+01  8.0718E+02 -2.3355E+01
+      1  3  -0.8616   0.4611   12   1  12  29  1.4815E+01  1.4466E+01  9.8064E+02 -2.9133E+01
+      2  3  -1.1626   0.3280   12   1  14  29  1.4766E+01  1.4535E+01  9.7933E+02 -4.3082E+01
+      3  3  -1.4516  -0.0157   12   1  14  29  1.4687E+01  1.4827E+01  9.3166E+02 -3.7634E+01
+      4  3  -1.2071   0.1682   12   1  11  29  1.4561E+01  1.5476E+01  9.4454E+02 -2.4555E+01
+      5  3  -1.2169   0.2072   12   1  12  29  1.4367E+01  1.6461E+01  9.4717E+02 -1.7158E+01
+      6  3  -1.3848   0.1384   12   1  14  29  1.4097E+01  1.7558E+01  8.8522E+02 -1.7502E+01
+      7  3  -1.5921   0.0447   12   1  14  28  1.3758E+01  1.8449E+01  8.1201E+02 -2.0810E+01
+      8  3  -1.6394  -0.1905   12   1  14  28  1.3374E+01  1.8906E+01  7.7162E+02 -2.3145E+01
+      9  3  -1.6743  -0.2923   12   1  12  29  1.2973E+01  1.8904E+01  7.4392E+02 -2.4081E+01
+     10  3  -1.7714  -0.4425   12   1  12  29  1.2584E+01  1.8595E+01  7.0284E+02 -2.4296E+01
+     11  3  -1.8443  -0.6146   12   1  13  29  1.2230E+01  1.8189E+01  6.6008E+02 -2.3653E+01
+     12  3  -1.8696  -0.8125   12   1  14  29  1.1930E+01  1.7823E+01  6.3286E+02 -2.2555E+01
+     13  3  -1.8907  -0.8270   12   1  14  29  1.1706E+01  1.7517E+01  6.1356E+02 -2.2191E+01
+     14  3  -1.9012  -0.8219    5   1   1  70  1.1575E+01  1.7225E+01  5.8458E+02 -2.3260E+01
+     15  3  -1.9027  -0.7326    5   1   1  69  1.1543E+01  1.6910E+01  5.4036E+02 -2.5478E+01
+     16  3  -1.9070  -0.6855    5   1   1  69  1.1600E+01  1.6584E+01  4.8425E+02 -2.8475E+01
+     17  3  -1.9125  -0.6732    5   1   1  69  1.1725E+01  1.6297E+01  4.1737E+02 -3.2386E+01
+     18  3  -1.9178  -0.6863    5   1   1  69  1.1891E+01  1.6091E+01  3.4073E+02 -3.7372E+01
+     19  3  -1.9245  -0.7059    5   1   1   4  1.2077E+01  1.5973E+01  2.6205E+02 -4.3005E+01
+     20  3  -1.9302  -0.6978    5   1   1   4  1.2271E+01  1.5916E+01  1.9464E+02 -4.8348E+01
+     21  3  -1.9317  -0.7242    5   1   1   4  1.2467E+01  1.5880E+01  1.5072E+02 -5.2395E+01
+     22  3  -1.9309  -0.7853    5   1   1   4  1.2667E+01  1.5839E+01  1.3824E+02 -5.4309E+01
+     23  3  -1.9310  -0.8449   15   4   3   1  1.2871E+01  1.5788E+01  1.6107E+02 -5.3527E+01
+     24  3  -1.9319  -0.8102   15   4   4   1  1.3082E+01  1.5730E+01  2.1850E+02 -4.9906E+01
+     25  3  -1.9313  -0.7933   15   2   4   1  1.3299E+01  1.5673E+01  3.0414E+02 -4.3848E+01
+     26  3  -1.9296  -0.7791   15   2   4   1  1.3523E+01  1.5612E+01  4.0695E+02 -3.6203E+01
+     27  3  -1.9283  -0.7929   15   1   4   2  1.3750E+01  1.5542E+01  5.1456E+02 -2.7995E+01
+     28  3  -1.9286  -0.8245   15   1   4   2  1.3974E+01  1.5451E+01  6.1654E+02 -2.0142E+01
+     29  3  -1.9297  -0.8889   15   1   4   2  1.4184E+01  1.5333E+01  7.0614E+02 -1.3281E+01
+     30  3  -1.9303  -0.8908    5   1   1  69  1.4367E+01  1.5185E+01  7.8046E+02 -7.6910E+00
+     31  3  -1.9306  -0.8874    5   1   1   1  1.4512E+01  1.5008E+01  8.4028E+02 -3.3045E+00
+     32  3  -1.9319  -0.9109    5   1   1  20  1.4609E+01  1.4805E+01  8.8875E+02  1.9044E-01
+     33  3  -1.9358  -0.9216    5   1   1  21  1.4651E+01  1.4585E+01  9.2951E+02  3.1803E+00
+     34  3  -1.9427  -0.9515    5   1   1  22  1.4642E+01  1.4356E+01  9.6519E+02  5.9626E+00
+     35  3  -1.9524  -0.9554   15   1   2   2  1.4587E+01  1.4130E+01  9.9643E+02  8.6415E+00
+     36  3  -1.9640  -0.9171   15   1   2   2  1.4504E+01  1.3919E+01  1.0220E+03  1.1113E+01
+     37  3  -1.9767  -0.9034   15   1   2   2  1.4408E+01  1.3732E+01  1.0394E+03  1.3104E+01
+     38  3  -1.9900  -0.9103   15   1   2   2  1.4320E+01  1.3573E+01  1.0454E+03  1.4252E+01
+     39  3  -2.0043  -0.9230   15   1   3   2  1.4256E+01  1.3447E+01  1.0372E+03  1.4205E+01
+     40  3  -2.0197  -0.9319   15   1   4   2  1.4226E+01  1.3355E+01  1.0132E+03  1.2718E+01
+     41  3  -2.0359  -0.9539   15   1   4   2  1.4234E+01  1.3296E+01  9.7333E+02  9.7217E+00
+     42  3  -2.0509  -0.9942   15   1   4   2  1.4276E+01  1.3268E+01  9.1944E+02  5.3323E+00
+     43  3  -2.0617  -1.0375    5   1   1  18  1.4344E+01  1.3266E+01  8.5503E+02 -1.4970E-01
+     44  3  -2.0645  -1.0169    5   1   1  19  1.4429E+01  1.3287E+01  7.8484E+02 -6.2950E+00
+     45  3  -2.0576  -1.0166    5   1   1  20  1.4519E+01  1.3323E+01  7.1431E+02 -1.2585E+01
+     46  3  -2.0424  -1.0160    5   1   1  33  1.4608E+01  1.3371E+01  6.4894E+02 -1.8506E+01
+     47  3  -2.0230  -0.9653    5   1   1  35  1.4693E+01  1.3425E+01  5.9357E+02 -2.3597E+01
+     48  3  -2.0040  -0.9238    5   1   1  36  1.4773E+01  1.3479E+01  5.5178E+02 -2.7513E+01
+     49  3  -1.9893  -0.8962    5   1   1  36  1.4849E+01  1.3529E+01  5.2567E+02 -3.0057E+01
+     50  3  -1.9818  -0.8910    5   1   1  36  1.4927E+01  1.3569E+01  5.1545E+02 -3.1195E+01
+     51  3  -1.9836  -0.8983    5   1   1  37  1.5011E+01  1.3596E+01  5.1974E+02 -3.1045E+01
+     52  3  -1.9958  -0.9233    5   1   1  38  1.5102E+01  1.3604E+01  5.3586E+02 -2.9836E+01
+     53  3  -2.0195  -0.9557    5   1   1  39  1.5202E+01  1.3594E+01  5.6028E+02 -2.7876E+01
+     54  3  -2.0548  -0.9905    5   1   1  40  1.5310E+01  1.3565E+01  5.8919E+02 -2.5492E+01
+     55  3  -2.1006  -1.0302    5   1   1  41  1.5424E+01  1.3518E+01  6.1901E+02 -2.2989E+01
+     56  3  -2.1529  -1.0835    5   1   1  42  1.5537E+01  1.3458E+01  6.4679E+02 -2.0628E+01
+     57  3  -2.2026  -1.1651    5   1   1  43  1.5645E+01  1.3389E+01  6.7044E+02 -1.8587E+01
+     58  3  -2.2349  -1.1553    5   1   1  32  1.5741E+01  1.3313E+01  6.8883E+02 -1.6977E+01
+     59  3  -2.2374  -1.1022    5   1   1  33  1.5820E+01  1.3237E+01  7.0171E+02 -1.5829E+01
+     60  3  -2.2126  -1.0503    5   1   1  33  1.5878E+01  1.3161E+01  7.0953E+02 -1.5122E+01
+     61  3  -2.1748  -1.0093    5   1   1  34  1.5912E+01  1.3090E+01  7.1330E+02 -1.4791E+01
+     62  3  -2.1368  -0.9800    5   1   1  35  1.5922E+01  1.3023E+01  7.1414E+02 -1.4749E+01
+     63  3  -2.1056  -0.9561    5   1   1  35  1.5909E+01  1.2963E+01  7.1327E+02 -1.4903E+01
+     64  3  -2.0838  -0.9331    5   1   1  36  1.5875E+01  1.2909E+01  7.1161E+02 -1.5168E+01
+     65  3  -2.0718  -0.9119    5   1   1  37  1.5825E+01  1.2862E+01  7.0980E+02 -1.5480E+01
+     66  3  -2.0693  -0.8927    5   1   1  38  1.5764E+01  1.2823E+01  7.0793E+02 -1.5799E+01
+     67  3  -2.0757  -0.8800    5   1   1  39  1.5698E+01  1.2790E+01  7.0582E+02 -1.6114E+01
+     68  3  -2.0903  -0.8781    5   1   1  40  1.5631E+01  1.2766E+01  7.0287E+02 -1.6450E+01
+     69  3  -2.1127  -0.8870    5   1   1  40  1.5567E+01  1.2751E+01  6.9830E+02 -1.6846E+01
+     70  3  -2.1424  -0.9057    5   1   1  41  1.5508E+01  1.2747E+01  6.9130E+02 -1.7350E+01
+     71  3  -2.1785  -0.9377    5   1   1  42  1.5456E+01  1.2753E+01  6.8118E+02 -1.8021E+01
+     72  3  -2.2190  -0.9833    5   1   1  42  1.5408E+01  1.2771E+01  6.6757E+02 -1.8895E+01
+     73  3  -2.2598  -1.0452    5   1   1  43  1.5365E+01  1.2801E+01  6.5043E+02 -1.9995E+01
+     74  3  -2.2933  -1.1307    5   1   1  43  1.5324E+01  1.2844E+01  6.3016E+02 -2.1310E+01
+     75  3  -2.3094  -1.2621    5   1   1  43  1.5284E+01  1.2899E+01  6.0758E+02 -2.2805E+01
+     76  3  -2.3019  -1.2022   12   1   1   5  1.5242E+01  1.2965E+01  5.8372E+02 -2.4419E+01
+     77  3  -2.2737  -1.1475   12   1   1   5  1.5198E+01  1.3041E+01  5.5992E+02 -2.6074E+01
+     78  3  -2.2349  -1.1224   12   1   1   5  1.5152E+01  1.3126E+01  5.3745E+02 -2.7681E+01
+     79  3  -2.1950  -1.1213   12   1   1   5  1.5104E+01  1.3217E+01  5.1747E+02 -2.9156E+01
+     80  3  -2.1603  -1.1206    5   1   1  39  1.5055E+01  1.3312E+01  5.0092E+02 -3.0425E+01
+     81  3  -2.1339  -1.0710    5   1   1  40  1.5007E+01  1.3411E+01  4.8837E+02 -3.1436E+01
+     82  3  -2.1172  -1.0417    5   1   1  41  1.4961E+01  1.3510E+01  4.8002E+02 -3.2157E+01
+     83  3  -2.1107  -1.0317    5   1   1  41  1.4916E+01  1.3608E+01  4.7575E+02 -3.2581E+01
+     84  3  -2.1149  -1.0428    5   1   1  42  1.4872E+01  1.3705E+01  4.7505E+02 -3.2724E+01
+     85  3  -2.1297  -1.0710    5   1   1  42  1.4831E+01  1.3799E+01  4.7731E+02 -3.2621E+01
+     86  3  -2.1556  -1.0739   15   1   4   2  1.4789E+01  1.3891E+01  4.8171E+02 -3.2326E+01
+     87  3  -2.1929  -1.0871   15   1   4   2  1.4747E+01  1.3980E+01  4.8747E+02 -3.1891E+01
+     88  3  -2.2416  -1.1160   15   1   4   2  1.4703E+01  1.4067E+01  4.9381E+02 -3.1378E+01
+     89  3  -2.3015  -1.1628   15   1   4   2  1.4656E+01  1.4152E+01  5.0003E+02 -3.0849E+01
+     90  3  -2.3699  -1.2313   15   1   4   2  1.4606E+01  1.4236E+01  5.0558E+02 -3.0359E+01
+     91  3  -2.4393  -1.3288   15   1   4   2  1.4553E+01  1.4320E+01  5.0997E+02 -2.9954E+01
+     92  3  -2.4927  -1.3556   12   1   1  49  1.4497E+01  1.4403E+01  5.1287E+02 -2.9680E+01
+     93  3  -2.5089  -1.4016   12   1   1  49  1.4438E+01  1.4484E+01  5.1404E+02 -2.9559E+01
+     94  3  -2.4838  -1.4290   12   1   1  48  1.4379E+01  1.4564E+01  5.1336E+02 -2.9611E+01
+     95  3  -2.4359  -1.4109   15   1   2   2  1.4318E+01  1.4642E+01  5.1083E+02 -2.9839E+01
+     96  3  -2.3848  -1.3313   15   1   2   2  1.4259E+01  1.4716E+01  5.0648E+02 -3.0230E+01
+     97  3  -2.3404  -1.2787   15   1   2   2  1.4200E+01  1.4786E+01  5.0051E+02 -3.0764E+01
+     98  3  -2.3065  -1.2459   15   1   2   2  1.4144E+01  1.4850E+01  4.9316E+02 -3.1405E+01
+     99  3  -2.2837  -1.2287   15   1   2   2  1.4089E+01  1.4907E+01  4.8480E+02 -3.2116E+01
+    100  3  -2.2718  -1.2101   15   1   3   2  1.4035E+01  1.4956E+01  4.7577E+02 -3.2859E+01
+    101  2  -1.6400   0.0597   15   8   1  58  1.4033E+01  1.4989E+01  4.8045E+02 -3.2466E+01
+    102  2  -1.9081  -0.2499   15   8   1  58  1.3850E+01  1.5027E+01  4.9107E+02 -3.3577E+01
+    103  2  -2.0081  -0.5619   12   1  30  57  1.3742E+01  1.5022E+01  4.6230E+02 -3.6003E+01
+    104  2  -2.1093  -0.5562   12   1  28  57  1.3605E+01  1.4993E+01  4.3336E+02 -3.7810E+01
+    105  2  -2.1861  -0.5720   12   1  28  57  1.3418E+01  1.4947E+01  4.1668E+02 -3.7889E+01
+    106  2  -2.2251  -0.5974   15   8   1  56  1.3222E+01  1.4901E+01  4.1601E+02 -3.6790E+01
+    107  2  -2.2473  -0.5721   15   8   1  57  1.3040E+01  1.4848E+01  4.3278E+02 -3.4683E+01
+    108  2  -2.2688  -0.5481   15   8   1  58  1.2910E+01  1.4786E+01  4.5784E+02 -3.2077E+01
+    109  2  -2.3001  -0.5527   15   8   1  58  1.2841E+01  1.4731E+01  4.7675E+02 -2.9867E+01
+    110  2  -2.2979  -0.6006   15   8   1  57  1.2809E+01  1.4680E+01  4.8949E+02 -2.8321E+01
+    111  2  -2.2522  -0.6743   15   8   1  57  1.2793E+01  1.4624E+01  5.0386E+02 -2.6974E+01
+    112  2  -2.2125  -0.7685   15   8   1  57  1.2793E+01  1.4560E+01  5.2528E+02 -2.5306E+01
+    113  2  -2.2052  -0.8656   15   8   1  57  1.2821E+01  1.4492E+01  5.5193E+02 -2.3278E+01
+    114  2  -2.2435  -0.9570   15   8   1  57  1.2882E+01  1.4418E+01  5.7863E+02 -2.1124E+01
+    115  2  -2.3156  -1.0315   15   8   1  57  1.2965E+01  1.4335E+01  6.0135E+02 -1.9044E+01
+    116  2  -2.3699  -1.0652   15   8   1  56  1.3053E+01  1.4245E+01  6.1972E+02 -1.7155E+01
+    117  2  -2.3626  -1.0459   15   8   1  56  1.3147E+01  1.4155E+01  6.3497E+02 -1.5597E+01
+    118  2  -2.3245  -1.0135   15   8   1  56  1.3260E+01  1.4066E+01  6.4599E+02 -1.4664E+01
+    119  2  -2.2969  -0.9850   15   8   1  55  1.3397E+01  1.3978E+01  6.4953E+02 -1.4695E+01
+    120  2  -2.2977  -0.9775   15   8   1  55  1.3550E+01  1.3890E+01  6.4418E+02 -1.5747E+01
+    121  2  -2.3308  -0.9945   15   8   1  55  1.3704E+01  1.3796E+01  6.3304E+02 -1.7426E+01
+    122  2  -2.3905  -1.0291   15   8   1  56  1.3850E+01  1.3688E+01  6.2106E+02 -1.9149E+01
+    123  2  -2.4554  -1.0735   15   8   1  56  1.3984E+01  1.3565E+01  6.1118E+02 -2.0524E+01
+    124  2  -2.5010  -1.1323   15   8   1  56  1.4101E+01  1.3428E+01  6.0269E+02 -2.1501E+01
+    125  2  -2.5079  -1.1525   15   8   1  11  1.4198E+01  1.3282E+01  5.9352E+02 -2.2259E+01
+    126  2  -2.4727  -1.1619   15   8   1  12  1.4268E+01  1.3132E+01  5.8295E+02 -2.2944E+01
+    127  2  -2.4248  -1.1780   16   1   8   1  1.4306E+01  1.2983E+01  5.7251E+02 -2.3540E+01
+    128  2  -2.3975  -1.1540   16   1   8   1  1.4315E+01  1.2839E+01  5.6459E+02 -2.3935E+01
+    129  2  -2.4015  -1.1759   15   1   8   4  1.4300E+01  1.2708E+01  5.6013E+02 -2.4087E+01
+    130  2  -2.4317  -1.2382   15   1   8   4  1.4268E+01  1.2599E+01  5.5817E+02 -2.4069E+01
+    131  2  -2.4748  -1.2263   15   8   1  17  1.4224E+01  1.2523E+01  5.5706E+02 -2.4007E+01
+    132  2  -2.5111  -1.2285   15   8   1  18  1.4170E+01  1.2488E+01  5.5572E+02 -2.3971E+01
+    133  2  -2.5300  -1.2468   15   8   1  18  1.4110E+01  1.2500E+01  5.5372E+02 -2.4006E+01
+    134  2  -2.5445  -1.2871   12   1  28  83  1.4048E+01  1.2559E+01  5.5055E+02 -2.4150E+01
+    135  2  -2.5633  -1.3324   12   1  29  83  1.3989E+01  1.2661E+01  5.4539E+02 -2.4472E+01
+    136  2  -2.5826  -1.4939   15   8   1  19  1.3939E+01  1.2797E+01  5.3774E+02 -2.5024E+01
+    137  2  -2.5922  -1.5566   15   8   1  29  1.3898E+01  1.2956E+01  5.2795E+02 -2.5791E+01
+    138  2  -2.5858  -1.4569   12   1  28  83  1.3867E+01  1.3127E+01  5.1694E+02 -2.6715E+01
+    139  2  -2.5707  -1.3575   12   1  28  83  1.3843E+01  1.3300E+01  5.0568E+02 -2.7729E+01
+    140  2  -2.5553  -1.3572   16   1   1   1  1.3825E+01  1.3465E+01  4.9438E+02 -2.8803E+01
+    141  2  -2.5416  -1.3182   16   1   1   1  1.3807E+01  1.3612E+01  4.8279E+02 -2.9942E+01
+    142  2  -2.5328  -1.3476   16   8   1   1  1.3784E+01  1.3733E+01  4.7048E+02 -3.1137E+01
+    143  2  -2.5313  -1.3759   12   1  29   5  1.3749E+01  1.3823E+01  4.5728E+02 -3.2367E+01
+    144  2  -2.5426  -1.3532   15   8   1  12  1.3701E+01  1.3876E+01  4.4337E+02 -3.3577E+01
+    145  2  -2.5710  -1.3076   15   8   1  13  1.3640E+01  1.3895E+01  4.2931E+02 -3.4728E+01
+    146  2  -2.6128  -1.2758   15   8   1  13  1.3567E+01  1.3884E+01  4.1581E+02 -3.5749E+01
+    147  2  -2.6497  -1.2708   15   8   1  13  1.3486E+01  1.3851E+01  4.0412E+02 -3.6561E+01
+    148  2  -2.6472  -1.2723   15   8   1  15  1.3400E+01  1.3805E+01  3.9559E+02 -3.7059E+01
+    149  2  -2.5968  -1.2884   15   8   1  15  1.3312E+01  1.3754E+01  3.9158E+02 -3.7156E+01
+    150  2  -2.5315  -1.3282   15   8   1  16  1.3224E+01  1.3708E+01  3.9285E+02 -3.6802E+01
+    151  2  -2.4802  -1.2823   15   1   8   4  1.3141E+01  1.3673E+01  3.9965E+02 -3.6014E+01
+    152  2  -2.4577  -1.2349   15   1   8   4  1.3062E+01  1.3655E+01  4.1139E+02 -3.4855E+01
+    153  2  -2.4705  -1.2454   15   1   8   4  1.2991E+01  1.3655E+01  4.2694E+02 -3.3441E+01
+    154  2  -2.5234  -1.3208   15   1   8   4  1.2928E+01  1.3673E+01  4.4481E+02 -3.1897E+01
+    155  2  -2.6170  -1.4307   15   8   1  60  1.2875E+01  1.3707E+01  4.6332E+02 -3.0371E+01
+    156  2  -2.7151  -1.4278   15   8   1  60  1.2834E+01  1.3752E+01  4.8080E+02 -2.8987E+01
+    157  2  -2.7123  -1.4330   15   8   1  60  1.2807E+01  1.3801E+01  4.9589E+02 -2.7839E+01
+    158  2  -2.6094  -1.3697   12   1  36 109  1.2797E+01  1.3846E+01  5.0758E+02 -2.6983E+01
+    159  2  -2.5137  -1.2667   15   1   8 109  1.2805E+01  1.3879E+01  5.1568E+02 -2.6410E+01
+    160  2  -2.4593  -1.2048   16   1   8   1  1.2831E+01  1.3893E+01  5.2046E+02 -2.6086E+01
+    161  2  -2.4490  -1.1905   15   1   8   4  1.2875E+01  1.3885E+01  5.2260E+02 -2.5945E+01
+    162  2  -2.4844  -1.2178   15   1   8   4  1.2935E+01  1.3854E+01  5.2285E+02 -2.5940E+01
+    163  2  -2.5682  -1.3025   15   1   8   4  1.3011E+01  1.3798E+01  5.2181E+02 -2.6031E+01
+    164  2  -2.6977  -1.4718   15   1   7   4  1.3098E+01  1.3721E+01  5.2005E+02 -2.6204E+01
+    165  2  -2.8217  -1.5523   15   8   1  11  1.3191E+01  1.3624E+01  5.1782E+02 -2.6455E+01
+    166  2  -2.8072  -1.5659   15   8   1  12  1.3286E+01  1.3516E+01  5.1545E+02 -2.6765E+01
+    167  2  -2.7092  -1.4492   15   8   8 111  1.3376E+01  1.3401E+01  5.1302E+02 -2.7117E+01
+    168  2  -2.6415  -1.3704   15   1   8 109  1.3457E+01  1.3287E+01  5.1073E+02 -2.7475E+01
+    169  2  -2.6241  -1.3320   16   1   8   1  1.3526E+01  1.3177E+01  5.0880E+02 -2.7805E+01
+    170  2  -2.6503  -1.3476   15   1   8   4  1.3579E+01  1.3077E+01  5.0738E+02 -2.8055E+01
+    171  2  -2.7073  -1.4169   15   1   8   4  1.3618E+01  1.2990E+01  5.0670E+02 -2.8205E+01
+    172  2  -2.7755  -1.5653   15   1   7   4  1.3642E+01  1.2918E+01  5.0692E+02 -2.8233E+01
+    173  2  -2.8266  -1.6587   12   1  36 101  1.3654E+01  1.2862E+01  5.0805E+02 -2.8151E+01
+    174  2  -2.8421  -1.6048   12   1  29  98  1.3656E+01  1.2824E+01  5.0992E+02 -2.7987E+01
+    175  2  -2.8346  -1.5892   12   1  29  98  1.3653E+01  1.2802E+01  5.1223E+02 -2.7781E+01
+    176  2  -2.8254  -1.6265   12   1  36  98  1.3646E+01  1.2798E+01  5.1449E+02 -2.7578E+01
+    177  2  -2.8223  -1.6489   15   8   1  12  1.3636E+01  1.2810E+01  5.1619E+02 -2.7428E+01
+    178  2  -2.8250  -1.6019   15   8   1  13  1.3626E+01  1.2838E+01  5.1676E+02 -2.7372E+01
+    179  2  -2.8336  -1.5610   15   8   1  13  1.3615E+01  1.2880E+01  5.1571E+02 -2.7448E+01
+    180  2  -2.8500  -1.5268   15   8   1  14  1.3603E+01  1.2934E+01  5.1261E+02 -2.7683E+01
+    181  2  -2.8717  -1.5127   15   8   1  15  1.3591E+01  1.2997E+01  5.0734E+02 -2.8084E+01
+    182  2  -2.8883  -1.5464   15   8   1  15  1.3577E+01  1.3064E+01  5.0003E+02 -2.8642E+01
+    183  2  -2.8870  -1.6331   15   8   1  16  1.3561E+01  1.3132E+01  4.9104E+02 -2.9332E+01
+    184  2  -2.8704  -1.6922   16   1   2   1  1.3543E+01  1.3199E+01  4.8094E+02 -3.0110E+01
+    185  2  -2.8561  -1.6356   16   8   2   1  1.3521E+01  1.3260E+01  4.7044E+02 -3.0924E+01
+    186  2  -2.8557  -1.6009   16   8   2   1  1.3495E+01  1.3315E+01  4.6031E+02 -3.1715E+01
+    187  2  -2.8690  -1.6170   15   8   1  13  1.3463E+01  1.3362E+01  4.5124E+02 -3.2411E+01
+    188  2  -2.8810  -1.5634   15   8   1  13  1.3426E+01  1.3402E+01  4.4394E+02 -3.2967E+01
+    189  2  -2.8718  -1.5142   15   8   1  14  1.3382E+01  1.3434E+01  4.3874E+02 -3.3342E+01
+    190  2  -2.8400  -1.4977   15   8   1  15  1.3334E+01  1.3459E+01  4.3578E+02 -3.3526E+01
+    191  2  -2.8047  -1.5136   15   8   1  15  1.3282E+01  1.3477E+01  4.3489E+02 -3.3541E+01
+    192  2  -2.7849  -1.5324   16   8   1   1  1.3228E+01  1.3490E+01  4.3573E+02 -3.3415E+01
+    193  2  -2.7882  -1.5820   16   4   1   2  1.3174E+01  1.3499E+01  4.3786E+02 -3.3197E+01
+    194  2  -2.8093  -1.6692   16   5   1   2  1.3124E+01  1.3504E+01  4.4092E+02 -3.2923E+01
+    195  2  -2.8216  -1.6372   15   8   1  81  1.3080E+01  1.3508E+01  4.4452E+02 -3.2625E+01
+    196  2  -2.7962  -1.6080   12   1  28 108  1.3042E+01  1.3509E+01  4.4848E+02 -3.2318E+01
+    197  2  -2.7426  -1.5155   16   1   1   1  1.3013E+01  1.3508E+01  4.5269E+02 -3.2009E+01
+    198  2  -2.6940  -1.4292   16   1   1   1  1.2992E+01  1.3505E+01  4.5705E+02 -3.1698E+01
+    199  2  -2.6720  -1.4102   16   8   1   1  1.2981E+01  1.3501E+01  4.6152E+02 -3.1377E+01
+    200  2  -2.6850  -1.4291   15   1   8 109  1.2979E+01  1.3497E+01  4.6601E+02 -3.1041E+01
+    200  2  -2.7361  -1.4420   16   1   8   1  1.2985E+01  1.3491E+01  4.7055E+02 -3.0692E+01
+ END OF FULL MULTIGRID
+ ---------------------
+ STARTS TO WRITE FIRST OUTPUT
+ ENDS TO WRITE FIRST OUTPUT
+    201  1  -1.6338   0.3096   15  16   1 112  1.2991E+01  1.3494E+01  4.7524E+02 -3.2051E+01
+    202  1  -1.7408   0.4771   15  16   1 112  1.2999E+01  1.3430E+01  4.9122E+02 -3.5415E+01
+    203  1  -1.7485   0.5427   15  16   1 112  1.3027E+01  1.3349E+01  4.8649E+02 -3.5586E+01
+    204  1  -1.8631   0.3834   15  16   1 112  1.3000E+01  1.3246E+01  5.0364E+02 -3.3570E+01
+    205  1  -1.9939   0.1643   15  16   1 110  1.3053E+01  1.3175E+01  5.2026E+02 -3.0884E+01
+    206  1  -2.0953  -0.0243   12   1  57 112  1.3146E+01  1.3153E+01  5.0263E+02 -3.1926E+01
+    207  1  -2.1196  -0.0405   15  15   1 120  1.3228E+01  1.3120E+01  4.9301E+02 -3.3220E+01
+    208  1  -2.1745  -0.1098   15  16   1 115  1.3262E+01  1.3048E+01  4.9857E+02 -3.2955E+01
+    209  1  -2.2374  -0.0715   15  16   1 117  1.3213E+01  1.2973E+01  5.1518E+02 -3.1167E+01
+    210  1  -2.2963  -0.1113   15  16   1 119  1.3166E+01  1.2923E+01  5.1294E+02 -3.1051E+01
+    211  1  -2.3832  -0.2452   15  16   1 121  1.3150E+01  1.2898E+01  4.9813E+02 -3.2259E+01
+    212  1  -2.4817  -0.4209   15  14   1 120  1.3167E+01  1.2899E+01  4.9575E+02 -3.2453E+01
+    213  1  -2.5293  -0.4584   15  14   1 119  1.3195E+01  1.2933E+01  4.9705E+02 -3.2245E+01
+    214  1  -2.5194  -0.5012   12   1  57 117  1.3202E+01  1.2984E+01  4.9658E+02 -3.2257E+01
+    215  1  -2.5152  -0.4327   12   1  57 113  1.3188E+01  1.3028E+01  4.9340E+02 -3.2530E+01
+    216  1  -2.5119  -0.3877   12   1  57 113  1.3163E+01  1.3065E+01  4.8551E+02 -3.3046E+01
+    217  1  -2.4583  -0.3669   12   1  57 113  1.3136E+01  1.3105E+01  4.7482E+02 -3.3651E+01
+    218  1  -2.4312  -0.3399   15  16   1 112  1.3119E+01  1.3139E+01  4.6471E+02 -3.4213E+01
+    219  1  -2.4848  -0.3023   15  16   1 113  1.3106E+01  1.3158E+01  4.6006E+02 -3.4404E+01
+    220  1  -2.5454  -0.2749   15  16   1 114  1.3082E+01  1.3165E+01  4.6334E+02 -3.4001E+01
+    221  1  -2.5138  -0.2612   15  16   1 115  1.3041E+01  1.3167E+01  4.7053E+02 -3.3296E+01
+    222  1  -2.4884  -0.2589   15  16   1 114  1.2992E+01  1.3166E+01  4.7550E+02 -3.2893E+01
+    223  1  -2.5313  -0.2668   15  16   1 114  1.2957E+01  1.3165E+01  4.7502E+02 -3.3038E+01
+    224  1  -2.5932  -0.2702   15  16   1 117  1.2951E+01  1.3161E+01  4.7272E+02 -3.3292E+01
+    225  1  -2.5963  -0.2789   15  16   1 117  1.2975E+01  1.3155E+01  4.7347E+02 -3.3158E+01
+    226  1  -2.5863  -0.2894   15  16   1 116  1.3022E+01  1.3144E+01  4.7791E+02 -3.2673E+01
+    227  1  -2.6131  -0.3018   15  16   1 118  1.3079E+01  1.3130E+01  4.8330E+02 -3.2183E+01
+    228  1  -2.6347  -0.3038   15  16   1 113  1.3132E+01  1.3110E+01  4.8667E+02 -3.1929E+01
+    229  1  -2.6284  -0.2938   15  16   1 113  1.3171E+01  1.3088E+01  4.8684E+02 -3.1899E+01
+    230  1  -2.6180  -0.2466   15  16   1 110  1.3198E+01  1.3067E+01  4.8491E+02 -3.1980E+01
+    231  1  -2.6135  -0.2216   15  16   1 113  1.3216E+01  1.3050E+01  4.8236E+02 -3.2141E+01
+    232  1  -2.6247  -0.2194   15  16   1 113  1.3228E+01  1.3039E+01  4.8019E+02 -3.2326E+01
+    233  1  -2.6501  -0.2379   15  16   1 113  1.3228E+01  1.3039E+01  4.7863E+02 -3.2473E+01
+    234  1  -2.6682  -0.2783   15  16   1 113  1.3214E+01  1.3052E+01  4.7729E+02 -3.2557E+01
+    235  1  -2.7035  -0.3320   15  16   1 113  1.3190E+01  1.3079E+01  4.7540E+02 -3.2652E+01
+    236  1  -2.7689  -0.3910   15  16   1 113  1.3162E+01  1.3114E+01  4.7322E+02 -3.2764E+01
+    237  1  -2.7722  -0.4494   15  16   1 113  1.3138E+01  1.3150E+01  4.7184E+02 -3.2807E+01
+    238  1  -2.7368  -0.5002   15  16   1 114  1.3121E+01  1.3179E+01  4.7208E+02 -3.2711E+01
+    239  1  -2.7762  -0.5477   15  16   1 114  1.3111E+01  1.3198E+01  4.7341E+02 -3.2524E+01
+    240  1  -2.8387  -0.5829   15  16   1 116  1.3107E+01  1.3208E+01  4.7465E+02 -3.2372E+01
+    241  1  -2.7960  -0.6196   15  16   1 116  1.3108E+01  1.3211E+01  4.7488E+02 -3.2328E+01
+    242  1  -2.7778  -0.6720   15  16   1 116  1.3112E+01  1.3208E+01  4.7442E+02 -3.2362E+01
+    243  1  -2.8554  -0.7324   15  16   1 117  1.3121E+01  1.3198E+01  4.7421E+02 -3.2382E+01
+    244  1  -2.9534  -0.7960   15  16   1 118  1.3134E+01  1.3184E+01  4.7527E+02 -3.2309E+01
+    245  1  -2.9529  -0.8482   15  16   1 107  1.3147E+01  1.3169E+01  4.7781E+02 -3.2102E+01
+    246  1  -2.9501  -0.8702   15  16   1 107  1.3157E+01  1.3158E+01  4.8093E+02 -3.1826E+01
+    247  1  -2.9871  -0.8819   15  16   1 107  1.3163E+01  1.3152E+01  4.8337E+02 -3.1581E+01
+    248  1  -3.0190  -0.8764   15  16   1 106  1.3165E+01  1.3152E+01  4.8443E+02 -3.1428E+01
+    249  1  -3.0490  -0.8756   15  16   1 106  1.3164E+01  1.3154E+01  4.8459E+02 -3.1351E+01
+  ITER GL RMS_RES. MAX_RES. DOM  I   J   K    MF_IN     MF_OUT       FORCE      TORQUE
+    250  1  -3.0782  -0.8880   15  16   1 106  1.3163E+01  1.3155E+01  4.8453E+02 -3.1298E+01
+    251  1  -3.0847  -0.9164   15  16   1 106  1.3164E+01  1.3153E+01  4.8445E+02 -3.1255E+01
+    252  1  -3.0868  -0.9629   15  16   1 106  1.3168E+01  1.3148E+01  4.8406E+02 -3.1270E+01
+    253  1  -3.0768  -1.0249   15  16   1 105  1.3175E+01  1.3141E+01  4.8284E+02 -3.1381E+01
+    254  1  -3.0584  -1.0771   15  16   1 105  1.3183E+01  1.3134E+01  4.8113E+02 -3.1563E+01
+    255  1  -3.0933  -1.1280   15  16   1 105  1.3192E+01  1.3128E+01  4.7937E+02 -3.1744E+01
+    256  1  -3.1970  -1.1645   15  16   1 105  1.3199E+01  1.3124E+01  4.7829E+02 -3.1864E+01
+    257  1  -3.2203  -1.2064   15  16   1 105  1.3205E+01  1.3124E+01  4.7786E+02 -3.1904E+01
+    258  1  -3.1260  -1.2028   15  16   1 104  1.3207E+01  1.3129E+01  4.7781E+02 -3.1884E+01
+    259  1  -3.0963  -1.1926   15  16   1 104  1.3206E+01  1.3140E+01  4.7765E+02 -3.1840E+01
+    260  1  -3.1508  -1.1852   15  16   1 104  1.3201E+01  1.3156E+01  4.7705E+02 -3.1815E+01
+    261  1  -3.2415  -1.1865   15  16   1 104  1.3192E+01  1.3175E+01  4.7606E+02 -3.1808E+01
+    262  1  -3.3036  -1.2054   15  16   1 104  1.3181E+01  1.3192E+01  4.7494E+02 -3.1817E+01
+    263  1  -3.3247  -1.2603   15  16   1 104  1.3169E+01  1.3205E+01  4.7408E+02 -3.1840E+01
+    264  1  -3.3054  -1.3518   15  16   1 104  1.3156E+01  1.3210E+01  4.7366E+02 -3.1856E+01
+    265  1  -3.2487  -1.4097   15  16   1 115  1.3146E+01  1.3209E+01  4.7362E+02 -3.1867E+01
+    266  1  -3.2012  -1.3704    5   1  39 188  1.3139E+01  1.3203E+01  4.7407E+02 -3.1864E+01
+    267  1  -3.1993  -1.2170    5   1  38 187  1.3139E+01  1.3196E+01  4.7495E+02 -3.1828E+01
+    268  1  -3.2529  -1.2013    5   1  38 187  1.3145E+01  1.3188E+01  4.7612E+02 -3.1760E+01
+    269  1  -3.3341  -1.4113    5   1  36 186  1.3159E+01  1.3181E+01  4.7732E+02 -3.1670E+01
+    270  1  -3.3477  -1.3652    5   1  40 188  1.3177E+01  1.3175E+01  4.7834E+02 -3.1573E+01
+    271  1  -3.2838  -1.3438    5   1  36 185  1.3197E+01  1.3171E+01  4.7884E+02 -3.1497E+01
+    272  1  -3.2469  -1.3778    5   1  36 185  1.3216E+01  1.3170E+01  4.7894E+02 -3.1446E+01
+    273  1  -3.2649  -1.3899    5   1  38 187  1.3229E+01  1.3170E+01  4.7860E+02 -3.1444E+01
+    274  1  -3.3088  -1.3855   15  16   1 117  1.3236E+01  1.3172E+01  4.7769E+02 -3.1496E+01
+    275  1  -3.3334  -1.3264   15  16   1 117  1.3235E+01  1.3174E+01  4.7625E+02 -3.1603E+01
+    276  1  -3.3391  -1.3077   15  16   1 117  1.3228E+01  1.3177E+01  4.7440E+02 -3.1755E+01
+    277  1  -3.3467  -1.3283   15  16   1 118  1.3217E+01  1.3180E+01  4.7258E+02 -3.1903E+01
+    278  1  -3.3534  -1.3830   15  16   1 118  1.3204E+01  1.3185E+01  4.7117E+02 -3.2010E+01
+    279  1  -3.3505  -1.4861   15  16   1 118  1.3193E+01  1.3190E+01  4.7058E+02 -3.2045E+01
+    280  1  -3.3488  -1.6414   15  16   1 118  1.3185E+01  1.3197E+01  4.7080E+02 -3.2008E+01
+    281  1  -3.3684  -1.6834   15  16   2 120  1.3183E+01  1.3204E+01  4.7160E+02 -3.1926E+01
+    282  1  -3.4209  -1.6564   15  16   2 120  1.3187E+01  1.3212E+01  4.7254E+02 -3.1835E+01
+    283  1  -3.4915  -1.6904   15  16   1 106  1.3196E+01  1.3219E+01  4.7314E+02 -3.1784
