@@ -607,6 +607,45 @@ def cmd_audit(args):
             problems.append({"kind": "合同声明的 gate 与 check 编号不匹配",
                              "check": e["check"], "contract": cid})
 
+    # 白话覆盖检查：gates.md 里出现过的每一步，都必须有对用户的说法，
+    # 否则界面只能退回显示内部编号 —— 那就等于把 G0-G6 漏给小白了。
+    plain_path = CONTRACTS.parent / "plain-language.json"
+    gates_md = CONTRACTS.parent / "gates.md"
+    gate_ids = []
+    if gates_md.is_file():
+        gate_ids = re.findall(r"^##\s+(G\d)\b", gates_md.read_text(encoding="utf-8"), re.M)
+    translated = []
+    if plain_path.is_file():
+        try:
+            blob = json.loads(plain_path.read_text(encoding="utf-8"))
+            translated = [str(s.get("id", "")) for s in blob.get("stages", [])]
+        except Exception as exc:
+            problems.append({"kind": "白话对照表读不了",
+                             "check": "plain-language.json", "contract": str(exc)})
+    else:
+        problems.append({"kind": "白话对照表不存在",
+                         "check": "plain-language.json", "contract": str(plain_path)})
+    for gid in gate_ids:
+        if gid not in translated:
+            problems.append({"kind": "这一步没有对用户的白话说法（界面会漏出内部编号）",
+                             "check": gid, "contract": "plain-language.json"})
+    for gid in translated:
+        if gate_ids and gid not in gate_ids:
+            problems.append({"kind": "白话表里的步骤在 gates.md 里找不到",
+                             "check": gid, "contract": "plain-language.json"})
+    # "第几步" 有两个来源：本文件的 STEP_OF_GATE 和白话表。对不上就是又一处漂移。
+    if plain_path.is_file():
+        try:
+            for s in json.loads(plain_path.read_text(encoding="utf-8")).get("stages", []):
+                want = STEP_OF_GATE.get(str(s.get("id", "")))
+                if want is not None and int(s.get("step", -1)) != want:
+                    problems.append({"kind": "第几步对不上（STEP_OF_GATE vs 白话表）",
+                                     "check": "%s: 代码说第 %s 步，白话表说第 %s 步"
+                                              % (s.get("id"), want, s.get("step")),
+                                     "contract": "plain-language.json"})
+        except Exception:
+            pass
+
     payload = {
         "ok": not problems,
         "contracts_total": len(entries),
@@ -615,6 +654,7 @@ def cmd_audit(args):
         "checks_builtin": len(BUILTIN_CHECK_IDS),
         "checks_implemented": len(used),
         "checks_without_contract": sorted(used - bound - BUILTIN_CHECK_IDS),
+        "stages_translated": len(translated),
         "problems": problems,
     }
     if args.json:
@@ -626,6 +666,8 @@ def cmd_audit(args):
         print("  合同绑定检查  : %d 项" % payload["checks_from_contract"])
         print("  过程判据      : %d 项（无合同，显式登记）" % payload["checks_builtin"])
         print("  实际实现      : %d 项" % payload["checks_implemented"])
+        print("  白话覆盖      : %d/%d 步有对用户的说法"
+              % (payload["stages_translated"], len(gate_ids)))
         print()
         if not problems:
             print("  ✓ 合同与代码一致，无漂移")
@@ -644,21 +686,43 @@ GATES = {
     "post": gate_post,
 }
 
+# 子命令名 → 步骤编号。GATES 的键是命令名，Result.gate 是编号 —— 两套，
+# 写日志时要用命令名查。以前直接拿 Result.gate 查这张表，一跑就 KeyError。
 STAGE_MAP = {
     "requirements": "G0", "brief": "G1", "scheme": "G2",
     "geometry": "G3", "mesh": "G4", "solve": "G5", "post": "G6",
 }
+GATE_OF_COMMAND = {
+    "requirements": "G0", "brief": "G1", "scheme": "G2",
+    "geometry": "G3", "mesh": "G4", "solve": "G5", "post": "G6",
+}
+
+# 编号 → 第几步。与 plain-language.json 的 step 必须一致，
+# audit 会核对（见 cmd_audit 的白话覆盖检查）。
+STEP_OF_GATE = {
+    "G0": 1, "G1": 2, "G2": 3, "G3": 4, "G4": 5, "G5": 6, "G6": 7,
+}
+
+
+VERDICT_CN = {"PASS": "通过", "WARN": "注意", "FAIL": "没通过", "SKIP": "还查不了"}
 
 
 def render(result: Result) -> str:
-    lines = ["闸门 " + result.gate + " 判定：" + result.verdict,
-             "  PASS=%d WARN=%d FAIL=%d SKIP=%d" % (
+    """打印给人看。编号放最后，先给结论。
+
+    命令行里保留 (G4) 这样的编号 —— 日志和 skill 都按编号索引，
+    但第一眼看到的必须是中文。
+    """
+    lines = ["第 %d 步检查（%s）：%s" % (
+                 STEP_OF_GATE.get(result.gate, 0), result.gate,
+                 VERDICT_CN.get(result.verdict, result.verdict)),
+             "  通过 %d / 注意 %d / 没通过 %d / 还查不了 %d" % (
                  len([i for i in result.items if i["verdict"] == "PASS"]),
                  len(result.warns), len(result.fails), len(result.skips))]
     for item in result.items:
         mark = {"PASS": "v", "WARN": "!", "FAIL": "x", "SKIP": "-"}[item["verdict"]]
-        lines.append("  " + mark + " " + item["id"] + " " + item["title"]
-                     + "  [" + item["measured"] + "]")
+        lines.append("  " + mark + " " + item["title"] + "  [" + item["measured"] + "]"
+                     + "  (" + item["id"] + ")")
     return LF.join(lines)
 
 
@@ -681,19 +745,19 @@ def main(argv=None):
         return cmd_audit(args)
 
     names = list(GATES.keys()) if args.gate == "all" else [args.gate]
-    results = [GATES[name](case, args) for name in names]
+    results = [(name, GATES[name](case, args)) for name in names]
 
     overall = "PASS"
-    if any(r.verdict == "FAIL" for r in results):
+    if any(r.verdict == "FAIL" for _, r in results):
         overall = "FAIL"
-    elif any(r.verdict == "WARN" for r in results):
+    elif any(r.verdict == "WARN" for _, r in results):
         overall = "WARN"
-    elif all(r.verdict == "SKIP" for r in results):
+    elif all(r.verdict == "SKIP" for _, r in results):
         overall = "SKIP"
 
     if args.log:
-        for result in results:
-            stage = STAGE_MAP[result.gate]
+        for command, result in results:
+            stage = GATE_OF_COMMAND.get(command, STAGE_MAP.get(result.gate, result.gate))
             measured = "; ".join(i["id"] + "=" + i["verdict"] for i in result.items)
             criteria = " | ".join(sorted({i["criteria"] for i in result.items}))
             ledger._append_log(
@@ -716,10 +780,11 @@ def main(argv=None):
         print(json.dumps({
             "ok": overall in ("PASS", "SKIP"),
             "overall": overall,
-            "gates": [{"gate": r.gate, "verdict": r.verdict, "items": r.items} for r in results],
+            "gates": [{"gate": r.gate, "verdict": r.verdict, "items": r.items}
+                      for _, r in results],
         }, ensure_ascii=False, indent=2))
     else:
-        for result in results:
+        for _, result in results:
             print(render(result))
         print("总体：" + overall)
 
