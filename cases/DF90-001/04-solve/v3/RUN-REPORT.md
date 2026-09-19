@@ -223,3 +223,85 @@ exit=0        <- 失败也返回 0，这是本项目第三次踩到 "NUMECA 退�
 
 **从第十二节的线索 1 接**：打开 `mesh-v4.iec`，把第 6 行 `RELATIVE_GRID_FILE undefined`
 改成有效值（或把第 7 行 `TRB_FILE` 指向 `03-mesh/v4/mesh-v4.trb`），再跑一次同样的 `finebatch` 位置式命令。
+---
+
+## 【第 3 棒】finebatch 真实用法 + 一条硬结论（2026-09-20 05:0x）
+
+### 关键发现：调用形式有两套，第 4 个位置参数是 bin 目录
+
+`finebatchx86_64.exe --help` 输出（实测）：
+
+```
+finebatch usage (positional):
+   first  argument => input project file (extension .iec)
+   second argument => input mesh file (extension .igg)
+   third  argument => output computation file (extension .run)
+   fourth argument => COMMON (or bin) directory path
+   fifth  argument => input computation index (optional)
+
+MERGE MESH 模式（order is not important）: -project -mesh -computation -index -nbint -nbreal
+CREATE RUN 模式: -project -computation -index
+```
+
+**前几棒用 `-project/-mesh/-computation` 是合法的**，但报 `unknownmesh-v4.igg` 说明参数没被吃到。
+改用**位置式**后成功。**`--help` 本身返回 0，别把退出码当成功信号。**
+
+### 位置式命令（可复现）
+
+```powershell
+finebatchx86_64.exe `
+  cases/DF90-001/04-solve/v3/mesh-v4.iec `
+  cases/DF90-001/03-mesh/v4/mesh-v4.igg `
+  cases/DF90-001/04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.run `
+  "D:\NUMECA_SOFTWARE\fine161\bin" 1
+```
+
+**结果：`.run` 产出成功，268,397 字节。**
+
+### ⚠ 但有一条**致命的告警**（这是本棒的硬结论）
+
+```
+. checking Number Of Blocks ...  OK.
+. checking Block number 1...
+   start checking Block row_2_flux_1_Main_Blade_downStream ...
+. checking project type ...  OK.
+     . checking Name ...  NOT CONSISTENT.
+
+The mesh file "...\03-mesh\v4\mesh-v4.igg"
+and the project "...\04-solve\v3\mesh-v4.iec"
+do not have the same topology
+
+= Output file(s) successfully written !     <- 注意：报了 topology 不一致，仍然写出了文件
+```
+
+**含义**：`v8` 的 `.iec` 里带着 **v8 网格的块拓扑**（块名 + IMAX/JMAX/KMAX）。
+v4 的网格是给 **v11 的新叶片**划的，块尺寸不同 —— 所以 `checking Name ... NOT CONSISTENT`。
+
+**所以「改 `.iec` 的 `GRID_FILE`」这条路也是不行的** —— 这和「换网格 ≠ 改 `.run` 的 `GRID_FILE`」
+是**同一个错的第二层**：`.iec` 和 `.run` 一样，**内部记着块拓扑**，拓扑变了就必须重建。
+
+**而且它不报错、照样写出 `.run`** —— 这是最危险的地方：拿到一个"看起来成功"的 `.run`，
+拿去跑 CFD 会在别处炸，或者更糟：跑出一套不可信的结果。
+
+### 下一棒该做什么（最短路径）
+
+**用 IGG 对 `03-mesh/v4/mesh-v4.igg` 新开工程，另存出 `mesh-v4.iec`。**
+
+- 可执行：`D:\NUMECA_SOFTWARE\fine161\bin64\iggx86_64.exe`
+- **新开工程，不要复用任何现有 `.iec`** —— 复用的就是拓扑
+- 产出后**必须**用同一条位置式 `finebatch` 命令验证：
+  **`checking Name` 那一行必须是 `OK`，不能是 `NOT CONSISTENT`**
+- 这是本棒的判据，比"文件生成了"强得多
+
+### 本棒的其它实测
+
+- 原 `.iec` 与我们的 `.iec` **头部逐行相同**（只差 `GRID_FILE` 一行）：
+  `RELATIVE_GRID_FILE undefined` / `TRB_FILE \usr\unknown` / `RELATIVE_TRB_FILE undefined`
+  **在原文件里也是这样** —— 所以第 6/8 行**不是**问题所在，前几棒的猜测可以排除
+- `-help` 与无参数都会打印 usage；**两者退出码都是 0**
+
+### 本棒没有做
+
+- 没有逐块对照 16 块（**因为 topology 不一致，对照本身就是错的基准**）
+- 没有起求解器（`.run` 拓扑不对，跑了也是白跑）
+- 没有 git add / commit
