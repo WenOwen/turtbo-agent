@@ -74,12 +74,17 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--case", default=r"D:\Project\Research\turtbo-agent\cases\DF90-001")
     ap.add_argument("--dest", default=None)
+    ap.add_argument("--mesh", default=None,
+                    help="案例内的网格 .igg；不给就用 03-mesh/v2/mesh-v2.igg")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
 
     case = Path(args.case).resolve()
     dest = Path(args.dest).resolve() if args.dest else case / "04-solve" / "v2" / "n05000_p101325"
-    case_mesh = case / "03-mesh" / "v2" / "mesh-v2.igg"
+    # 允许换网格：v2 用 mesh-v2（与原始逐字节相同，纯路径变化），
+    # G5 用 mesh-v4（叶片换了，网格必须跟着换 —— 这时 identical 会是 False，如实记录）。
+    case_mesh = (Path(args.mesh).resolve() if args.mesh
+                 else case / "03-mesh" / "v2" / "mesh-v2.igg")
     if not case_mesh.is_file():
         raise SystemExit("案例网格不在：" + str(case_mesh))
 
@@ -109,7 +114,7 @@ def main(argv=None):
     same = sha256(case_mesh) == sha256(orig_mesh)
     setup = {
         "case": "DF90-001",
-        "version": "v2",
+        "version": dest.parent.name,
         "case_name": stem,
         "work_point": {"rpm": 5000, "outlet_static_pressure_pa": 101325,
                        "omega_rad_s": 523.598775571636,
@@ -117,7 +122,10 @@ def main(argv=None):
         "why_redo": ("04-solve/v1 下 60 个工况只有 1 个留下结果，且残差停在 1e-3.5 未收敛。",
                      "这一版把那个唯一的真解重新布置进案例，让产物落在案例内。"),
         "mesh_rebind": {
-            "reason": "案例自带网格与原网格逐字节相同，改绑是纯路径变化，物理零变化",
+            "reason": ("案例自带网格与原网格逐字节相同，改绑是纯路径变化，物理零变化"
+                       if same else
+                       "**换网格**：叶片已按 v4 参数表重做，网格必须跟着换；"
+                       "与原网格不同源，identical=False 是预期的"),
             "from": str(orig_mesh),
             "to": str(case_mesh),
             "from_sha256": sha256(orig_mesh),

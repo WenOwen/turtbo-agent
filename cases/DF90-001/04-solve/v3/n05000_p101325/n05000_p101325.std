@@ -1,0 +1,191 @@
+ Batch mode: PVM is deactivated
+SOLVER VERSION 16.1 SINGLE PRECISION 
+NISubTaskChildren::NISubTaskChildren: read steering filecases\DF90-001\04-solve\v3\n05000_p101325\n05000_p101325.steering
+check_feature 'Solver'
+  checking regular version
+MPI VERSION: IMPI 2018.0.0
+STARTING NUMECA FLOW SOLVER
+amainc : PREFIX = cases\DF90-001\04-solve\v3\n05000_p101325\n05000_p101325
+amainc : MXRVAR, MXIVAR = 216948619,15227694
+amainc : DEFFILE = D:\NUMECA_SOFTWARE\Fine161\bin\euranus.def
+check_feature 'Solver_BASE'
+  checking regular version
+All licenses checked out!
+  Initializing...
+ Variable viscosity from the Sutherland law 
+ Dynamic viscosity is equal to 1.716e-005 (Pa*s) at temperature 293.111 (K)
+ The Sutherland temperature is 110.555 (K)
+ Group 1 (Stator)     : Blocks   1  2  3  4  5  6  7
+ Upstream surfaces for Group 1: ROTOR-STATOR
+ Downstream surfaces for Group 1: OUTLET
+ Group 2 (Rotor)      : Blocks   8  9  10  11  12  13  14  15  16
+ Upstream surfaces for Group 2: INLET
+ Downstream surfaces for Group 2: ROTOR-STATOR
+createControlSurfaceList: number of entries = 10
+createControlSurfaceList: surf blade(s)/row_2/AG5 id 4
+createControlSurfaceList: surf outlet/row_2/AG5 id 0
+createControlSurfaceList: surf blade(s)/row_1/AG5 id 9
+createControlSurfaceList: surf inlet/row_1/AG5 id 8
+createControlSurfaceList: surf shroud/row_2/AG5 id 3
+createControlSurfaceList: surf No_Force_and_Torque id 2
+createControlSurfaceList: surf hub/row_2/AG5 id 1
+createControlSurfaceList: surf shroud/row_1/AG5 id 7
+createControlSurfaceList: surf hub/row_1/AG5 id 5
+createControlSurfaceList: surf Force_and_Torque id 6
+cbcinc: create 0 spaces in NMBSubPatchList
+createBladeList: Blade nr 1 row_2_Main_Blade
+createBladeList: leading edge in block nr 5 at 1 1 1 57 185 185
+createBladeList: trailing edge in block nr 5 at 1 1 1 57 281 281
+createBladeList: Blade nr 2 row_1_Main_Blade
+createBladeList: leading edge in block nr 12 at 1 1 1 57 113 113
+createBladeList: trailing edge in block nr 12 at 1 1 1 57 225 225
+createBladeList: found block 5 5 1
+createBladeList: patch indices 1 1 1 57 185 281
+createBladeList: found block 5 5 2
+createBladeList: patch indices 1 1 1 57 1 185
+createBladeList: found block 12 5 2
+createBladeList: patch indices 1 1 1 57 113 225
+createBladeList: found block 12 5 3
+createBladeList: patch indices 1 1 1 57 1 113
+createBladeList: Blade 1
+createBladeList: block 5 1 1 1 57 185 281 
+createBladeList: block 5 1 1 1 57 1 185 
+createBladeList: Blade 2
+createBladeList: block 12 1 1 1 57 113 225 
+createBladeList: block 12 1 1 1 57 1 113 
+contrSurfDataStructure: controlSurfName = outlet/row_2/AG5
+Candidate solid = hub/row_2/AG5
+contrSurfDataStructure: controlSurfName = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+contrSurfDataStructure: controlSurfName = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+contrSurfDataStructure: controlSurfName = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_2/AG5
+contrSurfDataStructure: controlSurfName = blade(s)/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = shroud/row_2/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+contrSurfDataStructure: controlSurfName = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+contrSurfDataStructure: controlSurfName = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+contrSurfDataStructure: controlSurfName = inlet/row_1/AG5
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+contrSurfDataStructure: controlSurfName = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = hub/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+Candidate solid = blade(s)/row_1/AG5
+Candidate solid = Force_and_Torque
+Candidate solid = shroud/row_1/AG5
+Candidate solid = No_Force_and_Torque
+controlSurfaceDataStructure: n element in dico = 9
+controlSurfaceDataStructure: associated domains = 5 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+blade(s)/row_2/AG5 has ID 4 and is a Solid
+controlSurfaceDataStructure: associated domains = 1 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+outlet/row_2/AG5 has ID 0 and is an Outlet
+controlSurfaceDataStructure: associated domains = 12 15 16 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+blade(s)/row_1/AG5 has ID 9 and is a Solid
+controlSurfaceDataStructure: associated domains = 10 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+inlet/row_1/AG5 has ID 8 and is an Inlet
+controlSurfaceDataStructure: associated domains = 1 2 3 4 5 6 7 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+shroud/row_2/AG5 has ID 3 and is a Solid
+controlSurfaceDataStructure: associated domains = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 
+controlSurfaceDataStructure: associated groups = 0 1 
+controlSurfaceDataStructure: associated ranks = 0 
+No_Force_and_Torque has ID 2 and is a Solid
+controlSurfaceDataStructure: associated domains = 1 2 3 4 5 6 7 
+controlSurfaceDataStructure: associated groups = 0 
+controlSurfaceDataStructure: associated ranks = 0 
+hub/row_2/AG5 has ID 1 and is a Solid
+controlSurfaceDataStructure: associated domains = 8 9 10 11 12 13 14 15 16 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+shroud/row_1/AG5 has ID 7 and is a Solid
+controlSurfaceDataStructure: associated domains = 8 9 10 11 12 13 14 
+controlSurfaceDataStructure: associated groups = 1 
+controlSurfaceDataStructure: associated ranks = 0 
+hub/row_1/AG5 has ID 5 and is a Solid
+ NUMBER OF ROTOR/STATOR INTERFACES :            1
+
+ INTERFACE NUMBER   1 (INDEX :  10)
+ ------------------------------------
+  MIXING PLANE APPROACH
+ NUMBER OF UPSTREAM   PATCHES :     1
+ NUMBER OF DOWNSTREAM PATCHES :     1
+binit : IRSPAR = 1 not compatible with ICOMP = 0
+      : IRSPAR being set to 0 
+binit : IFNPPP > 0 not compatible with ICOMP = 0
+      : IFNPPP being set to 0 
+No ADF file found for Rotor-Stator FNMB data -> COMPUTING all RS FNMB data
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 1
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 2
+EURANUS WILL READ MESH IN DOUBLE PRECISION
+BLOCK NUMBER 3
