@@ -74,7 +74,13 @@ R1 出口 -28.52…-64.51 对 -60.53；S1 出口 -12.98…-16.45 对 -2.43）。
 - 已提交到 `1b28b40`。工作区干净（根目录 `_metal*.py` 是它的临时探测脚本，别删）。
 
 **它回来之后立刻做**：
-1. 用查清的约定**重造 v9 的叶片**，让它真正由 v3 参数表导出
+1. 用查清的约定**重造 v9 的叶片**，让它真正由 v3 参数表导出。
+   **技术路径已摸清**：`_automation/v9/v9_build_par.py` 现在只做两件事 ——
+   读 v8 的 `.par`、用 `ab.replace_curve_parameters()` 换掉 `HUB_CURVE` / `TIP_CURVE`，
+   **其余（叶片）原样照抄**。要重造叶片，得在 `build_row()` 里加一步：
+   把 `S<N>_CAMBER_BETA1/2` 的 `VALUE` 按换算结果替换掉（手法与换曲线同类）。
+   转换用子 agent 产出的 `tools/metal_angle_convert.py`。
+   **改完必须重跑 `gate_check geometry --version v9` 看 G3-5 的金属角项变不变。**
    —— **同时把 R1 叶尖间隙从 0.002 改成参数表的 0.0005**（见上）
 2. 查清 **turbo-flow 的稠度定义在哪个半径上**（见上，可能是假警报）
 3. 重出 v3 口径的 `_automation/g3/schedule-*.json`（现在那份是 v1 的，且缺 S1）
