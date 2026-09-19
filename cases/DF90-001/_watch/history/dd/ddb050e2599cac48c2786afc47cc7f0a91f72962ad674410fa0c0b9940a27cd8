@@ -1,0 +1,2 @@
+case,rpm,pressure_pa_abs,state,iteration,mf_in,mf_out,mass_error_pct,pressure_ratio,efficiency,torque_nm,shaft_power_w,reason
+mesh-v4_n05000_p101325,5000,101325,accepted,1652,12.89706,12.89682,0.0018609,1.01187,0.8573806,-27.84236,14578.22,mass_balance_converged

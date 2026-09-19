@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-20T05:28:14+08:00　·　当前阶段 **G4**　·　revision 95
+> 生成于 2026-09-20T07:41:48+08:00　·　当前阶段 **G5**　·　revision 101
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -10,27 +10,29 @@
 **但工具不这么认为：**G2 最近一次闸门判定是 **WARN**
 「已完成」说的是这一步**有产物**，闸门说的是这一步**过没过判据**。两者不一致时以后者为准 —— 明细见 LOG.md。
 
-最近一次记录：2026-09-20T04:27:05+08:00　PASS　登记产物 03-mesh/v4/mesh-v4.qualityReport
+最近一次记录：2026-09-20T07:41:46+08:00　INFO　登记产物 04-solve/v3/g5/sweep_summary.csv
 
-## 未登记的改动（近 14 天 69 条，历史共 69 条）
+## 未登记的改动（近 14 天 71 条，历史共 71 条）
 
 这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
 可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
 
-- 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.igg　459893 -> 459893 bytes
-- 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.bcs　15981 -> 15981 bytes
 - 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.config　13326 -> 13326 bytes
 - 04:33:11　**算例参数**　added　04-solve/v3/n05000_p101325/n05000_p101325.run　0 -> 268409 bytes
 - 05:03:43　**算例参数**　added　04-solve/v3/mesh-v4.iec　0 -> 24365931 bytes
 - 05:17:50　**算例参数**　added　04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.run　0 -> 268397 bytes
 - 05:28:14　**算例参数**　deleted　04-solve/v3/mesh-v4.iec　24365931 -> 0 bytes
 - 05:03:43　**算例参数**　added　04-solve/v3/mesh-v4.WRONG-topology.iec　0 -> 24365931 bytes
-- …另有 61 条，见 _watch/changes.jsonl
+- 07:33:15　**算例参数**　added　04-solve/v3/g5/thrust_closure.csv　0 -> 741 bytes
+- 07:39:22　**算例参数**　added　04-solve/v3/g5/sweep_summary.csv　0 -> 263 bytes
+- …另有 63 条，见 _watch/changes.jsonl
 
 ## 最近 10 次变更
 
 | 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
 |---|---|---|---|---|---|
+| 09-20 07:39:22 | 算例参数 | **unknown** | added | 04-solve/v3/g5/sweep_summary.csv | 0 -> 263 |
+| 09-20 07:33:15 | 算例参数 | **unknown** | added | 04-solve/v3/g5/thrust_closure.csv | 0 -> 741 |
 | 09-20 05:03:43 | 算例参数 | **unknown** | added | 04-solve/v3/mesh-v4.WRONG-topology.iec | 0 -> 24365931 |
 | 09-20 05:28:14 | 算例参数 | **unknown** | deleted | 04-solve/v3/mesh-v4.iec | 24365931 -> 0 |
 | 09-20 05:17:50 | 算例参数 | **unknown** | added | 04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.run | 0 -> 268397 |
@@ -39,12 +41,10 @@
 | 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.config | 13326 -> 13326 |
 | 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.bcs | 15981 -> 15981 |
 | 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.igg | 459893 -> 459893 |
-| 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.trb | 34403 -> 36042 |
-| 09-20 04:25:49 | 网格 | **unknown** | added | 03-mesh/v4/mesh-v4.bak.trb | 0 -> 34403 |
 
 ## 你接手前必须知道
 
-**结论非 PASS 的产物（11 条）**
+**结论非 PASS 的产物（13 条）**
 
 - [WARN] 02-geometry/v8/PROVENANCE.md　— 同时记录 build-par/v8_build_manifest.json 已过期（hub 与 lean 均与交付不符）
 - [WARN] 02-geometry/v8/autoblade/R1_13span/R1.geomTurbo　— 转子；REVERSE_THETA=0，导出后负向，与 v7 交付件方向一致
@@ -73,7 +73,7 @@
 - 轴向长度　来源：open　轴向总长是否有约束
 - `acceptance.ACC-1` 之外　来源：待细化　是否还有其他验收口径（如效率下限、噪声、重量）
 
-## 产物（61 条）
+## 产物（67 条）
 
 | 阶段 | 结论 | 版本 | 路径 | sha256 |
 |---|---|---|---|---|
@@ -138,10 +138,16 @@
 | G4 | PASS | v3 | 03-mesh/v3/mesh-v3.qualityReport | 15228615 |
 | G4 | PASS | v4 | 03-mesh/v4/mesh-v4.igg | 2314a345 |
 | G4 | PASS | v4 | 03-mesh/v4/mesh-v4.qualityReport | 824b2164 |
+| G5 | INFO | v3 | 04-solve/v3/G5-REPORT.md | be872162 |
+| G5 | PASS | v3 | 04-solve/v3/g5/convergence.json | e8e5a4ef |
+| G5 | WARN | v3 | 04-solve/v3/g5/thrust_closure.csv | 98ea3fe3 |
+| G5 | PASS | v3 | 04-solve/v3/g5/outlet-area-audit.json | 2660491f |
+| G5 | FAIL | v3 | 04-solve/v3/g5/anchor_comparison.json | 502d8742 |
+| G5 | INFO | v3 | 04-solve/v3/g5/sweep_summary.csv | ddb050e2 |
 
 ---
 
-看守状态：监视 155 个文件　·　累计变更 88 条　·　历史库 351 份内容
+看守状态：监视 157 个文件　·　累计变更 90 条　·　历史库 353 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。

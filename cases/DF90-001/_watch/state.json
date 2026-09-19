@@ -1,11 +1,11 @@
 {
   "initialized": true,
   "baseline_at": "2026-09-19T00:34:14+08:00",
-  "files": 155,
+  "files": 157,
   "history_stored": 0,
   "last_tick": "2026-09-19T01:31:17+08:00",
   "last_tick_epoch": 1789752677.7988505,
-  "total_changes": 88,
+  "total_changes": 90,
   "hashes": {
     "04-solve/v2/n05000_p101325/n05000_p101325.run": "8e712dd78832d94e88fdc5f37779926d066429231c32528a91c4481446ea883a",
     "04-solve/v2/n05000_p101325/thrust_closure.csv": "6649e94a40bb943d8741b313a79755ff98077f0a818adc692aa81d8124502305",
@@ -73,6 +73,8 @@
     "04-solve/v3/n05000_p101325/n05000_p101325.run": "539a238311bbda3c40c8c67a149a761a82957cee4d63f46d5c29fcb5146b9b24",
     "04-solve/v3/mesh-v4.iec": "8eadeb1ace762991318b4721218e4ecdea408da82583efa3bad9120950ccedac",
     "04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.run": "e96f17fc54ea60203ab1a45b53d785f81e40331779af9faeb8f9b64a37b5711d",
-    "04-solve/v3/mesh-v4.WRONG-topology.iec": "8eadeb1ace762991318b4721218e4ecdea408da82583efa3bad9120950ccedac"
+    "04-solve/v3/mesh-v4.WRONG-topology.iec": "8eadeb1ace762991318b4721218e4ecdea408da82583efa3bad9120950ccedac",
+    "04-solve/v3/g5/thrust_closure.csv": "98ea3fe3fc47304b1fbdd233763402a6e5fca7c8bd85a5afaff7bda1a47fae19",
+    "04-solve/v3/g5/sweep_summary.csv": "ddb050e2599cac48c2786afc47cc7f0a91f72962ad674410fa0c0b9940a27cd8"
   }
 }
