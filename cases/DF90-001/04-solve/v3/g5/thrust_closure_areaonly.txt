@@ -1,0 +1,5 @@
+出口面积交叉核验（C-004）
+  全周面积 = 周区 0.02204345 x 周期 11 = 0.24247795 m2
+  解析环面积 = pi*(0.3^2 - 0.1132^2) = 0.2424862166 m2
+  相对差 3.4091e-05  [PASS]
+  -> D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\g5\outlet-area-audit.json

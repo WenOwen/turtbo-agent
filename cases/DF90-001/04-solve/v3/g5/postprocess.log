@@ -1,0 +1,11 @@
+[06:07:13] postprocess waiting for solver to finish...
+[07:32:55] solver reported DONE -- waiting 20s for file flush
+[07:33:15] RUN convergence_check: C:\Program Files\Python312\python.exe tools/convergence_check.py --std D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\mesh-v4_n05000_p101325\run-v3.std --out D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\g5 --max-iter 2000
+[07:33:15]   rc=0
+[07:33:15] RUN thrust_closure: C:\Program Files\Python312\python.exe tools/thrust_closure.py --xmf D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\mesh-v4_n05000_p101325\mesh-v4_n05000_p101325.xmf --out D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\g5 --convergence D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\g5\convergence.json
+[07:33:15]   rc=0
+[07:33:15] RUN thrust_closure_areaonly: C:\Program Files\Python312\python.exe tools/thrust_closure.py --xmf D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\mesh-v4_n05000_p101325\mesh-v4_n05000_p101325.xmf --out D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\g5 --outlet-area-only
+[07:33:15]   rc=0
+[07:33:15] RUN anchor_check: C:\Program Files\Python312\python.exe tools/anchor_check.py --case D:\Project\Research\turtbo-agent\cases\DF90-001 --out D:\Project\Research\turtbo-agent\cases\DF90-001\04-solve\v3\g5
+[07:33:15]   rc=4
+[07:33:15] POSTPROCESS DONE

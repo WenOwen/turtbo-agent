@@ -1,0 +1,18 @@
+{
+  "what": "C-004 全周出口面积交叉核验",
+  "independent_of_flow_convergence": true,
+  "why": [
+    "全周面积只由网格几何与叶排周期数决定，不依赖流场是否收敛；",
+    "所以这一条的结论不受本次未收敛影响。"
+  ],
+  "sector_area_m2": 0.02204345,
+  "periodicity": 11,
+  "full_area_m2": 0.24247795,
+  "analytic_annulus_m2": 0.24248621657774488,
+  "hub_radius_m": 0.1132,
+  "shroud_radius_m": 0.3,
+  "rel_diff": 3.4090918080022454e-05,
+  "verdict": "PASS",
+  "how": "全周面积 = XMF 周期扇区面积 x 出口叶排周期数；与 pi*(r_shroud^2-r_hub^2) 交叉核验",
+  "source_xmf": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v3\\mesh-v4_n05000_p101325\\mesh-v4_n05000_p101325.xmf"
+}

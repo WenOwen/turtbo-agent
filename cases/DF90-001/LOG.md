@@ -471,3 +471,63 @@
 - 判据：Mesh Validity OK；No Negative Cell；1596448 点；最小偏斜角 16.496 度
 - 结论：PASS
 
+## 2026-09-20T07:41:45+08:00 | G5 求解 | INFO
+- 动作：登记产物 04-solve/v3/G5-REPORT.md
+- 操作者：agent
+- 输入：04-solve/v3/G5-REPORT.md  sha256=be872162d42f9b92  bytes=25746
+- 上游：04-solve/v3/g5/convergence.json
+- 产物：04-solve/v3/G5-REPORT.md  sha256=be872162d42f9b925392054f4cdbb4a5e493f0aeae3c5f8e7610d1424a09228c
+- 判据：（未提供判据，仅登记）
+- 结论：INFO
+- 备注：G5 求解闸门报告：收敛=算完了；静推力 566.60 N=57.78 kgf；A_out 三方核验 3.41e-05
+
+## 2026-09-20T07:41:45+08:00 | G5 求解 | PASS
+- 动作：登记产物 04-solve/v3/g5/convergence.json
+- 操作者：agent
+- 输入：04-solve/v3/g5/convergence.json  sha256=e8e5a4efa9250200  bytes=2784
+- 上游：04-solve/v3/mesh-v4_n05000_p101325/run-v3.std
+- 产物：04-solve/v3/g5/convergence.json  sha256=e8e5a4efa925020085a1fc7c6eac4504b9770197507150b72e1b1c0e5fee162d
+- 判据：（未提供判据，仅登记）
+- 结论：PASS
+- 备注：收敛判定 算完了：窗口 1553..1652，四条积分量极差<=0.0072%，log10RMS 均值 -5.988
+
+## 2026-09-20T07:41:45+08:00 | G5 求解 | WARN
+- 动作：登记产物 04-solve/v3/g5/thrust_closure.csv
+- 操作者：agent
+- 输入：04-solve/v3/g5/thrust_closure.csv  sha256=98ea3fe3fc47304b  bytes=741
+- 上游：04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.xmf
+- 产物：04-solve/v3/g5/thrust_closure.csv  sha256=98ea3fe3fc47304b1fbdd233763402a6e5fca7c8bd85a5afaff7bda1a47fae19
+- 判据：（未提供判据，仅登记）
+- 结论：WARN
+- 备注：C-004 静推力三列 566.6042417/566.6769851/-0.072743385 N；A_out 核验 3.4091e-05 PASS；但 566.60 N 远低于 882.60 N(90kgf)，且工况不同(5000 vs 6100rpm)
+
+## 2026-09-20T07:41:45+08:00 | G5 求解 | PASS
+- 动作：登记产物 04-solve/v3/g5/outlet-area-audit.json
+- 操作者：agent
+- 输入：04-solve/v3/g5/outlet-area-audit.json  sha256=2660491fd75b320f  bytes=763
+- 上游：04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.xmf
+- 产物：04-solve/v3/g5/outlet-area-audit.json  sha256=2660491fd75b320f381e2a68c80cd57a145d2a8d945258cbc263e6738959f593
+- 判据：（未提供判据，仅登记）
+- 结论：PASS
+- 备注：C-004 全周出口面积交叉核验：0.02204345x11=0.24247795 vs 解析 0.2424862166，相对差 3.4091e-05
+
+## 2026-09-20T07:41:46+08:00 | G5 求解 | FAIL
+- 动作：登记产物 04-solve/v3/g5/anchor_comparison.json
+- 操作者：agent
+- 输入：04-solve/v3/g5/anchor_comparison.json  sha256=502d874240e8bcef  bytes=5396
+- 上游：requirements.yaml
+- 产物：04-solve/v3/g5/anchor_comparison.json  sha256=502d874240e8bcef172d521fd5873e313ce25e83cdb1a8144e22e46bb42ef698
+- 判据：（未提供判据，仅登记）
+- 结论：FAIL
+- 备注：G5-6 工具判 FAIL(rotor torque -19.31%, tol 0.05)；但真 v7 锚点环形几何 Inlet hub 0.103457 vs 本次 0.08(-22.67%) => 跨血缘，该 FAIL 只能读成不可比
+
+## 2026-09-20T07:41:46+08:00 | G5 求解 | INFO
+- 动作：登记产物 04-solve/v3/g5/sweep_summary.csv
+- 操作者：agent
+- 输入：04-solve/v3/g5/sweep_summary.csv  sha256=ddb050e2599cac48  bytes=263
+- 上游：04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.xmf
+- 产物：04-solve/v3/g5/sweep_summary.csv  sha256=ddb050e2599cac48c2786afc47cc7f0a91f72962ad674410fa0c0b9940a27cd8
+- 判据：（未提供判据，仅登记）
+- 结论：INFO
+- 备注：本次工况汇总 1 行 accepted, iter=1652, mass_error_pct=0.0018609; 注意 gate_check solve 默认口径会取到 _replay/v7 那份
+

@@ -1,0 +1,162 @@
+{
+  "xmf": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v3\\mesh-v4_n05000_p101325\\mesh-v4_n05000_p101325.xmf",
+  "station": "Outlet",
+  "inputs": {
+    "mass_flow_kg_s": 12.89682,
+    "axial_velocity_m_s": 43.93928,
+    "static_pressure_pa_abs": 101324.7,
+    "ambient_static_pressure_pa_abs": 101325.0
+  },
+  "outlet_area": {
+    "sector_area_m2": 0.02204345,
+    "periodicity": 11,
+    "full_area_m2": 0.24247795,
+    "analytic_annulus_m2": 0.24248621657774488,
+    "hub_radius_m": 0.1132,
+    "shroud_radius_m": 0.3,
+    "rel_diff": 3.4090918080022454e-05,
+    "verdict": "PASS",
+    "how": "全周面积 = XMF 周期扇区面积 x 出口叶排周期数；与 pi*(r_shroud^2-r_hub^2) 交叉核验"
+  },
+  "result": {
+    "momentum_thrust_n": 566.6769850896,
+    "pressure_thrust_n": -0.07274338500070571,
+    "static_thrust_n": 566.6042417045993,
+    "static_thrust_kgf": 57.777553160824475,
+    "closure_rel_err": 0.0
+  },
+  "solver_reported": {
+    "axial_thrust_n_wall_only": 605.2881,
+    "torque_nm": -27.84236,
+    "power_w": -14578.22,
+    "isentropic_efficiency_tt": 0.8573806,
+    "total_pressure_ratio": 1.01187
+  },
+  "note": [
+    "solver_reported.axial_thrust_n_wall_only 是**壁面力**，只积分转子叶片与轮毂。",
+    "C-004 明说它不是整机推力，列在这里只为对照，不得当结论。"
+  ],
+  "convergence": {
+    "window": 100,
+    "checks": [
+      {
+        "id": "S0",
+        "title": "窗口长度",
+        "verdict": "PASS",
+        "measured": "100 个连续细网格迭代（1553..1652）"
+      },
+      {
+        "id": "S1",
+        "title": "逐步质量不平衡 <= 0.1%",
+        "verdict": "PASS",
+        "measured": "窗口内最大 0.0000%"
+      },
+      {
+        "id": "S2",
+        "title": "进口流量相对极差 <= 0.2%",
+        "verdict": "PASS",
+        "measured": "0.0000%"
+      },
+      {
+        "id": "S3",
+        "title": "出口流量相对极差 <= 0.2%",
+        "verdict": "PASS",
+        "measured": "0.0000%"
+      },
+      {
+        "id": "S4",
+        "title": "残差窗口极差 <= 0.3 个量级",
+        "verdict": "PASS",
+        "measured": "0.092 个量级"
+      },
+      {
+        "id": "S5",
+        "title": "积分量窗口极差 <= 0.5%",
+        "verdict": "PASS",
+        "measured": "进口流量 0.0000%；出口流量 0.0000%；转子轴向力 0.0033%；扭矩 0.0072%"
+      },
+      {
+        "id": "L1",
+        "title": "残差窗口均值 <= -4.0",
+        "verdict": "PASS",
+        "measured": "log10(RMS) 均值 -5.988"
+      },
+      {
+        "id": "H1",
+        "title": "窗口内数值有限",
+        "verdict": "PASS",
+        "measured": "无 NaN/Inf"
+      },
+      {
+        "id": "H2",
+        "title": "窗口内 GL 恒为 1",
+        "verdict": "PASS",
+        "measured": "已是连续细网格段"
+      },
+      {
+        "id": "H3",
+        "title": "窗口内迭代号不跳变",
+        "verdict": "PASS",
+        "measured": "1553..1652 连续"
+      }
+    ],
+    "verdict": "算完了",
+    "integral_quantities": [
+      {
+        "key": "mf_in",
+        "label": "进口流量",
+        "mean": 12.897,
+        "range_pct": 0.0,
+        "flat": true
+      },
+      {
+        "key": "mf_out",
+        "label": "出口流量",
+        "mean": 12.897,
+        "range_pct": 0.0,
+        "flat": true
+      },
+      {
+        "key": "force",
+        "label": "转子轴向力",
+        "mean": 605.2982,
+        "range_pct": 0.0033041565297867743,
+        "flat": true
+      },
+      {
+        "key": "torque",
+        "label": "扭矩",
+        "mean": -27.84208,
+        "range_pct": 0.007183371357308403,
+        "flat": true
+      }
+    ],
+    "all_integral_flat": true,
+    "latest_iter": 1652,
+    "max_iter": 2000,
+    "iter_range": [
+      1553,
+      1652
+    ],
+    "latest": {
+      "iter": 1652,
+      "gl": 1,
+      "rms": -5.967,
+      "maxres": -4.531,
+      "mf_in": 12.897,
+      "mf_out": 12.897,
+      "force": 605.3,
+      "torque": -27.842
+    },
+    "std": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v3\\mesh-v4_n05000_p101325\\run-v3.std",
+    "criteria": {
+      "window": 100,
+      "mass_imbalance_pct": 0.1,
+      "flow_range_pct": 0.2,
+      "residual_range_decade": 0.3,
+      "residual_level_log10": -4.0,
+      "source": "numeca-fine-solver SKILL.md 的 v7 口径 + 合同 C-002"
+    }
+  },
+  "usable_for_conclusions": true
+}

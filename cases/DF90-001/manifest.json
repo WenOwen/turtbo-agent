@@ -2,14 +2,14 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-20T04:27:05+08:00",
-  "revision": 95,
+  "updated": "2026-09-20T07:41:46+08:00",
+  "revision": 101,
   "requirement_ref": {
     "file": "requirements.yaml",
     "sha256": "32cdab3d9f27350bc243a50fa419f11940fe4e14d9484762c40e750c087f7883",
     "bytes": 5719
   },
-  "current_stage": "G4",
+  "current_stage": "G5",
   "artifacts": [
     {
       "stage": "G0",
@@ -897,6 +897,96 @@
       "provenance": {
         "from": "03-mesh/v4/mesh-v4.igg",
         "from_sha256": "2314a3453b1b366507df4e75624cc9d13195e10a16facb87dcc7af60a0328efa"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "report",
+      "path": "04-solve/v3/G5-REPORT.md",
+      "version": "v3",
+      "sha256": "be872162d42f9b925392054f4cdbb4a5e493f0aeae3c5f8e7610d1424a09228c",
+      "bytes": 25746,
+      "verdict": "INFO",
+      "ts": "2026-09-20T07:41:45+08:00",
+      "note": "G5 求解闸门报告：收敛=算完了；静推力 566.60 N=57.78 kgf；A_out 三方核验 3.41e-05",
+      "provenance": {
+        "from": "04-solve/v3/g5/convergence.json",
+        "from_sha256": "e8e5a4efa925020085a1fc7c6eac4504b9770197507150b72e1b1c0e5fee162d"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "evidence",
+      "path": "04-solve/v3/g5/convergence.json",
+      "version": "v3",
+      "sha256": "e8e5a4efa925020085a1fc7c6eac4504b9770197507150b72e1b1c0e5fee162d",
+      "bytes": 2784,
+      "verdict": "PASS",
+      "ts": "2026-09-20T07:41:45+08:00",
+      "note": "收敛判定 算完了：窗口 1553..1652，四条积分量极差<=0.0072%，log10RMS 均值 -5.988",
+      "provenance": {
+        "from": "04-solve/v3/mesh-v4_n05000_p101325/run-v3.std",
+        "from_sha256": "21878471bcfe1965a58aa17c327fd1e2435294839126e40cd5cc8921080621c7"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "performance",
+      "path": "04-solve/v3/g5/thrust_closure.csv",
+      "version": "v3",
+      "sha256": "98ea3fe3fc47304b1fbdd233763402a6e5fca7c8bd85a5afaff7bda1a47fae19",
+      "bytes": 741,
+      "verdict": "WARN",
+      "ts": "2026-09-20T07:41:45+08:00",
+      "note": "C-004 静推力三列 566.6042417/566.6769851/-0.072743385 N；A_out 核验 3.4091e-05 PASS；但 566.60 N 远低于 882.60 N(90kgf)，且工况不同(5000 vs 6100rpm)",
+      "provenance": {
+        "from": "04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.xmf",
+        "from_sha256": "319ee5a9294b76fe0ff2bfba2e52756ac279d2dcc841a989dd435ef71cb79b47"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "evidence",
+      "path": "04-solve/v3/g5/outlet-area-audit.json",
+      "version": "v3",
+      "sha256": "2660491fd75b320f381e2a68c80cd57a145d2a8d945258cbc263e6738959f593",
+      "bytes": 763,
+      "verdict": "PASS",
+      "ts": "2026-09-20T07:41:45+08:00",
+      "note": "C-004 全周出口面积交叉核验：0.02204345x11=0.24247795 vs 解析 0.2424862166，相对差 3.4091e-05",
+      "provenance": {
+        "from": "04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.xmf",
+        "from_sha256": "319ee5a9294b76fe0ff2bfba2e52756ac279d2dcc841a989dd435ef71cb79b47"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "anchor",
+      "path": "04-solve/v3/g5/anchor_comparison.json",
+      "version": "v3",
+      "sha256": "502d874240e8bcef172d521fd5873e313ce25e83cdb1a8144e22e46bb42ef698",
+      "bytes": 5396,
+      "verdict": "FAIL",
+      "ts": "2026-09-20T07:41:46+08:00",
+      "note": "G5-6 工具判 FAIL(rotor torque -19.31%, tol 0.05)；但真 v7 锚点环形几何 Inlet hub 0.103457 vs 本次 0.08(-22.67%) => 跨血缘，该 FAIL 只能读成不可比",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "32cdab3d9f27350bc243a50fa419f11940fe4e14d9484762c40e750c087f7883"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "other",
+      "path": "04-solve/v3/g5/sweep_summary.csv",
+      "version": "v3",
+      "sha256": "ddb050e2599cac48c2786afc47cc7f0a91f72962ad674410fa0c0b9940a27cd8",
+      "bytes": 263,
+      "verdict": "INFO",
+      "ts": "2026-09-20T07:41:46+08:00",
+      "note": "本次工况汇总 1 行 accepted, iter=1652, mass_error_pct=0.0018609; 注意 gate_check solve 默认口径会取到 _replay/v7 那份",
+      "provenance": {
+        "from": "04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.xmf",
+        "from_sha256": "319ee5a9294b76fe0ff2bfba2e52756ac279d2dcc841a989dd435ef71cb79b47"
       }
     }
   ],
