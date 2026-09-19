@@ -100,6 +100,12 @@ R1 出口 -28.52…-64.51 对 -60.53；S1 出口 -12.98…-16.45 对 -2.43）。
 3. **③ G3 收口** —— `_automation/g3/schedule-*.json` 是 v1 口径的且缺 S1，要重出 v3 口径两份；
    查 R1 叶尖间隙、S1 出口金属角、**S1 弦长 8.1% 不符**（0.0827 vs 0.0900）
 4. **④ G4 划网格** —— AutoGrid，v8 的 TRB 模板现成（`03-mesh/v2/`）
+   ⚠ **已发现同类坑（2026-09-20 03:1x）**：`03-mesh/v2/mesh-v2.autogrid_job.py` 里是**绝对路径指向外部**：
+   `a5_open_project('D:/Project/Research/Ducted-Fan/run/90kg-duct-fan-v8/mesh/mesh-v1/mesh-v1.trb')`，
+   保存也写回那个目录。**和求解算例当初一模一样的病** —— 离开 `Ducted-Fan` 就跑不起来。
+   **G4 必须做同样的「改绑 + 取证」动作**：
+   先证新旧网格哈希相同（证明是纯路径变化），再改绑到案例自己的文件，改完做残留检查。
+   参考 `04-solve/v2/n05000_p101325/setup.json` 里记的做法。
 5. **⑤ G5 跑 CFD** —— 5000 / 6100 rpm。求解编排工具现成：
    `tools/setup_n05000.py`、`tools/thrust_closure.py`、`tools/convergence_check.py`
 6. **⑥ CFView 提推力** → 三表 + 一页结论
