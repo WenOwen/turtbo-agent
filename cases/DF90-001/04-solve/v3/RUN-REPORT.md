@@ -112,3 +112,114 @@ finebatch -project <旧或来源.iec> -index <旧工况索引> -mesh <新.igg> \
 （它当时就标了「下一棒得自己确认」），我确认了它的后果，但没解决它。
 
 **下一步最省力的路径是从第六节第 1 条接**：先搞清 `save_project` 到底该写出什么。
+
+---
+
+# 追加（05:0x–05:1x，第 2 棒实际执行这一层）
+
+> 上一节把卡点定在「`.iec` 工程文件不存在」。**我复核后：卡点不成立 —— 文件在。**
+> 下面全是我亲手跑出来的，不是转述。
+
+## 九、先纠正上一节的一个判断
+
+上一节在 `04-solve/v3/n05000_p101325/` 里找裸 `.iec`，没找到。**但工程文件在上一层：**
+
+```
+cases/DF90-001/04-solve/v3/mesh-v4.iec      24,365,931 B
+```
+
+**它存在。** 上一节的卡点（「`-project` 没有东西可指」）**不成立**。
+
+## 十、`finebatch` 的参数是**位置式**的，不是 flag
+
+实测 `finebatchx86_64.exe --help` 原文：
+
+```
+finebatch usage:
+         first  argument => input project file (extension .iec)
+         second argument => input mesh file (extension .igg)
+         third  argument => output computation file (extension .run)
+         fourth argument => COMMON (or bin) directory path
+         fifth  argument => input computation index (optional)
+```
+
+**所以第三节抄的那条 `-project / -index / -mesh / -computation` 写法是错的**，
+`finebatch` 不认这些 flag。正确形式（我实际跑的）：
+
+```
+finebatchx86_64.exe <iec> <igg> <run> "D:\NUMECA_SOFTWARE\fine161\bin" 1
+```
+
+## 十一、56 行残留：**第 1 段零残留** ✓（附带一条警告）
+
+**这个 `.iec` 是 56 段的多算例工程**：
+
+```
+第 3 行   COMPUTATION_NAME n05000_p101325
+第 13 行  LAST_USED_COMPUTATION_INDEX    56
+段边界：第 1 段 = 行 16..10575；第 2 段起于 10576
+```
+
+**56 行 `Ducted-Fan` 的行号：最小 10612，最大 591412** —— 全部在第 2..56 段。
+**第 1 段（行 16..10575）里 `Ducted-Fan` 零命中。**
+
+第 1 段自己的重启动设置（行 50/52 逐行读出）：
+```
+START_FROM_INITIAL_SOLUTION_FILE no
+INITIAL_SOLUTION_FILE            unknown        <- 值是 "unknown"，不是真路径
+```
+**第 1 段不会从 v8 的解重启动** ✓
+
+⚠ **警告留给下游**：第 2..56 段那 56 行 `INITIAL_SOLUTION_FILE` 指向 `Ducted-Fan`，
+**那些段若被物化会从 v8 的解重启动** —— 而 v8 是另一套几何/叶片，与 v11 不是同一台机器。
+**本棒只物化 `index 1`，不受影响；但扫点阶段必须先清掉那 56 行。**
+
+> 我自己一度搞混：`Select-String 'INITIAL_SOLUTION_FILE'` 会同时命中 `START_FROM_INITIAL_SOLUTION_FILE`，
+> 所以我一开始以为第 1 段第 50/52 行就是残留。**判别残留必须直接 grep `Ducted-Fan`，不要 grep 字段名。**
+
+## 十二、`finebatch` 实际跑了，**失败** —— 原因未查明
+
+**报错（两种布局都试了，一模一样）：**
+
+```
+ERROR:  File: D:\Project\Research\turtbo-agent\cases\DF90-001\03-mesh\v4\ does not exist! STOP !
+NIFineBatch::merge_mesh, ERROR: Cannot find the mesh file: 'unknownmesh-v4.igg'
+NIFineBatch::merge_mesh, ERROR: IGG file not correct! STOP
+exit=0        <- 失败也返回 0，这是本项目第三次踩到 "NUMECA 退出码不是信号"
+```
+
+**试过的两种输出布局（都失败）：**
+1. `04-solve/v3/n05000_p101325/mesh-v4_n05000_p101325.run`
+2. `04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.run`（**skill 第 15 条的原生同级目录合同**）
+
+**→ 布局不是原因。**
+
+**已实测排除的：**
+- 文件确实在：`cases/DF90-001/03-mesh/v4/mesh-v4.igg` = **459,893 B**，`Test-Path` True
+- `.iec` 的 `GRID_FILE`（第 5 行）指对了那个绝对路径
+- 输出目录已建、工作路径纯 ASCII
+
+**未查明的、给下一棒的线索（按可能性排序）：**
+1. **`'unknownmesh-v4.igg'` 这个拼法最可疑** —— `unknown` 前缀像是从
+   `.iec` 第 6/8 行 `RELATIVE_GRID_FILE undefined` / `RELATIVE_TRB_FILE undefined` 取的。
+   **finebatch 可能要求 `RELATIVE_GRID_FILE` 有值。** 试试把它填成 `mesh-v4.igg` 或相对路径。
+2. `.iec` 第 7/9 行是 `TRB_FILE \usr\unknown` / `GEOMETRY_FILE \usr\unknown` ——
+   **第 2 个位置参数给的 `.igg` 可能不够，也许要 `.trb`**（`03-mesh/v4/mesh-v4.trb` 在，35.1 KB）
+3. **最有力的旁证**：v2 当年的 `.run` **不是在案例目录里物化的**
+   （`04-solve/v2/` 下没有 `.iec`，`boundary_audit.json` 的 `run` 指向 `Ducted-Fan\...`）——
+   **当年是在 `Ducted-Fan` 树里、用那边的 `.iec` 物化的。**
+   本棒只改了 `GRID_FILE`，**可能不够** —— 也许 `TRB_FILE` / `RELATIVE_*` 也要一起改绑。
+
+## 十三、这一棒做到哪、没做什么
+
+**做到了：** 复核「`.iec` 存在」（推翻上一节卡点）· 查清 `finebatch` 位置式参数 ·
+**查清 56 行残留全在第 2..56 段、第 1 段干净** · 实际跑了 `finebatch` 两次、拿到真报错 · 排除布局因素
+
+**没做到：** `.run` 没物化出来 · 因此 16 块对照 / 零残留 grep / 试跑都没做
+
+**没做：** 没有 git add/commit · **没有转包**（一层内做完）· 没改任何比对口径 · **没编造任何数字**
+
+## 十四、下一棒从哪接（一句话）
+
+**从第十二节的线索 1 接**：打开 `mesh-v4.iec`，把第 6 行 `RELATIVE_GRID_FILE undefined`
+改成有效值（或把第 7 行 `TRB_FILE` 指向 `03-mesh/v4/mesh-v4.trb`），再跑一次同样的 `finebatch` 位置式命令。
