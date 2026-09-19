@@ -2,14 +2,14 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-20T01:55:49+08:00",
-  "revision": 80,
+  "updated": "2026-09-20T02:26:04+08:00",
+  "revision": 87,
   "requirement_ref": {
     "file": "requirements.yaml",
     "sha256": "32cdab3d9f27350bc243a50fa419f11940fe4e14d9484762c40e750c087f7883",
     "bytes": 5719
   },
-  "current_stage": "G0",
+  "current_stage": "G3",
   "artifacts": [
     {
       "stage": "G0",
@@ -673,6 +673,111 @@
         "from": "01-scheme/v3/流道尺寸表.csv",
         "from_sha256": "ce722e735575376cd3f61fab5d9c95e56b9a5c9f9967a0d33be7a203081baa64"
       }
+    },
+    {
+      "stage": "G3",
+      "kind": "geometry",
+      "path": "02-geometry/v9/autoblade/R1_13span/R1.geomTurbo",
+      "version": "v9",
+      "sha256": "4549d56f5c2b2a44da5e62101c642b6c059740fd9bb3783f38f196c64cbf14e0",
+      "bytes": 204522,
+      "verdict": "PASS",
+      "ts": "2026-09-20T02:25:22+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v3/流道尺寸表.csv",
+        "from_sha256": "ce722e735575376cd3f61fab5d9c95e56b9a5c9f9967a0d33be7a203081baa64"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "geometry",
+      "path": "02-geometry/v9/autoblade/R2_13span/R2.geomTurbo",
+      "version": "v9",
+      "sha256": "bc73713082fc2dfe143eaa862ee84d2f02d61d322fcb7602e06a1635f9bdd459",
+      "bytes": 202810,
+      "verdict": "PASS",
+      "ts": "2026-09-20T02:25:23+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v3/流道尺寸表.csv",
+        "from_sha256": "ce722e735575376cd3f61fab5d9c95e56b9a5c9f9967a0d33be7a203081baa64"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "manifest",
+      "path": "02-geometry/v9/autoblade/R1_13span/R1.geomTurbo.manifest.json",
+      "version": "v9",
+      "sha256": "34a02fd54528515c5f72c88f05a3a7a1e6c0fc4dd4d55827136d2fb2bc8d9ad5",
+      "bytes": 2985,
+      "verdict": "PASS",
+      "ts": "2026-09-20T02:25:23+08:00",
+      "note": "",
+      "provenance": {
+        "from": "02-geometry/v9/autoblade/R1_13span/R1.geomTurbo",
+        "from_sha256": "4549d56f5c2b2a44da5e62101c642b6c059740fd9bb3783f38f196c64cbf14e0"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "manifest",
+      "path": "02-geometry/v9/autoblade/R2_13span/R2.geomTurbo.manifest.json",
+      "version": "v9",
+      "sha256": "0af305323f5cca8ff59c7e76bf3cc848c9c2fb64f434fba219d247d6809f2d40",
+      "bytes": 2965,
+      "verdict": "WARN",
+      "ts": "2026-09-20T02:25:24+08:00",
+      "note": "",
+      "provenance": {
+        "from": "02-geometry/v9/autoblade/R2_13span/R2.geomTurbo",
+        "from_sha256": "bc73713082fc2dfe143eaa862ee84d2f02d61d322fcb7602e06a1635f9bdd459"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "figure",
+      "path": "02-geometry/v9/figures/R2/meridional.svg",
+      "version": "v9",
+      "sha256": "cf6570dc965da636a5e0bab9417f92ff088360aa8833cf376b1b154b38849e27",
+      "bytes": 9991,
+      "verdict": "PASS",
+      "ts": "2026-09-20T02:25:25+08:00",
+      "note": "",
+      "provenance": {
+        "from": "02-geometry/v9/autoblade/R2_13span/R2.geomTurbo",
+        "from_sha256": "bc73713082fc2dfe143eaa862ee84d2f02d61d322fcb7602e06a1635f9bdd459"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "audit",
+      "path": "02-geometry/v9/v9_build_report.json",
+      "version": "v9",
+      "sha256": "3e29de7b1843901dd508aaa3edd99cb42c161402e9396f75588f02f305a999d6",
+      "bytes": 1287,
+      "verdict": "INFO",
+      "ts": "2026-09-20T02:25:26+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v3/流道尺寸表.csv",
+        "from_sha256": "ce722e735575376cd3f61fab5d9c95e56b9a5c9f9967a0d33be7a203081baa64"
+      }
+    },
+    {
+      "stage": "G3",
+      "kind": "figure",
+      "path": "02-geometry/v9/figures/R1/meridional.svg",
+      "version": "v9",
+      "sha256": "a028f47567beb8d80a5a4cc46adea92b77f34131de8da93119a2af573056018a",
+      "bytes": 9990,
+      "verdict": "PASS",
+      "ts": "2026-09-20T02:26:04+08:00",
+      "note": "",
+      "provenance": {
+        "from": "02-geometry/v9/autoblade/R1_13span/R1.geomTurbo",
+        "from_sha256": "4549d56f5c2b2a44da5e62101c642b6c059740fd9bb3783f38f196c64cbf14e0"
+      }
     }
   ],
   "supporting": [
@@ -740,6 +845,16 @@
       "path": "_automation/v8/v8_winding_check.py",
       "sha256": "71e804f520cc5280188804adebd5ee0cda21babb2e4e1054b1da126aca1c6478",
       "bytes": 831
+    },
+    {
+      "path": "_automation/v9/v9_build_par.py",
+      "sha256": "d609ea9c25d639c1d26aae7b622cd4436024b710957642d691f4660bcd098735",
+      "bytes": 3792
+    },
+    {
+      "path": "_automation/v9/v9_manifest.py",
+      "sha256": "83e004c136db713a0520a82019b386fb6015f379d21368ba309fea5cea506e34",
+      "bytes": 3703
     }
   ]
 }

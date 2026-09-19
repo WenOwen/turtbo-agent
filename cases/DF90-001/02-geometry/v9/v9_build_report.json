@@ -1,0 +1,63 @@
+{
+ "hub_points": [
+  [
+   0.0,
+   0.08
+  ],
+  [
+   0.05,
+   0.086
+  ],
+  [
+   0.095,
+   0.0945
+  ],
+  [
+   0.185,
+   0.0958
+  ],
+  [
+   0.23,
+   0.0985
+  ],
+  [
+   0.3,
+   0.1132
+  ]
+ ],
+ "shroud_points": [
+  [
+   0.0,
+   0.3
+  ],
+  [
+   0.3,
+   0.3
+  ]
+ ],
+ "source": "01-scheme/v3",
+ "rows": {
+  "R1": {
+   "ok": true,
+   "returncode": 0,
+   "par": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v9\\autoblade\\R1_13span\\R1.par",
+   "abp": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v9\\autoblade\\R1_13span\\R1.abp",
+   "geomTurbo": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v9\\autoblade\\R1_13span\\R1.geomTurbo",
+   "geom_bytes": 204522,
+   "abm": [
+    "model02ed.abm"
+   ]
+  },
+  "R2": {
+   "ok": true,
+   "returncode": 0,
+   "par": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v9\\autoblade\\R2_13span\\R2.par",
+   "abp": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v9\\autoblade\\R2_13span\\R2.abp",
+   "geomTurbo": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v9\\autoblade\\R2_13span\\R2.geomTurbo",
+   "geom_bytes": 202810,
+   "abm": [
+    "model02ed.abm"
+   ]
+  }
+ }
+}

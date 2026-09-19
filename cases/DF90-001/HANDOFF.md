@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-19T18:47:49+08:00　·　当前阶段 **G5**　·　revision 63
+> 生成于 2026-09-20T02:26:05+08:00　·　当前阶段 **G3**　·　revision 87
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -10,29 +10,41 @@
 **但工具不这么认为：**G2 最近一次闸门判定是 **WARN**
 「已完成」说的是这一步**有产物**，闸门说的是这一步**过没过判据**。两者不一致时以后者为准 —— 明细见 LOG.md。
 
-最近一次记录：2026-09-19T18:47:46+08:00　FAIL　登记产物 04-solve/v2/n05000_p101325/anchor_comparison.json
+最近一次记录：2026-09-20T02:26:04+08:00　PASS　登记产物 02-geometry/v9/figures/R1/meridional.svg
 
-## 未登记的改动（近 14 天 3 条，历史共 3 条）
+## 未登记的改动（近 14 天 15 条，历史共 15 条）
 
 这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
 可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
 
-- 18:00:32　**算例参数**　added　04-solve/v2/n05000_p101325/n05000_p101325.run　0 -> 268409 bytes
-- 18:05:44　**算例参数**　added　04-solve/v2/n05000_p101325/thrust_closure.csv　0 -> 724 bytes
-- 18:11:07　**算例参数**　modified　04-solve/v2/n05000_p101325/thrust_closure.csv　724 -> 724 bytes
+- 01:50:53　**设计参数**　added　01-scheme/v3/turbo-flow-v3/result.json　0 -> 26347 bytes
+- 01:50:53　**设计参数**　added　01-scheme/v3/turbo-flow-v3/designed_project.json　0 -> 4399 bytes
+- 02:21:27　**几何**　added　02-geometry/v9/autoblade/R1_13span/R1.abp　0 -> 1441 bytes
+- 02:21:27　**几何**　added　02-geometry/v9/autoblade/R1_13span/R1/model02ed.abm　0 -> 644679 bytes
+- 02:21:27　**几何**　added　02-geometry/v9/autoblade/R1_13span/R1.par　0 -> 611693 bytes
+- 02:21:28　**几何**　added　02-geometry/v9/autoblade/R2_13span/R2/model02ed.abm　0 -> 645748 bytes
+- 02:21:28　**几何**　added　02-geometry/v9/autoblade/R2_13span/R2.abp　0 -> 1441 bytes
+- 02:21:28　**几何**　added　02-geometry/v9/autoblade/R2_13span/R2.par　0 -> 612765 bytes
+- …另有 7 条，见 _watch/changes.jsonl
 
 ## 最近 10 次变更
 
 | 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
 |---|---|---|---|---|---|
-| 09-19 18:35:36 | 算例参数 | agent | modified | 04-solve/v2/n05000_p101325/thrust_closure.csv | 724 -> 723 |
-| 09-19 18:11:07 | 算例参数 | **unknown** | modified | 04-solve/v2/n05000_p101325/thrust_closure.csv | 724 -> 724 |
-| 09-19 18:05:44 | 算例参数 | **unknown** | added | 04-solve/v2/n05000_p101325/thrust_closure.csv | 0 -> 724 |
-| 09-19 18:00:32 | 算例参数 | **unknown** | added | 04-solve/v2/n05000_p101325/n05000_p101325.run | 0 -> 268409 |
+| 09-20 02:21:28 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R2_13span/R2.par | 0 -> 612765 |
+| 09-20 02:21:28 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R2_13span/R2.abp | 0 -> 1441 |
+| 09-20 02:21:28 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R2_13span/R2/model02ed.abm | 0 -> 645748 |
+| 09-20 02:21:27 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R1_13span/R1.par | 0 -> 611693 |
+| 09-20 02:21:27 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R1_13span/R1/model02ed.abm | 0 -> 644679 |
+| 09-20 02:21:27 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R1_13span/R1.abp | 0 -> 1441 |
+| 09-20 01:54:27 | 设计参数 | agent | added | 01-scheme/v3/thrust_1d.json | 0 -> 3221 |
+| 09-20 01:54:27 | 设计参数 | agent | added | 01-scheme/v3/thrust_1d.csv | 0 -> 317 |
+| 09-20 01:53:52 | 设计参数 | agent | added | 01-scheme/v2/thrust_1d.json | 0 -> 2764 |
+| 09-20 01:53:52 | 设计参数 | agent | added | 01-scheme/v2/thrust_1d.csv | 0 -> 317 |
 
 ## 你接手前必须知道
 
-**结论非 PASS 的产物（6 条）**
+**结论非 PASS 的产物（11 条）**
 
 - [WARN] 02-geometry/v8/PROVENANCE.md　— 同时记录 build-par/v8_build_manifest.json 已过期（hub 与 lean 均与交付不符）
 - [WARN] 02-geometry/v8/autoblade/R1_13span/R1.geomTurbo　— 转子；REVERSE_THETA=0，导出后负向，与 v7 交付件方向一致
@@ -40,6 +52,8 @@
 - [WARN] 03-mesh/v1/mesh-v1.qualityReport　— new-project 基线，非交付件
 - [WARN] 04-solve/v2/n05000_p101325/thrust_closure.csv　— 重登记（登记后文件被重新生成过，哈希不符）。未收敛中间值，不得用于任何结论。
 - [FAIL] 04-solve/v2/n05000_p101325/anchor_comparison.json　— 跨血缘对照（环形几何差 22.7%）+ 扭矩超容差 6.53%
+- [WARN] 01-scheme/v2/benchmark_gate.json
+- [WARN] 01-scheme/v3/benchmark_gate.json
 
 **待晋升的经验（2 条）**
 
@@ -59,11 +73,11 @@
 - 轴向长度　来源：open　轴向总长是否有约束
 - `acceptance.ACC-1` 之外　来源：待细化　是否还有其他验收口径（如效率下限、噪声、重量）
 
-## 产物（31 条）
+## 产物（53 条）
 
 | 阶段 | 结论 | 版本 | 路径 | sha256 |
 |---|---|---|---|---|
-| G0 | PASS | v1 | requirements.yaml | 76749d8b |
+| G0 | PASS | v1 | requirements.yaml | 32cdab3d |
 | G0 | PASS | v1 | 00-brief/open_questions.md | f09eb2c3 |
 | G1 | PASS | v1 | 00-brief/design_brief.md | 5ad3fa99 |
 | G5 | INFO | v7 | _replay/v7/sweep_summary.csv | 7f10f7c1 |
@@ -94,10 +108,32 @@
 | G5 | WARN | v2 | 04-solve/v2/n05000_p101325/thrust_closure.csv | 6649e94a |
 | G5 | INFO | v2 | 04-solve/v2/n05000_p101325/convergence.json | 0c37c98c |
 | G5 | FAIL | v2 | 04-solve/v2/n05000_p101325/anchor_comparison.json | 461fa73b |
+| G2 | PASS | v2 | 01-scheme/v2/inputs/turbo-flow-v2.json | 7c0b3351 |
+| G2 | PASS | v2 | 01-scheme/v2/流道尺寸表.csv | 82242eb8 |
+| G2 | PASS | v2 | 01-scheme/v2/叶片几何参数表.csv | 4a0a7e0e |
+| G2 | PASS | v2 | 01-scheme/v2/通流计算结果表.csv | dfe9fac0 |
+| G2 | WARN | v2 | 01-scheme/v2/benchmark_gate.json | 17eb10ee |
+| G2 | PASS | v2 | 01-scheme/v2/motor-envelope-check.json | 84d1b80f |
+| G2 | INFO | v2 | 01-scheme/v2/NOTES.md | a1358b3e |
+| G2 | PASS | v3 | 01-scheme/v3/inputs/turbo-flow-v3.json | c89df2e4 |
+| G2 | PASS | v3 | 01-scheme/v3/流道尺寸表.csv | ce722e73 |
+| G2 | PASS | v3 | 01-scheme/v3/叶片几何参数表.csv | 210e5597 |
+| G2 | PASS | v3 | 01-scheme/v3/通流计算结果表.csv | 274149a9 |
+| G2 | WARN | v3 | 01-scheme/v3/benchmark_gate.json | 79cc19a1 |
+| G2 | WARN | v3 | 01-scheme/v3/thrust_1d.json | 637cace1 |
+| G2 | WARN | v3 | 01-scheme/v3/thrust_1d.csv | 3cb8eb48 |
+| G2 | INFO | v3 | 01-scheme/v3/NOTES.md | 6352f661 |
+| G3 | PASS | v9 | 02-geometry/v9/autoblade/R1_13span/R1.geomTurbo | 4549d56f |
+| G3 | PASS | v9 | 02-geometry/v9/autoblade/R2_13span/R2.geomTurbo | bc737130 |
+| G3 | PASS | v9 | 02-geometry/v9/autoblade/R1_13span/R1.geomTurbo.manifest.json | 34a02fd5 |
+| G3 | WARN | v9 | 02-geometry/v9/autoblade/R2_13span/R2.geomTurbo.manifest.json | 0af30532 |
+| G3 | PASS | v9 | 02-geometry/v9/figures/R2/meridional.svg | cf6570dc |
+| G3 | INFO | v9 | 02-geometry/v9/v9_build_report.json | 3e29de7b |
+| G3 | PASS | v9 | 02-geometry/v9/figures/R1/meridional.svg | a028f475 |
 
 ---
 
-看守状态：监视 93 个文件　·　累计变更 4 条　·　历史库 288 份内容
+看守状态：监视 122 个文件　·　累计变更 34 条　·　历史库 316 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。

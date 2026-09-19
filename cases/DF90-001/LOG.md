@@ -336,3 +336,66 @@
 - 判据：补入电机轴向位置 between_rotor_and_stator / duct_contraction required / inlet_hub_constrained_by_motor false
 - 结论：PASS
 
+## 2026-09-20T02:25:22+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v9/autoblade/R1_13span/R1.geomTurbo
+- 操作者：agent
+- 输入：02-geometry/v9/autoblade/R1_13span/R1.geomTurbo  sha256=4549d56f5c2b2a44  bytes=204522
+- 上游：01-scheme/v3/流道尺寸表.csv
+- 产物：02-geometry/v9/autoblade/R1_13span/R1.geomTurbo  sha256=4549d56f5c2b2a44da5e62101c642b6c059740fd9bb3783f38f196c64cbf14e0
+- 判据：流道取自 v3（轮毂 6 控制点，机匣锁 0.300）；叶片截面沿用 v8。hub 逐点核对最大偏差 0.0061 mm；周期 9 与参数表一致；13 截面
+- 结论：PASS
+
+## 2026-09-20T02:25:23+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v9/autoblade/R2_13span/R2.geomTurbo
+- 操作者：agent
+- 输入：02-geometry/v9/autoblade/R2_13span/R2.geomTurbo  sha256=bc73713082fc2dfe  bytes=202810
+- 上游：01-scheme/v3/流道尺寸表.csv
+- 产物：02-geometry/v9/autoblade/R2_13span/R2.geomTurbo  sha256=bc73713082fc2dfe143eaa862ee84d2f02d61d322fcb7602e06a1635f9bdd459
+- 判据：同上；周期 11 与参数表一致；流道与 R1 逐点相同
+- 结论：PASS
+
+## 2026-09-20T02:25:23+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v9/autoblade/R1_13span/R1.geomTurbo.manifest.json
+- 操作者：agent
+- 输入：02-geometry/v9/autoblade/R1_13span/R1.geomTurbo.manifest.json  sha256=34a02fd54528515c  bytes=2985
+- 上游：02-geometry/v9/autoblade/R1_13span/R1.geomTurbo
+- 产物：02-geometry/v9/autoblade/R1_13span/R1.geomTurbo.manifest.json  sha256=34a02fd54528515c5f72c88f05a3a7a1e6c0fc4dd4d55827136d2fb2bc8d9ad5
+- 判据：G3-9 的机器可读溯源：geomturbo_sha256 + schedule(blade_count 9, 13 sections)
+- 结论：PASS
+
+## 2026-09-20T02:25:24+08:00 | G3 叶片造型 | WARN
+- 动作：登记产物 02-geometry/v9/autoblade/R2_13span/R2.geomTurbo.manifest.json
+- 操作者：agent
+- 输入：02-geometry/v9/autoblade/R2_13span/R2.geomTurbo.manifest.json  sha256=0af305323f5cca8f  bytes=2965
+- 上游：02-geometry/v9/autoblade/R2_13span/R2.geomTurbo
+- 产物：02-geometry/v9/autoblade/R2_13span/R2.geomTurbo.manifest.json  sha256=0af305323f5cca8ff59c7e76bf3cc848c9c2fb64f434fba219d247d6809f2d40
+- 判据：G3-9 结构化断言抓到：S1 截面弦长中位 0.0827 与参数表 0.0900 差 8.1%
+- 结论：WARN
+
+## 2026-09-20T02:25:25+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v9/figures/R2/meridional.svg
+- 操作者：agent
+- 输入：02-geometry/v9/figures/R2/meridional.svg  sha256=cf6570dc965da636  bytes=9991
+- 上游：02-geometry/v9/autoblade/R2_13span/R2.geomTurbo
+- 产物：02-geometry/v9/figures/R2/meridional.svg  sha256=cf6570dc965da636a5e0bab9417f92ff088360aa8833cf376b1b154b38849e27
+- 判据：G3-8 预览图：子午面
+- 结论：PASS
+
+## 2026-09-20T02:25:26+08:00 | G3 叶片造型 | INFO
+- 动作：登记产物 02-geometry/v9/v9_build_report.json
+- 操作者：agent
+- 输入：02-geometry/v9/v9_build_report.json  sha256=3e29de7b1843901d  bytes=1287
+- 上游：01-scheme/v3/流道尺寸表.csv
+- 产物：02-geometry/v9/v9_build_report.json  sha256=3e29de7b1843901dd508aaa3edd99cb42c161402e9396f75588f02f305a999d6
+- 判据：AutoBlade 批量构建报告（两排 ok=True）
+- 结论：INFO
+
+## 2026-09-20T02:26:04+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v9/figures/R1/meridional.svg
+- 操作者：agent
+- 输入：02-geometry/v9/figures/R1/meridional.svg  sha256=a028f47567beb8d8  bytes=9990
+- 上游：02-geometry/v9/autoblade/R1_13span/R1.geomTurbo
+- 产物：02-geometry/v9/figures/R1/meridional.svg  sha256=a028f47567beb8d80a5a4cc46adea92b77f34131de8da93119a2af573056018a
+- 判据：G3-8 预览图：子午面
+- 结论：PASS
+
