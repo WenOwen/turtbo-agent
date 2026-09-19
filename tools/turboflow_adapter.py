@@ -52,6 +52,8 @@ EXIT_VERIFY = 4
 
 LF = chr(10)
 
+VERDICT_CN = {"PASS": "通过", "WARN": "注意", "FAIL": "没通过", "SKIP": "还查不了"}
+
 
 def now_iso():
     return _dt.datetime.now().astimezone().replace(microsecond=0).isoformat()
@@ -280,11 +282,13 @@ def main(argv=None):
                           "summary": bm["summary"], "out": str(out)},
                          ensure_ascii=False, indent=2))
     else:
-        print("对标闸门：" + bm["verdict"] + "  (PASS %d / WARN %d / FAIL %d / SKIP %d)" % (
-            bm["summary"]["pass"], bm["summary"]["warn"],
-            bm["summary"]["fail"], bm["summary"]["skip"]))
+        print("和基准对一对：" + VERDICT_CN.get(bm["verdict"], bm["verdict"])
+              + "　(通过 %d / 注意 %d / 没通过 %d / 查不了 %d)" % (
+                  bm["summary"]["pass"], bm["summary"]["warn"],
+                  bm["summary"]["fail"], bm["summary"]["skip"]))
         for i in bm["items"]:
-            print("  " + i["verdict"].ljust(4) + " " + i["id"] + " " + i["title"]
+            print("  " + VERDICT_CN.get(i["verdict"], i["verdict"]).ljust(4)
+                  + " " + i["id"] + " " + i["title"]
                   + "  目标=" + str(i["target"]) + "  实测=" + str(i["actual"])
                   + "  " + str(i.get("delta_shown", "")))
         print("  三表 + 报告已写入 " + str(out))

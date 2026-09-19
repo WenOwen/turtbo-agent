@@ -35,16 +35,31 @@ description: "G3 闸门：把叶片几何参数表与流道尺寸表转成 AutoG
 
 ## 输出前自查清单（G3 硬闸门）
 
+**这张表已经是机读的**：`python tools/gate_check.py geometry --case <case>` 逐条实现。
+编号必须与代码一致 —— 改这里就要改 `tools/gate_check.py`，否则 `audit` 会报漂移。
+
 | id | 判据 | 失败处置 |
 |---|---|---|
+| G3-0 | 几何产物可用（目录在、有 `.geomTurbo`、能解析出截面） | 先把产物做出来 |
 | G3-1 | 输出路径**纯 ASCII** | 移路径；不要改文件语法 |
-| G3-2 | 截面数与参数表一致 | 回 G2 |
+| G3-2 | 截面数与上游 `SectionSchedule`（`_automation/g3/schedule-<叶排>.json`）一致 | 回 G2 |
 | G3-3 | 相对展向位置单调递增且覆盖 0→1 | 回 G2 |
 | G3-4 | 每个截面点序闭合、无自交、无重复点 | 回 G2 或改造型参数 |
-| G3-5 | `pitch = 2πr/Z`、`solidity = chord/pitch` 回算相对误差 ≤ 1e-6 | 回 G2 |
-| G3-6 | 前缘/尾缘半径非负；弦长 > 0 | 回 G2 |
+| G3-5 | 几何实测与参数表**逐项**一致：稠度（**必须同一半径比**）、弦长、叶片数 | 回 G2 |
+| G3-6 | 弦长 > 0 | 回 G2 |
 | G3-7 | 行名、周期数、`SIDES_EXCHANGE`、`REVERSE_THETA` 已核对 | 修正导出设置 |
-| G3-8 | 预览图目视通过（像叶片、前缘不畸变） | 回造型参数 |
+| G3-8 | 预览图存在（**目视像不像叶片由人判断**，工具只查在不在） | 回造型参数 |
+| **G3-9** | **由参数表导出**：几何必须带机器可读的 `*.manifest.json`，其源参数与参数表对得上 | **回 G2**，不许手工改几何 |
+
+**G3-5 的措辞为什么改了**：原判据写的是「`pitch = 2πr/Z`、`solidity = chord/pitch` 回算
+相对误差 ≤ 1e-6」。那是**定义式恒等** —— 按定义算出来的值当然等于定义，永远通过，
+没有判别力。有判别力的是「几何实测的稠度与参数表写的稠度对不对得上」，
+而且两边**必须取同一半径**（几何侧取截面平均半径、设计侧取流道中径，会凭空造出 3.6% 的假偏差）。
+阈值与 `tools/geom_check.py` 同源，不在这里另写一份。
+
+**G3-9 为什么必须单列**：原先只在下面「禁止项」里写着「不手工编辑几何文件」，
+没有检查 id，于是人工调过轮毂、人工选过弯掠的几何在工具眼里完全合法。
+DF90-001 的 v8 就是这么过去的 —— 见 `02-geometry/v8/PROVENANCE.md`。
 
 **G3-7 说明**：`SIDES_EXCHANGE` / `REVERSE_THETA` 错会导致叶片整体镜像或吸力面/压力面互换。
 这类错误在网格阶段**不会报错**，要到 CFD 出图才发现。
@@ -58,19 +73,37 @@ description: "G3 闸门：把叶片几何参数表与流道尺寸表转成 AutoG
 
 ### 可执行入口
 
+> ⚠️ **dataset 路径**：真实位置是 `<cascade-forge>/UDF/datasets/…`，
+> 不是 `<cascade-forge>/datasets/…`（后者不存在，照抄会报"目录不存在"）。
+
+> 🛑 **当前阻塞（2026-09-19 实测）**：`UDF/datasets/geometry-v2.1.0/catalog.duckdb`
+> 里 `geometries_v2` = **0 行**、`anchor_fits_v2` = **0 行**，全库只有
+> `schema_info` / `schema_migrations` 各 1 行。配置文件写着 `target_valid: 20000`，实际是 0。
+> 有数据的只有 NACA65 那几套基准库（36 / 36 / 36 / 9 条）。
+> **没有翼型可取，`build-blade` 无论怎么调都会在第一步失败。**
+> 要打通这一条，得先 `ingest-anchors` 把锚点翼型灌进去 —— 那是另一件事，
+> 不是"把命令抄对"能解决的。
+
+> 📌 **`--schedule` 收的是 JSON，不是 CSV**。`build_blade` 内部调
+> `SectionSchedule.model_validate_json()`，喂 `叶片几何参数表.csv` 会报
+> `Invalid JSON: expected value at line 1 column 1`。
+> 用 `python tools/g3_schedule.py --case <case> --row R1 --geometry-id <id>` 转换；
+> 它同时写一份 `.notes.md` 说明哪些字段是原生、哪些是推算的。
+
 ```powershell
 $CF = "D:\Project\Research\cascade-forge\UDF\.venv\Scripts\python.exe"
+$DS = "D:\Project\Research\cascade-forge\UDF\datasets"
 
 # 生成叶片（写入 dataset）
 & $CF -m cascade_forge.cli build-blade `
-    --dataset   <cascade-forge>/datasets/geometry-v2.1.0 `
+    --dataset   "$DS\geometry-v2.1.0" `
     --destination <输出目录> `
-    --schedule  <叶片几何参数表.csv> `
-    --raw-root  <cascade-forge>/UDF
+    --schedule  <SectionSchedule.json> `
+    --raw-root  "D:\Project\Research\cascade-forge\UDF"
 
 # 导出几何（按 geometry_id）
 & $CF -m cascade_forge.cli export <geometry_id> `
-    --dataset   <cascade-forge>/datasets/geometry-v2.1.0 `
+    --dataset   "$DS\geometry-v2.1.0" `
     --destination <输出目录>
 
 # 圆尾缘 NACA65 路线（另一条入口）

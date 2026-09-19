@@ -576,6 +576,10 @@ def _sig_of(path):
     return {"path": str(path), "mtime": st.st_mtime, "size": st.st_size}
 
 
+# 「当前版本是哪个」只能有一份定义 —— 直接从闸门取，不在这里另抄一份。
+from gate_check import latest_version  # noqa: E402
+
+
 def build_views(case_id, force=False):
     """生成（或复用）该案例的几何与网格视图。
 
@@ -658,11 +662,48 @@ def build_views(case_id, force=False):
     except Exception as exc:
         groups.append({"kind": "cfd", "title": "CFD 结果", "error": repr(exc), "views": []})
 
-    # 设计值对照放最前面 —— 它回答的是"对不对"，比"长什么样"更重要
+    # ── 方案（G2）：三表 + 对标闸门 ─────────────────────────────────────────
+    # 界面上原来只有几何 / 网格 / CFD 三组图，全是 G3/G4/G5 的产物 ——
+    # **第 3 步一张图都没有**。而三表 + 对标闸门恰恰是整条链上唯一能
+    # 回答"这个方案对不对"的证据。
+    try:
+        import scheme_view
+        dirs = scheme_view.find_scheme_dirs(case)
+        if dirs:
+            src = dirs[-1]
+            sub = out_root / "scheme"
+            srcs = [src / n for n in ("流道尺寸表.csv", "叶片几何参数表.csv",
+                                      "通流计算结果表.csv", "benchmark_gate.json")]
+            srcs += sorted(src.rglob("result.json"))
+            srcs = [p for p in srcs if p.is_file()]
+            sig = {"files": [_sig_of(p) for p in srcs]}
+            if srcs and not _stamp_ok(sub, sig, force):
+                scheme_view.build(src, sub)
+                (sub / ".source.json").write_text(json.dumps(sig), encoding="utf-8")
+            rel = sub.relative_to(ROOT).as_posix()
+            imgs = []
+            for f, t, n in (("benchmark.svg", "和基准对一对",
+                             "和基准对上了吗：目标 / 实测 / 偏差 / 结论"),
+                            ("scheme.svg", "三表与溯源",
+                             "流道、叶排、性能，以及这三表是哪一次求解生成的")):
+                if (sub / f).is_file():
+                    imgs.append({"title": t, "note": n, "path": rel + "/" + f})
+            if imgs:
+                groups.append({"kind": "scheme", "title": "方案",
+                               "hint": "三表与基准对照",
+                               "views": [{"name": "方案", "dir": rel, "images": imgs}]})
+    except Exception as exc:
+        groups.append({"kind": "scheme", "title": "方案", "error": repr(exc),
+                       "views": []})
+
+    # ── 设计值对照（G3）：设计表 vs 几何实测 + 溯源链 ──────────────────────
+    # 溯源图放在这里，不另开一组：它和对照表回答的是同一个问题 ——
+    # "这套几何站不站得住"。断点和偏差并排看，才知道该信哪个。
     try:
         import geom_check
         sub = out_root / "check"
-        srcs = [case / "01-scheme" / "v1" / "叶片几何参数表.csv"]
+        scheme_dir = case / "01-scheme" / latest_version(case / "01-scheme")
+        srcs = [scheme_dir / "叶片几何参数表.csv"]
         srcs += sorted((case / "02-geometry").glob("**/*.par"))
         srcs += sorted((case / "02-geometry").glob("**/*.geomTurbo"))
         srcs = [p for p in srcs if p.is_file()]
@@ -670,22 +711,76 @@ def build_views(case_id, force=False):
         if srcs and not _stamp_ok(sub, sig, force):
             geom_check.build(case, sub)
             (sub / ".source.json").write_text(json.dumps(sig), encoding="utf-8")
+        rel = sub.relative_to(ROOT).as_posix()
+        imgs = []
         if (sub / "design-vs-geom.svg").is_file():
-            rel = sub.relative_to(ROOT).as_posix()
+            imgs.append({"title": "设计值 vs 几何实测",
+                         "note": "逐项结论，红框是对不上的",
+                         "path": rel + "/design-vs-geom.svg"})
+        if imgs:
             groups.append({"kind": "check", "title": "设计值对照",
-                           "hint": "参数表 vs 几何实测", "views": [{
-                               "name": "对照", "dir": rel,
-                               "images": [{"title": "设计值 vs 几何实测",
-                                           "note": "逐项结论，红框是对不上的",
-                                           "path": rel + "/design-vs-geom.svg"}]}]})
+                           "hint": "参数表 vs 几何实测",
+                           "views": [{"name": "对照", "dir": rel, "images": imgs}]})
     except Exception as exc:
         groups.append({"kind": "check", "title": "设计值对照",
                        "error": repr(exc), "views": []})
 
+    # ── 造型溯源（G3）：参数表 → 几何 这条链哪一环断了 ─────────────────────
+    try:
+        import prov_view
+        sub = out_root / "provenance"
+        srcs = sorted((case / "02-geometry").glob("**/*.geomTurbo"))
+        srcs += sorted((case / "_automation").glob("g3/schedule-*.json"))
+        srcs = [p for p in srcs if p.is_file()]
+        sig = {"files": [_sig_of(p) for p in srcs]}
+        if srcs and not _stamp_ok(sub, sig, force):
+            prov_view.build(case, sub)
+            (sub / ".source.json").write_text(json.dumps(sig), encoding="utf-8")
+        rel = sub.relative_to(ROOT).as_posix()
+        if (sub / "provenance.svg").is_file():
+            groups.append({"kind": "check", "title": "设计值对照",
+                           "hint": "参数表 vs 几何实测", "views": [],
+                           "_merge": {"name": "溯源", "dir": rel, "images": [
+                               {"title": "造型溯源",
+                                "note": "参数表 → 几何，哪一环没有证据",
+                                "path": rel + "/provenance.svg"}]}})
+    except Exception as exc:
+        groups.append({"kind": "check", "title": "设计值对照",
+                       "error": repr(exc), "views": []})
+
+    # 把溯源图并进「设计值对照」那一组 —— 不另开一组。
+    # 审核反复说过：组数本身就是负担。这两张图回答同一个问题，
+    # 拆成两组只是让页面更长。
+    by_kind = {}
+    for g in groups:
+        if g["kind"] == "check":
+            by_kind.setdefault("check", []).append(g)
+    if len(by_kind.get("check") or []) > 1:
+        merged, extra = [], []
+        for g in groups:
+            if g["kind"] != "check":
+                merged.append(g)
+                continue
+            if g.get("_merge"):
+                extra.append(g.pop("_merge"))
+            elif g["views"]:
+                merged.append(g)
+        for g in merged:
+            if g["kind"] == "check" and extra:
+                g["views"] = (g.get("views") or []) + extra
+                extra = []
+        groups = merged
+
+    # 显示顺序 = 人该看的顺序：先"方案对不对"，再"几何对不对"，最后"长什么样"。
+    # 以前这里注释写着"设计值对照放最前面"，代码却把它 append 在最后 ——
+    # 注释和实际显示的顺序是反的。现在按这张表排，注释不再说谎。
+    ORDER = ["scheme", "check", "geom", "mesh", "cfd"]
+    groups.sort(key=lambda g: ORDER.index(g["kind"]) if g["kind"] in ORDER else 99)
+
     live = [g for g in groups if g["views"]]
     if not live:
         return {"ok": True, "available": False, "groups": groups,
-                "reason": "本案例还没有几何、网格或求解产物"}
+                "reason": "本案例还没有方案、几何、网格或求解产物"}
     return {"ok": True, "available": True, "groups": groups}
 
 

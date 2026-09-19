@@ -477,6 +477,26 @@ def read_changes(case_dir, limit=None):
     return out[-limit:] if limit else out
 
 
+def latest_gate_verdicts(log_entries):
+    """从 LOG.md 取每一步**最近一次**闸门判定。返回 {阶段: 结论}。
+
+    为什么要这个：STATE.json 里的 "done" 说的是"这一步有产物"，
+    闸门说的是"这一步过没过判据" —— 两者可以不一致。
+    实测：DF90-001 的 G3 在 STATE.json 里是 done，
+    而闸门判定是 FAIL（几何不能证明由参数表导出）。
+    交接简报只报前者的话，接手的人会以为 G3 没问题。
+    """
+    out = {}
+    for e in log_entries:
+        act = next((f["v"] for f in e.get("fields", []) if f.get("k") == "动作"), "")
+        if not act.startswith("闸门判定"):
+            continue
+        st = e.get("stage")
+        if st:
+            out[st] = e.get("verdict")
+    return out
+
+
 def build_handoff(case_dir, new_records=None, snapshot=None):
     """生成 HANDOFF.md。目标 <= 120 行 —— 一个"必然被读到"的文件不能太长。"""
     case_dir = Path(case_dir).resolve()
@@ -523,6 +543,19 @@ def build_handoff(case_dir, new_records=None, snapshot=None):
     if pending:
         bits.append("未开始 " + "/".join(pending))
     L.append("　".join(bits) if bits else "阶段状态未知")
+
+    # 「已完成」与闸门结论是两件事，不一致必须当面说清。
+    gate_v = latest_gate_verdicts(log_entries)
+    contradicted = [(g, gate_v.get(g)) for g in done
+                    if gate_v.get(g) in ("FAIL", "WARN")]
+    if contradicted:
+        L.append("")
+        L.append("**但工具不这么认为：**"
+                 + "；".join("%s 最近一次闸门判定是 **%s**" % (g, v)
+                             for g, v in contradicted))
+        L.append("「已完成」说的是这一步**有产物**，闸门说的是这一步**过没过判据**。"
+                 "两者不一致时以后者为准 —— 明细见 LOG.md。")
+
     if log_entries:
         last = log_entries[-1]
         act = next((f["v"] for f in last["fields"] if f["k"] == "动作"), "")

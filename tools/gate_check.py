@@ -18,6 +18,8 @@
 ----
   python tools/gate_check.py requirements --case cases/DF90-001
   python tools/gate_check.py brief        --case cases/DF90-001
+  python tools/gate_check.py scheme       --case cases/DF90-001
+  python tools/gate_check.py geometry     --case cases/DF90-001
   python tools/gate_check.py mesh         --case cases/DF90-001 --version v1
   python tools/gate_check.py solve        --case cases/DF90-001 --summary <sweep_summary.csv>
   python tools/gate_check.py all          --case cases/DF90-001
@@ -65,9 +67,14 @@ CONTRACTS = (ROOT / ".agents" / "skills" / "ducted-fan-aero-design"
 BUILTIN_CHECK_IDS = {
     "G0-1", "G0-2", "G0-3", "G0-5", "G0-6",
     "G1-1", "G1-2", "G1-3", "G1-4",
-    "G4-1", "G4-2", "G4-3", "G4-4",
+    # G2/G3 的判据写在各自 skill 里（ducted-fan-1d-scheme 的输出契约、
+    # cascade-forge-geometry-handoff 的 G3-1..G3-9），不在 ducted-fan-contracts.md。
+    # 按本集合的定义（无合同可依据的过程判据）显式登记，不假装它们有合同。
+    "G2-1", "G2-2", "G2-3", "G2-4", "G2-5", "G2-6", "G2-7", "G2-8",
+    "G3-0", "G3-1", "G3-2", "G3-3", "G3-4", "G3-5", "G3-6", "G3-7", "G3-8", "G3-9",
+    "G4-0", "G4-1", "G4-2", "G4-3", "G4-4",
     "G5-1", "G5-2", "G5-4",
-    "G6-1",
+    "G6-0", "G6-1",
 }
 
 
@@ -169,9 +176,13 @@ MANDATORY_REQUIREMENT_PATHS = [
 REQUIRED_CHECKS = {
     "G0-1", "G0-2", "G0-3", "G0-4", "G0-6",  # 需求基线：没有它后面全是空中楼阁
     "G1-1", "G1-2",                           # 设计大纲
-    "G4-1", "G4-2", "G4-3", "G4-4",          # 网格六件套 + 负单元
+    # G2：三表 + 列名 + 流道自洽 + 叶排数 + 溯源（哪一份求解生成了这三表）
+    "G2-1", "G2-2", "G2-3", "G2-4", "G2-7",
+    # G3：路径 + 展向 + 剖面 + 与参数表一致 + 周期数 + 由参数表导出
+    "G3-0", "G3-1", "G3-3", "G3-4", "G3-5", "G3-7", "G3-9",
+    "G4-0", "G4-1", "G4-2", "G4-3", "G4-4",  # 网格六件套 + 负单元
     "G5-1", "G5-2", "G5-3", "G5-4", "G5-5",  # 求解：没跑就没跑
-    "G6-1", "G6-2", "G6-3",                  # 交付：三表 + 推力闭合
+    "G6-0", "G6-1", "G6-2", "G6-3",          # 交付：三表 + 推力闭合
 }
 
 
@@ -386,7 +397,7 @@ def gate_brief(case: Path, args) -> Result:
               "disk_loading=%.1f Pa  v_i=%.2f m/s" % (dl, vi),
               "PASS" if in_range else "WARN", "gates.md#G1")
     else:
-        r.add("G1-3", "盘载荷与诱导速度可算", "需求中必须能取到推力(N)与桨盘面积",
+        r.add("G1-3", "盘载荷与诱导速度落在工程区间", "需求中必须能取到推力(N)与桨盘面积",
               "thrust_n=%s area=%s" % (thrust_n, area), "SKIP", "gates.md#G1")
 
     # 不得出现确定性性能预测
@@ -394,6 +405,748 @@ def gate_brief(case: Path, args) -> Result:
     r.add("G1-4", "未做确定性性能预测", "大纲中不得出现「保证/一定/必然达到」等断言",
           "hits=%d" % len(banned), "PASS" if not banned else "WARN", "gates.md#G1",
           {"hits": banned})
+    return r
+
+
+# ── G2 1D/通流方案 ─────────────────────────────────────────────────────────
+# 判据来自 gates.md#G2 与 ducted-fan-1d-scheme/SKILL.md 的输出契约。
+#
+# 这两道闸门（G2/G3）长期是**空的**：GATES 里只有 G0/G1/G4/G5/G6，
+# 而 STAGE_MAP / GATE_OF_COMMAND 却写着 scheme=G2、geometry=G3。
+# 结果是「七道闸门」实际只跑了五道 —— 恰好是「需求 → 形状」这两步没人查，
+# 而 DF90-001 卡住的地方正是这里。
+SCHEME_TABLES = {
+    "流道尺寸表.csv": ["站位", "类型", "序号", "轴向坐标(m)", "轮毂半径(m)",
+                       "机匣半径(m)", "中径半径(m)", "通流面积(m2)"],
+    "叶片几何参数表.csv": ["叶排", "类型", "级", "轴向坐标(m)", "叶片数", "弦长(m)",
+                           "稠度", "展弦比", "进口金属角(deg,相对轴向)",
+                           "出口金属角(deg,相对轴向)", "叶尖间隙(m)", "堵塞"],
+    "通流计算结果表.csv": ["参数类别", "参数名称", "单位", "数值"],
+}
+TIP_RADIUS_TOL_M = 1e-4          # 与 turboflow_adapter 的 B-4 同值：改一处要改两处
+
+
+def csv_rows(path):
+    """读一张 CSV 成 list[dict]。列名与值都 strip。"""
+    if not path.is_file():
+        return []
+    with path.open("r", encoding="utf-8-sig", newline="") as fh:
+        return [{k.strip(): (v or "").strip() for k, v in r.items() if k}
+                for r in csv.DictReader(fh)]
+
+
+def perf_map(rows):
+    """通流计算结果表是「参数类别/参数名称/单位/数值」长表，转成 名称 → 数值。"""
+    out = {}
+    for r in rows:
+        k = (r.get("参数名称") or "").strip()
+        if k:
+            out[k] = (r.get("数值") or "").strip()
+    return out
+
+
+def rel_diff(a, b):
+    if a is None or b is None:
+        return None
+    return abs(a - b) / max(abs(a), abs(b), 1e-300)
+
+
+def is_ascii(text):
+    try:
+        text.encode("ascii")
+        return True
+    except UnicodeEncodeError:
+        return False
+
+
+def result_matches(blob, perf):
+    """这份 result.json 是不是那三张表的来源？
+
+    用三个互相独立的数字认（效率 / 轴功率 / 扭矩），**不靠文件名、不靠目录名**。
+    实测：01-scheme/v1 下同时躺着三份 result.json，效率分别是
+    0.7597 / 0.7976 / 0.8794，只有一份对得上交付的三表 ——
+    而没有任何记录说明用的是哪一份。旁边那两份会给出一套完全不同的答案。
+    """
+    s = blob.get("summary") or {}
+    pairs = (("总总效率", s.get("efficiency_tt")),
+             ("轴功率", s.get("power_w")),
+             ("扭矩", s.get("torque_nm")))
+    hits, missed = 0, []
+    for label, actual in pairs:
+        want = numeric(perf.get(label))
+        if want is None or actual is None:
+            missed.append(label)
+            continue
+        rel = rel_diff(float(actual), want)
+        if rel is not None and rel <= 1e-9:
+            hits += 1
+        else:
+            missed.append(label)
+    return hits, missed
+
+
+def gate_scheme(case: Path, args) -> Result:
+    r = Result("G2")
+    version = args.version or latest_version(case / "01-scheme")
+    root = case / "01-scheme" / version
+    if not root.is_dir():
+        r.add("G2-1", "三表齐全", "01-scheme/<version>/ 必须存在",
+              "缺失：" + str(root), "SKIP", "gates.md#G2")
+        return r
+
+    missing = [n for n in SCHEME_TABLES if not (root / n).is_file()]
+    empty = [n for n in SCHEME_TABLES
+             if (root / n).is_file() and (root / n).stat().st_size == 0]
+    r.add("G2-1", "三表齐全",
+          "流道尺寸表 / 叶片几何参数表 / 通流计算结果表 必须都存在且非空",
+          "缺 %d 张、空 %d 张%s" % (len(missing), len(empty),
+                                  ("　缺：" + "、".join(missing)) if missing else ""),
+          "PASS" if not missing and not empty else "FAIL", "gates.md#G2",
+          {"missing": missing, "empty": empty})
+    if missing or empty:
+        return r
+
+    tables = {n: csv_rows(root / n) for n in SCHEME_TABLES}
+
+    # G2-2 列名 —— 列名错位是最难发现的一类错：数字都在，就是不在该在的地方。
+    bad_cols = {}
+    for name, want in SCHEME_TABLES.items():
+        got = set(tables[name][0].keys()) if tables[name] else set()
+        lack = [c for c in want if c not in got]
+        if lack:
+            bad_cols[name] = lack
+    r.add("G2-2", "三表列名齐全",
+          "按 ducted-fan-1d-scheme 输出契约逐列核对（含单位后缀）",
+          "有问题的表 %d 张%s" % (len(bad_cols),
+                               ("　" + json.dumps(bad_cols, ensure_ascii=False))
+                                if bad_cols else ""),
+          "PASS" if not bad_cols else "FAIL",
+          "ducted-fan-1d-scheme/SKILL.md#输出契约", {"missing_columns": bad_cols})
+
+    flat = {}
+    req = case / "requirements.yaml"
+    if req.is_file():
+        flat = load_flat_yaml(req)
+
+    # G2-3 流道几何自洽：站位单调 + 半径序 + 被需求锁死的机匣半径没被改。
+    ann = tables["流道尺寸表.csv"]
+    zs = [z for z in (numeric(x.get("轴向坐标(m)")) for x in ann) if z is not None]
+    mono = len(zs) >= 2 and all(zs[i] < zs[i + 1] for i in range(len(zs) - 1))
+    order_bad = []
+    for x in ann:
+        h = numeric(x.get("轮毂半径(m)"))
+        m = numeric(x.get("中径半径(m)"))
+        s = numeric(x.get("机匣半径(m)"))
+        if None in (h, m, s) or not (h < m < s):
+            order_bad.append(x.get("站位"))
+    tip_req = numeric(flat.get("geometry.tip_radius_m"))
+    locked = str(flat.get("geometry.constraint") or "").strip().lower() == "locked"
+    tips = [t for t in (numeric(x.get("机匣半径(m)")) for x in ann) if t is not None]
+    # 四个分支都要显式写出来。以前只有"tip_req 取到了"那一条会比对，
+    # 其余情况 tip_ok 默认 True —— 判据标题写着"不得被静默改动"，
+    # 代码却正是**静默通过**，同一种错换了个地方又犯一次。
+    if not locked:
+        tip_ok = True
+        tip_txt = ("需求未锁定机匣半径（constraint=%s），不做一致性比对"
+                   % (flat.get("geometry.constraint") or "未声明"))
+    elif tip_req is None:
+        tip_ok = False
+        tip_txt = "需求声明了 constraint=locked，却取不到 geometry.tip_radius_m —— 无基准可比"
+    elif not tips:
+        tip_ok = False
+        tip_txt = "流道尺寸表里取不到机匣半径"
+    else:
+        worst = max(abs(t - tip_req) for t in tips)
+        tip_ok = worst <= TIP_RADIUS_TOL_M
+        tip_txt = ("需求锁定 r_tip=%.4f　实测 %.4f–%.4f　最大偏差 %.2e m"
+                   % (tip_req, min(tips), max(tips), worst))
+    g23_ok = mono and not order_bad and tip_ok
+    r.add("G2-3", "流道几何自洽",
+          "站位轴向坐标单调递增；轮毂 < 中径 < 机匣；"
+          "被需求锁定的机匣半径不得被静默改动（容差 %.0e m）" % TIP_RADIUS_TOL_M,
+          "站位 %d 个，单调=%s；半径序异常 %d 个；%s　锁定=%s"
+          % (len(zs), "是" if mono else "否", len(order_bad), tip_txt,
+             "是" if locked else "否"),
+          "PASS" if g23_ok else "FAIL", "gates.md#G2 + ducted-fan-1d-scheme#A",
+          {"order_bad": order_bad, "monotonic": mono, "tip_ok": tip_ok})
+
+    # G2-4 叶排数：与需求 rows.count 一致，且与计算表的自述一致。
+    blades = tables["叶片几何参数表.csv"]
+    perf = perf_map(tables["通流计算结果表.csv"])
+    want_rows = numeric(flat.get("rows.count"))
+    got_rows = len(blades)
+    said_rows = numeric(perf.get("叶排数"))
+    if want_rows is None:
+        # 需求没写 rows.count，这条判据的一半就没得查。以前它退化成
+        # "两张表自述一致" 然后照样 PASS —— 需求与方案的叶排数不符也查不出来。
+        # G2-4 在 REQUIRED_CHECKS 里，所以这个 SKIP 会被转成 FAIL：
+        # "必查项没数据 = 没做完"。
+        r.add("G2-4", "叶排数与需求一致",
+              "叶片几何参数表的行数 == requirements rows.count，且 == 计算表的「叶排数」",
+              "requirements.yaml 未声明 rows.count（参数表 %d 行）" % got_rows,
+              "SKIP", "gates.md#G2（对标 B-5）")
+    else:
+        row_ok = int(want_rows) == got_rows \
+            and (said_rows is None or int(said_rows) == got_rows)
+        r.add("G2-4", "叶排数与需求一致",
+              "叶片几何参数表的行数 == requirements rows.count，且 == 计算表的「叶排数」",
+              "需求 %.0f　参数表 %d 行　计算表自述 %s"
+              % (want_rows, got_rows,
+                 ("%.0f" % said_rows) if said_rows is not None else "未声明"),
+              "PASS" if row_ok else "FAIL", "gates.md#G2（对标 B-5）")
+
+    # G2-5 对标闸门：结论可读，且每一项都带着出处。
+    bg = root / "benchmark_gate.json"
+    blob = None
+    if not bg.is_file():
+        r.add("G2-5", "对标闸门有结论",
+              "benchmark_gate.json 必须存在，逐项带 source，且无 FAIL 项",
+              "缺失：" + bg.name, "SKIP", "gates.md#G2")
+    else:
+        try:
+            blob = json.loads(bg.read_text(encoding="utf-8-sig"))
+        except Exception as exc:
+            r.add("G2-5", "对标闸门有结论", "benchmark_gate.json 必须可解析",
+                  "解析失败：" + repr(exc), "FAIL", "gates.md#G2")
+        if blob is not None:
+            items = blob.get("items") or []
+            naked = [i.get("id") for i in items if not (i.get("source") or "").strip()]
+            verdict = str(blob.get("verdict") or "").strip().upper()
+            hard_fail = [i.get("id") for i in items if i.get("verdict") == "FAIL"]
+            # 对标有 FAIL 项时**不判死**。gates.md#G2 的失败出口写得很清楚：
+            # 「对标不通过 → 如实记 FAIL → 降级为专家表格 + 文档化 1D 闭合 →
+            #   不阻塞 G3+，但要在大纲与交付说明里标注 G2 未通过独立验证」。
+            # 以前这里直接判 FAIL，把"不阻塞"变成"阻塞"，和写下来的规则打架。
+            ok = bool(items) and verdict in ("PASS", "WARN", "FAIL") and not naked
+            if not ok:
+                v25, note25 = "FAIL", ""
+            elif hard_fail:
+                v25 = "WARN"
+                note25 = ("　→ 对标有 %d 项没对上。按失败出口：不阻塞下一步，"
+                           "但必须在设计大纲与交付说明里标注「G2 未通过独立验证」"
+                           % len(hard_fail))
+            else:
+                v25, note25 = "PASS", ""
+            r.add("G2-5", "对标闸门有结论",
+                  "benchmark_gate.json 必须存在、逐项带 source；对标不通过记 FAIL 但**不阻塞下一步**",
+                  "结论=%s　逐项 %d 条　无出处 %d 条　FAIL %d 条%s"
+                  % (verdict or "?", len(items), len(naked), len(hard_fail), note25),
+                  v25, "gates.md#G2",
+                  {"verdict": verdict, "naked": naked, "fail": hard_fail})
+
+    # G2-6 质量守恒 —— gates.md#G2 的硬判据，容差 1e-6。
+    mi = numeric(perf.get("进口质量流量"))
+    mo = numeric(perf.get("出口质量流量"))
+    rel = rel_diff(mi, mo)
+    if rel is None:
+        r.add("G2-6", "质量守恒", "|mdot_in - mdot_out| / |mdot_in| <= 1e-6",
+              "计算表里取不到进口/出口质量流量", "SKIP", "gates.md#G2")
+    else:
+        r.add("G2-6", "质量守恒", "|mdot_in - mdot_out| / |mdot_in| <= 1e-6",
+              "进口 %.8g　出口 %.8g　相对差 %.2e" % (mi, mo, rel),
+              "PASS" if rel <= 1e-6 else "FAIL", "gates.md#G2")
+
+    # G2-7 溯源：这三张表到底是哪一次求解生成的？
+    # 这是本闸门最重要的一条 —— 目录里躺着多份 result.json 时，
+    # 没有任何记录说明用的是哪一份，而它们给出的是完全不同的方案。
+    cands = sorted(p for p in root.rglob("result.json") if p.is_file())
+    hit, lines = [], []
+    for p in cands:
+        try:
+            one = json.loads(p.read_text(encoding="utf-8-sig"))
+        except Exception as exc:
+            lines.append("%s：解析失败 %r" % (p.relative_to(root).as_posix(), exc))
+            continue
+        hits, _missed = result_matches(one, perf)
+        s = one.get("summary") or {}
+        lines.append("%s　效率 %.4f 功率 %.1f 扭矩 %.2f　命中 %d/3"
+                     % (p.relative_to(root).as_posix(),
+                        s.get("efficiency_tt") or 0.0, s.get("power_w") or 0.0,
+                        s.get("torque_nm") or 0.0, hits))
+        if hits == 3:
+            hit.append(p.relative_to(root).as_posix())
+    if not cands:
+        r.add("G2-7", "三表可溯源",
+              "三张表必须能追到生成它们的那一份 result.json",
+              "01-scheme/%s 下找不到任何 result.json" % version, "FAIL",
+              "gates.md#G2（禁止项：阈值没写来源）")
+    elif len(hit) == 1:
+        r.add("G2-7", "三表可溯源",
+              "三张表必须能追到生成它们的那一份 result.json（按效率/功率/扭矩三项认）",
+              "候选 %d 份，唯一命中：%s" % (len(cands), hit[0]),
+              "PASS" if len(cands) == 1 else "WARN", "gates.md#G2",
+              {"candidates": lines, "hit": hit})
+    else:
+        r.add("G2-7", "三表可溯源",
+              "三张表必须能追到生成它们的那一份 result.json（按效率/功率/扭矩三项认）",
+              "候选 %d 份，命中 %d 份 —— 无法确定用的是哪一份"
+              % (len(cands), len(hit)), "FAIL", "gates.md#G2",
+              {"candidates": lines, "hit": hit})
+
+    # G2-8 「工程可行」这个字段会被读成「方案不可行」，必须能被解释。
+    feasible = str(perf.get("工程可行") or "").strip().lower()
+    crit8 = "计算表里必须有「工程可行」，且结论要能由约束清单解释"
+    if feasible not in ("true", "false"):
+        r.add("G2-8", "「工程可行」结论可解释", crit8,
+              "工程可行=%s" % (perf.get("工程可行") or "缺失"), "SKIP", "gates.md#G2")
+    elif feasible == "true":
+        r.add("G2-8", "「工程可行」结论可解释", crit8,
+              "工程可行=True", "PASS", "gates.md#G2")
+    else:
+        src = hit[0] if len(hit) == 1 else (cands[0].relative_to(root).as_posix()
+                                            if cands else None)
+        cons = []
+        if src:
+            try:
+                cons = (json.loads((root / src).read_text(encoding="utf-8-sig"))
+                        .get("constraints") or [])
+            except Exception:
+                cons = []
+        eng_fail = [c for c in cons
+                    if c.get("kind") == "engineering" and not c.get("passed")]
+        des_fail = [c for c in cons
+                    if c.get("kind") == "design" and not c.get("passed")]
+        if not cons:
+            r.add("G2-8", "「工程可行」结论可解释", crit8,
+                  "工程可行=False，但取不到约束清单（%s）" % (src or "无 result"),
+                  "WARN", "gates.md#G2")
+        elif eng_fail:
+            r.add("G2-8", "「工程可行」结论可解释", crit8,
+                  "工程可行=False，且确有 %d 条工程约束不通过：%s"
+                  % (len(eng_fail),
+                     "、".join("%s.%s" % (c.get("row_id"), c.get("name"))
+                               for c in eng_fail)),
+                  "FAIL", "gates.md#G2", {"engineering_failed": eng_fail})
+        else:
+            note8 = ("工程可行=False，但工程约束 %d 条全通过；False 来自 %d 条 design 类约束"
+                     "（射击目标，不是工程约束）—— 表里只写 False 会被读成「方案不可行」"
+                     % (len(cons) - len(des_fail), len(des_fail)))
+            r.add("G2-8", "「工程可行」结论可解释", crit8, note8,
+                  "WARN", "gates.md#G2",
+                  {"design_failed": [c.get("name") for c in des_fail]})
+    return r
+
+
+# ── G3 叶片造型 ────────────────────────────────────────────────────────────
+# 判据来自 cascade-forge-geometry-handoff/SKILL.md 的「输出前自查清单」与 gates.md#G3。
+G3_PREVIEW_SUFFIXES = (".png", ".jpg", ".jpeg", ".svg")
+
+
+def interp_curve(curve, x):
+    """在 [(x, r), ...] 上线性插值；超出端点就取端点。"""
+    if not curve:
+        return None
+    pts = sorted(curve)
+    if x <= pts[0][0]:
+        return pts[0][1]
+    if x >= pts[-1][0]:
+        return pts[-1][1]
+    for i in range(len(pts) - 1):
+        x0, r0 = pts[i]
+        x1, r1 = pts[i + 1]
+        if x0 <= x <= x1:
+            t = (x - x0) / (x1 - x0) if x1 > x0 else 0.0
+            return r0 + (r1 - r0) * t
+    return pts[-1][1]
+
+
+def pt_dist(a, b):
+    return sum((p - q) ** 2 for p, q in zip(a, b)) ** 0.5
+
+
+def pair_rows(parsed, tbl):
+    """把几何里的叶排与参数表的行配对。
+
+    **不能只按同名配。** 几何里的 NIROW NAME 是 AutoBlade 的默认名
+    （实测是 "row 1" / "row 2"），参数表里写的是 "R1" / "S1" —— 对不上。
+    只按同名配会静默跳过整行，报出「参数表无此行」，看着像数据缺失，
+    其实是配对根本没做。规则与 tools/geom_check.py 保持一致：
+    同名 → 按叶片数 → 按顺序（并标注存疑）。
+    """
+    by_name = {}
+    for x in tbl:
+        by_name.setdefault((x.get("叶排") or "").strip(), x)
+    used, out = set(), []
+    for p, g in parsed:
+        for row in (g.get("rows") or []):
+            name = (row.get("name") or "").strip()
+            nb = row.get("blades") or row.get("periodicity") or 0
+            trow, how = None, "没找到"
+            if name in by_name and name not in used:
+                trow, how = by_name[name], "同名"
+            else:
+                for key, cand in by_name.items():
+                    if key in used:
+                        continue
+                    w = numeric(cand.get("叶片数"))
+                    if w is not None and nb and int(w) == int(nb):
+                        trow, how = cand, "按叶片数配对"
+                        break
+            if trow is None:
+                for key, cand in by_name.items():
+                    if key not in used:
+                        trow, how = cand, "按顺序（叶片数没对上，存疑）"
+                        break
+            if trow is not None:
+                used.add((trow.get("叶排") or "").strip())
+            out.append({"geom_path": p, "geom_file": p.name, "geom_row": name,
+                        "blades_geom": nb, "table_row": (trow or {}).get("叶排"),
+                        "matched_by": how, "row": row})
+    return out
+
+
+def gate_geometry(case: Path, args) -> Result:
+    r = Result("G3")
+    version = args.version or latest_version(case / "02-geometry")
+    root = case / "02-geometry" / version
+    if not root.is_dir():
+        r.add("G3-0", "几何产物可用", "02-geometry/<version>/ 必须存在",
+              "缺失：" + str(root), "SKIP", "gates.md#G3")
+        return r
+    files = [p for p in sorted(root.rglob("*.geomTurbo"))
+             if ".bak" not in p.name.lower()]
+    if not files:
+        r.add("G3-0", "几何产物可用", "02-geometry/<version>/ 下必须有 .geomTurbo",
+              "0 个", "SKIP", "gates.md#G3")
+        return r
+
+    try:
+        import geom_view
+    except Exception as exc:
+        r.add("G3-0", "几何产物可用", "需要 tools/geom_view.py",
+              "导入失败：" + repr(exc), "SKIP", "gates.md#G3")
+        return r
+
+    scheme = case / "01-scheme" / latest_version(case / "01-scheme")
+    tbl = csv_rows(scheme / "叶片几何参数表.csv")
+    by_name = {}
+    for x in tbl:
+        by_name.setdefault((x.get("叶排") or "").strip(), x)
+
+    parsed, perr = [], []
+    for p in files:
+        try:
+            parsed.append((p, geom_view.parse_geomturbo(p)))
+        except Exception as exc:
+            perr.append("%s：%r" % (p.name, exc))
+    if not parsed:
+        r.add("G3-0", "几何产物可用", "每个 .geomTurbo 都必须能解析出截面",
+              "全部解析失败：" + "；".join(perr), "FAIL", "gates.md#G3")
+        return r
+
+    # G3-1 路径纯 ASCII —— 非 ASCII 路径会让 AutoGrid 把合法几何误报成格式错误。
+    bad_path = [str(p) for p in files if not is_ascii(str(p))]
+    r.add("G3-1", "输出路径纯 ASCII",
+          "全链路路径不得含非 ASCII 字符（否则 AutoGrid 会误报格式错误）",
+          "几何 %d 个，非 ASCII 路径 %d 个" % (len(files), len(bad_path)),
+          "PASS" if not bad_path else "FAIL", "gates.md#G3（F-001）",
+          {"bad": bad_path})
+
+    # G3-2 截面数：上游的 SectionSchedule 说几个截面，几何就得有几个。
+    # schedule 按**参数表的叶排名**命名（schedule-R1.json），
+    # 几何里的 NIROW NAME 却是 "row 1" —— 必须先配对再找文件。
+    pairs = pair_rows(parsed, tbl)
+    sched_dir = case / "_automation" / "g3"
+    sc_checked, sc_bad, sc_missing = 0, [], []
+    for pr in pairs:
+        key = pr["table_row"] or pr["geom_row"]
+        sp = sched_dir / ("schedule-%s.json" % key)
+        if not sp.is_file():
+            sc_missing.append(key)
+            continue
+        try:
+            want = json.loads(sp.read_text(encoding="utf-8-sig"))
+        except Exception:
+            sc_missing.append(key)
+            continue
+        n_want = want.get("output_section_count") or len(want.get("sections") or [])
+        n_got = len(pr["row"].get("sections") or [])
+        sc_checked += 1
+        if n_want and int(n_want) != n_got:
+            sc_bad.append({"row": key, "schedule": n_want, "geom": n_got})
+    if not sc_checked:
+        r.add("G3-2", "截面数与上游一致",
+              "_automation/g3/schedule-<叶排>.json 的截面数 == 几何的截面数",
+              "没有可比对的 SectionSchedule（%s）—— 这条判据当前无判别力"
+              % ("、".join(sc_missing[:6]) or "目录不存在"), "SKIP",
+              "cascade-forge-geometry-handoff/SKILL.md#G3-2")
+    else:
+        # **缺项必须进结论。** 以前只要 sc_checked >= 1 就只看 sc_bad，
+        # sc_missing 被整段丢掉 —— 真实案例里几何有 2 个叶排、schedule 只有 R1，
+        # 却报「比对 1 个叶排，不一致 0 个」→ PASS。
+        # "根本没比的那一半"被当成了"比过了且一致"，正是原则 1 的反例。
+        n_total = sc_checked + len(sc_missing)
+        v32 = "FAIL" if sc_bad else ("WARN" if sc_missing else "PASS")
+        r.add("G3-2", "截面数与上游一致",
+              "_automation/g3/schedule-<叶排>.json 的截面数 == 几何的截面数；缺一份就不算比过",
+              "应比 %d 个叶排，实比 %d 个，缺 %d 个（%s）；不一致 %d 个%s"
+              % (n_total, sc_checked, len(sc_missing),
+                 "、".join(sc_missing[:6]) or "无", len(sc_bad),
+                 ("　" + json.dumps(sc_bad, ensure_ascii=False)) if sc_bad else ""),
+              v32, "cascade-forge-geometry-handoff/SKILL.md#G3-2",
+              {"bad": sc_bad, "missing": sc_missing})
+
+    # G3-3 展向位置单调递增且覆盖 0→1（用几何自带的 hub/shroud 通道曲线定位）。
+    span_bad, span_lines = [], []
+    for p, g in parsed:
+        hub_c = (g.get("channel") or {}).get("hub") or []
+        shr_c = (g.get("channel") or {}).get("shroud") or []
+        for row in (g.get("rows") or []):
+            secs = row.get("sections") or []
+            spans = []
+            for sec in secs:
+                try:
+                    m = geom_view.section_metrics(sec)
+                except Exception:
+                    continue
+                z = sum(m["z"]) / len(m["z"])
+                rh = interp_curve(hub_c, z)
+                rs = interp_curve(shr_c, z)
+                if rh is None or rs is None or rs <= rh:
+                    continue
+                spans.append((m["rmid"] - rh) / (rs - rh))
+            if len(spans) < 2:
+                span_bad.append({"row": row.get("name"),
+                                 "why": "只有 %d 个截面能定位展向" % len(spans)})
+                continue
+            mono_s = all(spans[i] < spans[i + 1] for i in range(len(spans) - 1))
+            lo, hi = min(spans), max(spans)
+            covers = abs(lo) <= 0.02 and abs(hi - 1.0) <= 0.02
+            span_lines.append("%s：%d 截面　%.4f→%.4f　单调=%s　覆盖=%s"
+                              % (row.get("name"), len(spans), lo, hi,
+                                 "是" if mono_s else "否", "是" if covers else "否"))
+            if not mono_s or not covers:
+                span_bad.append({"row": row.get("name"), "lo": lo, "hi": hi,
+                                 "monotonic": mono_s, "covers": covers})
+    r.add("G3-3", "展向位置单调且覆盖 0→1",
+          "各截面相对展向位置单调递增，最小 ≈0、最大 ≈1（容差 0.02）",
+          "有问题的叶排 %d 个　%s" % (len(span_bad), "　".join(span_lines[:4])),
+          ("PASS" if span_lines else "SKIP") if not span_bad else "FAIL",
+          "cascade-forge-geometry-handoff/SKILL.md#G3-3",
+          {"bad": span_bad, "lines": span_lines})
+
+    # G3-4 剖面闭合、无重复点。
+    prof_bad, prof_n = [], 0
+    for p, g in parsed:
+        for row in (g.get("rows") or []):
+            for sec in (row.get("sections") or []):
+                prof = sec.get("profile") or []
+                if len(prof) < 4:
+                    prof_bad.append({"row": row.get("name"), "sec": sec.get("index"),
+                                     "why": "点数 %d" % len(prof)})
+                    continue
+                prof_n += 1
+                suc = sec.get("suction") or []
+                prs = sec.get("pressure") or []
+                # 闭合：suction 与 pressure 都从 LE 走到 TE，两端点应重合。
+                if suc and prs:
+                    gap = max(pt_dist(suc[0], prs[0]), pt_dist(suc[-1], prs[-1]))
+                else:
+                    gap = pt_dist(prof[0], prof[-1])
+                ref = max((pt_dist(prof[i], prof[i + 1])
+                           for i in range(len(prof) - 1)), default=0.0)
+                closed = gap <= max(1e-9, 1e-6 * ref)
+                # 重复点只在**每一侧内部**查。拼接出来的 profile 在尾缘处
+                # 天然有两个重合点（suction 的末点与 reversed(pressure) 的首点），
+                # 那是解析器构造方式的固有属性，不是几何缺陷 ——
+                # 拿它当重复点会把 26/26 个截面全报成 FAIL（实测踩过）。
+                dup = 0
+                for side in (suc, prs):
+                    dup += sum(1 for i in range(len(side) - 1)
+                               if pt_dist(side[i], side[i + 1]) <= 1e-12)
+                if not closed or dup:
+                    prof_bad.append({"row": row.get("name"), "sec": sec.get("index"),
+                                     "端点间距_m": gap, "侧内重复点": dup})
+    r.add("G3-4", "剖面闭合、无重复点",
+          "每个截面点序闭合（首尾点重合）、相邻点不重复",
+          "检查 %d 个截面，有问题 %d 个%s"
+          % (prof_n, len(prof_bad),
+             ("　" + json.dumps(prof_bad[:4], ensure_ascii=False)) if prof_bad else ""),
+          ("PASS" if prof_n else "SKIP") if not prof_bad else "FAIL",
+          "cascade-forge-geometry-handoff/SKILL.md#G3-4", {"bad": prof_bad[:20]})
+
+    # G3-5 几何与参数表一致（稠度/弦长/叶片数）。
+    # **复用 geom_check 的比对与阈值** —— 阈值只能有一份，否则界面和图会各说各话。
+    try:
+        import geom_check
+        data = geom_check.build_rows(case, scheme_version=scheme.name,
+                                     geom_version=version)
+        items = data.get("items") or []
+        fails = [i for i in items if i.get("verdict") == "FAIL"]
+        warns = [i for i in items if i.get("verdict") == "WARN"]
+        r.add("G3-5", "几何与参数表一致",
+              "逐项比对设计表与几何实测（稠度按**同一半径**比、弦长、叶片数）；"
+              "阈值与 tools/geom_check.py 同源",
+              "比对 %d 项　FAIL %d　WARN %d%s"
+              % (len(items), len(fails), len(warns),
+                 ("　" + "；".join("%s %s" % (i.get("row"), i.get("what"))
+                                   for i in fails[:4])) if fails else ""),
+              ("PASS" if items else "SKIP") if not fails else "FAIL",
+              "cascade-forge-geometry-handoff/SKILL.md#G3-5",
+              {"fail": fails[:12], "warn": warns[:12],
+               "pairing": data.get("pairing")})
+    except Exception as exc:
+        r.add("G3-5", "几何与参数表一致", "复用 tools/geom_check.py 的逐项比对",
+              "比对失败：" + repr(exc), "SKIP",
+              "cascade-forge-geometry-handoff/SKILL.md#G3-5")
+
+    # G3-6 弦长 > 0。
+    chord_bad, chord_n = [], 0
+    for p, g in parsed:
+        for row in (g.get("rows") or []):
+            for sec in (row.get("sections") or []):
+                try:
+                    m = geom_view.section_metrics(sec)
+                except Exception:
+                    continue
+                chord_n += 1
+                if not (m["chord_m"] > 0):
+                    chord_bad.append({"row": row.get("name"), "sec": sec.get("index"),
+                                      "chord_m": m["chord_m"]})
+    r.add("G3-6", "弦长 > 0", "每个截面的弦长必须为正",
+          "检查 %d 个截面，弦长非正 %d 个" % (chord_n, len(chord_bad)),
+          ("PASS" if chord_n else "SKIP") if not chord_bad else "FAIL",
+          "cascade-forge-geometry-handoff/SKILL.md#G3-6", {"bad": chord_bad[:12]})
+
+    # G3-7 行名 / 周期数 / 方向开关。
+    # REVERSE_THETA 与 SIDES_EXCHANGE 写在 .par 里（.geomTurbo 不记这两项）——
+    # 这两个开关错会让叶片整体镜像，而网格阶段**不会报错**。
+    g37_bad, g37_warn, g37_lines = [], [], []
+    for pr in pairs:
+        row = pr["row"]
+        name = pr["geom_row"]
+        par = pr["geom_path"].with_suffix(".par")
+        ptxt = par.read_text(encoding="utf-8", errors="replace") if par.is_file() else ""
+        per = row.get("periodicity") or 0
+        nb = row.get("blades") or 0
+        want = numeric((by_name.get(pr["table_row"] or "") or {}).get("叶片数"))
+        ok = bool(per) and per == nb and (want is None or int(want) == per)
+        rev = re.search(r"REVERSE_THETA\s+([+-]?\d+)", ptxt)
+        sed = re.search(r"SIDES_EXCHANGE\s+([+-]?\d+)", ptxt)
+        # 判据里写着"方向开关必须已核对" —— 只查周期数就成了判据与实现不一致。
+        # 没记录不是错，是没核对过；记 WARN，不判死。
+        if not (rev and sed):
+            g37_warn.append(pr["table_row"] or name)
+        g37_lines.append("%s（几何名 %s，%s）：周期 %d / 叶片 %d / 参数表 %s　"
+                         "REVERSE_THETA=%s　SIDES_EXCHANGE=%s"
+                         % (pr["table_row"] or "?", name, pr["matched_by"], per, nb,
+                            ("%.0f" % want) if want is not None else "无此行",
+                            rev.group(1) if rev else "未记录",
+                            sed.group(1) if sed else "未记录"))
+        if not ok:
+            g37_bad.append({"row": pr["table_row"] or name, "periodicity": per,
+                            "blades": nb, "table": want})
+    if not g37_lines:
+        v37 = "SKIP"
+    elif g37_bad:
+        v37 = "FAIL"
+    elif g37_warn:
+        v37 = "WARN"
+    else:
+        v37 = "PASS"
+    r.add("G3-7", "行名 / 周期数 / 方向开关已核对",
+          "周期数 == 叶片数 == 参数表叶片数；REVERSE_THETA / SIDES_EXCHANGE 必须已记录",
+          "叶排 %d 个，周期数不符 %d 个，方向开关未记录 %d 个　%s"
+          % (len(g37_lines), len(g37_bad), len(g37_warn),
+             "　".join(g37_lines[:4])),
+          v37, "cascade-forge-geometry-handoff/SKILL.md#G3-7",
+          {"bad": g37_bad, "no_switch_record": g37_warn})
+
+    # G3-8 预览图。工具只能查「在不在」，「像不像叶片」是人的事。
+    previews = [q for q in root.rglob("*")
+                if q.is_file() and q.suffix.lower() in G3_PREVIEW_SUFFIXES]
+    r.add("G3-8", "预览图存在",
+          "几何目录下必须有可看的预览图（目视是否像叶片由人判断，工具只查在不在）",
+          "找到 %d 张：%s" % (len(previews),
+                            "、".join(q.name for q in previews[:5]) or "无"),
+          "PASS" if previews else "WARN",
+          "cascade-forge-geometry-handoff/SKILL.md#G3-8")
+
+    # G3-9 由参数表导出 —— **这是 DF90-001 真正失败的那一条**。
+    # 原先只在 SKILL 的禁止项里写着「不手工编辑几何文件」，没有检查 id，
+    # 于是 v8 几何（人工调轮毂 + 人工选弯掠）在工具眼里完全合法。
+    manifests = [q for q in root.rglob("*.manifest.json") if q.is_file()]
+    prov_docs = [q for q in root.rglob("*PROVENANCE*.md") if q.is_file()]
+    if not manifests:
+        note9 = ("没有 manifest.json%s —— 无法证明这套几何由参数表导出"
+                 % (("；但有 " + "、".join(q.name for q in prov_docs[:3])
+                     + "（人写的说明，不是机器可读溯源）") if prov_docs else ""))
+        r.add("G3-9", "由参数表导出",
+              "几何必须带机器可读的溯源记录（*.manifest.json），记下它由哪份参数表导出",
+              note9, "FAIL", "cascade-forge-geometry-handoff/SKILL.md#G3-9",
+              {"provenance_docs": [str(q.relative_to(root)) for q in prov_docs]})
+    elif not by_name:
+        # 参数表读不到就无从比对。以前这里因为循环一次都不进，mism 恒空 → PASS。
+        r.add("G3-9", "由参数表导出",
+              "几何必须带机器可读的溯源记录（*.manifest.json），其记录的源参数与参数表对得上",
+              "有 manifest %d 份，但读不到参数表（%s）—— 无基准可比"
+              % (len(manifests), scheme.name), "FAIL",
+              "cascade-forge-geometry-handoff/SKILL.md#G3-9")
+    else:
+        # **结构化断言，不是在 JSON 文本里搜数字子串。**
+        # 旧实现是 `("%.0f" % 叶片数) not in json.dumps(blob)` ——
+        # 于是 {"note": "handmade", "digits": "9 and 11"} 这种假 manifest 直接 PASS，
+        # 连空 {} 都能过。而这条判据正是为「手工几何」新加的，它挡不住手工几何。
+        #
+        # 真实 manifest 的形态（实测 cascade-forge/UDF/artifacts/NASA120859-R1/）：
+        #   {schema_version, blade_id, geomturbo_path, geomturbo_sha256,
+        #    schedule: {name, blade_count, rotation_direction, sections:[{chord_m,…}]}}
+        mism, lines9, matched_rows = [], [], set()
+        for q in manifests:
+            try:
+                blob9 = json.loads(q.read_text(encoding="utf-8-sig"))
+            except Exception as exc:
+                mism.append("%s 解析失败 %r" % (q.name, exc))
+                continue
+            lines9.append(q.relative_to(root).as_posix())
+            if not isinstance(blob9, dict):
+                mism.append("%s 顶层不是对象" % q.name)
+                continue
+            sha = str(blob9.get("geomturbo_sha256") or "")
+            if len(sha) != 64 or not re.fullmatch(r"[0-9a-fA-F]{64}", sha):
+                mism.append("%s 没有可用的 geomturbo_sha256（拿不到它对应哪份几何）" % q.name)
+            sch = blob9.get("schedule")
+            if not isinstance(sch, dict):
+                mism.append("%s 没有 schedule 块 —— 看不出它由哪份参数表导出" % q.name)
+                continue
+            bc = numeric(sch.get("blade_count"))
+            secs = sch.get("sections") or []
+            if bc is None or not secs:
+                mism.append("%s 的 schedule 缺 blade_count 或 sections" % q.name)
+                continue
+            # 叶片数：manifest 自述 vs 参数表
+            hit_name = None
+            for name, trow in by_name.items():
+                want = numeric(trow.get("叶片数"))
+                if want is not None and int(want) == int(bc):
+                    hit_name = name
+                    break
+            if hit_name is None:
+                mism.append("%s 的 blade_count=%.0f 在参数表里找不到对应叶排" % (q.name, bc))
+                continue
+            matched_rows.add(hit_name)
+            # 弦长：manifest 逐截面的 chord_m 中位数 vs 参数表该排的弦长
+            chords = [numeric(s.get("chord_m")) for s in secs if isinstance(s, dict)]
+            chords = [c for c in chords if c]
+            want_chord = numeric(by_name[hit_name].get("弦长(m)"))
+            if chords and want_chord:
+                chords.sort()
+                med = chords[len(chords) // 2]
+                dev = abs(med - want_chord) / want_chord
+                if dev > 0.05:
+                    mism.append("%s：%s 截面弦长中位数 %.4f 与参数表 %.4f 差 %.1f%%"
+                                % (q.name, hit_name, med, want_chord, dev * 100))
+        uncovered = sorted(set(by_name) - matched_rows)
+        if uncovered:
+            mism.append("参数表里的 %s 没有任何 manifest 覆盖" % "、".join(uncovered))
+        r.add("G3-9", "由参数表导出",
+              "*.manifest.json 必须带 geomturbo_sha256 与 schedule（blade_count + sections），"
+              "且 blade_count 与截面弦长与参数表对得上（弦长容差 5%）",
+              "manifest %d 份（%s）；覆盖 %d/%d 个叶排；对不上 %d 处%s"
+              % (len(manifests), "、".join(lines9[:3]), len(matched_rows), len(by_name),
+                 len(mism), ("　" + "；".join(mism[:4])) if mism else ""),
+              "PASS" if not mism else "FAIL",
+              "cascade-forge-geometry-handoff/SKILL.md#G3-9", {"mismatch": mism})
     return r
 
 
@@ -407,7 +1160,7 @@ def external_index(case):
     if d.is_dir():
         for j in sorted(d.glob("*.json")):
             try:
-                data = json.loads(j.read_text(encoding="utf-8"))
+                data = json.loads(j.read_text(encoding="utf-8-sig"))
             except Exception:
                 continue
             for f in (data.get("files") or []):
@@ -469,7 +1222,7 @@ def gate_mesh(case: Path, args) -> Result:
     version = args.version or latest_version(case / "03-mesh")
     root = case / "03-mesh" / version
     if not root.is_dir():
-        r.add("G4-1", "网格目录存在", "03-mesh/<version>/ 必须存在",
+        r.add("G4-0", "网格产物可用", "03-mesh/<version>/ 必须存在",
               "缺失：" + str(root), "SKIP", "gates.md#G4")
         return r
 
@@ -536,7 +1289,7 @@ def gate_mesh(case: Path, args) -> Result:
         found_sig = None
         for a in audits:
             try:
-                data = json.loads(a.read_text(encoding="utf-8"))
+                data = json.loads(a.read_text(encoding="utf-8-sig"))
             except Exception:
                 continue
             blocks = next((data.get(k) for k in SIG_KEYS if data.get(k)), None)
@@ -655,7 +1408,7 @@ def gate_post(case: Path, args) -> Result:
     version = args.version or latest_version(case / "06-delivery")
     root = case / "06-delivery" / version
     if not root.is_dir():
-        r.add("G6-1", "交付目录存在", "06-delivery/<version>/ 必须存在", "缺失", "SKIP", "gates.md#G6")
+        r.add("G6-0", "交付产物可用", "06-delivery/<version>/ 必须存在", "缺失", "SKIP", "gates.md#G6")
         return r
     # .html 是看板交付物；.png/.svg 是图；都算交付文件。
     # 但"交付三表"是硬要求：CSV 一个都没有 = 这步没做完。
@@ -750,8 +1503,9 @@ def cmd_audit(args):
     # 换成单引号、中间加注释、跨行，就会**静默漏报**（漏报比误报危险 ——
     # 它会让人以为"合同与代码一致"）。AST 认的是语法结构，不是字符。
     used = set()
+    titles = {}
     try:
-        tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+        tree = ast.parse(Path(__file__).read_text(encoding="utf-8-sig"))
         for node in ast.walk(tree):
             if not isinstance(node, ast.Call):
                 continue
@@ -764,6 +1518,10 @@ def cmd_audit(args):
             if isinstance(a0, ast.Constant) and isinstance(a0.value, str) \
                     and re.fullmatch(r"G\d+-\d+", a0.value):
                 used.add(a0.value)
+                # 同一个 id 挂几个**不同的标题**？标题不同 = 含义不同。
+                if len(node.args) > 1 and isinstance(node.args[1], ast.Constant) \
+                        and isinstance(node.args[1].value, str):
+                    titles.setdefault(a0.value, set()).add(node.args[1].value)
     except SyntaxError as exc:
         problems_pre = [{"kind": "gate_check.py 语法错误，判据自检无法进行",
                          "check": str(exc), "contract": ""}]
@@ -772,6 +1530,15 @@ def cmd_audit(args):
         problems_pre = []
     bound = set(specs.keys())
     problems = list(problems_pre)
+
+    # 一码多义：同一个编号在代码里挂着几个不同的标题，读日志的人就分不清
+    # 是哪一种"没通过"。实测 G3-1 曾经被 5 处复用（目录不存在 / 无几何文件 /
+    # 无解析器 / 解析失败 / 路径非 ASCII），而 SKILL.md 里 G3-1 只等于"输出路径纯 ASCII"。
+    # audit 以前只数 id 的**集合**，结构上看不见这种事。
+    multi = {cid: sorted(t) for cid, t in titles.items() if len(t) > 1}
+    for cid, t in sorted(multi.items()):
+        problems.append({"kind": "一码多义：同一 id 挂了 %d 个不同标题" % len(t),
+                         "check": cid + " → " + " / ".join(t), "contract": ""})
 
     for cid in sorted(bound - used):
         problems.append({"kind": "合同声明了检查，代码里没有实现",
@@ -800,7 +1567,7 @@ def cmd_audit(args):
     translated = []
     if plain_path.is_file():
         try:
-            blob = json.loads(plain_path.read_text(encoding="utf-8"))
+            blob = json.loads(plain_path.read_text(encoding="utf-8-sig"))
             translated = [str(s.get("id", "")) for s in blob.get("stages", [])]
         except Exception as exc:
             problems.append({"kind": "白话对照表读不了",
@@ -819,7 +1586,7 @@ def cmd_audit(args):
     # "第几步" 有两个来源：本文件的 STEP_OF_GATE 和白话表。对不上就是又一处漂移。
     if plain_path.is_file():
         try:
-            for s in json.loads(plain_path.read_text(encoding="utf-8")).get("stages", []):
+            for s in json.loads(plain_path.read_text(encoding="utf-8-sig")).get("stages", []):
                 want = STEP_OF_GATE.get(str(s.get("id", "")))
                 if want is not None and int(s.get("step", -1)) != want:
                     problems.append({"kind": "第几步对不上（STEP_OF_GATE vs 白话表）",
@@ -837,6 +1604,7 @@ def cmd_audit(args):
         "checks_builtin": len(BUILTIN_CHECK_IDS),
         "checks_implemented": len(used),
         "checks_without_contract": sorted(used - bound - BUILTIN_CHECK_IDS),
+        "checks_multi_meaning": sorted(multi),
         "stages_translated": len(translated),
         "problems": problems,
     }
@@ -853,9 +1621,9 @@ def cmd_audit(args):
               % (payload["stages_translated"], len(gate_ids)))
         print()
         if not problems:
-            print("  ✓ 合同与代码一致，无漂移")
+            print("  [OK] 合同与代码一致，无漂移")
         else:
-            print("  ✗ 发现 %d 处不一致：" % len(problems))
+            print("  [!!] 发现 %d 处不一致：" % len(problems))
             for pb in problems:
                 print("    - [%s] %s %s" % (pb["kind"], pb["check"], pb["contract"]))
     return EXIT_OK if not problems else EXIT_VERIFY
@@ -864,6 +1632,8 @@ def cmd_audit(args):
 GATES = {
     "requirements": gate_requirements,
     "brief": gate_brief,
+    "scheme": gate_scheme,
+    "geometry": gate_geometry,
     "mesh": gate_mesh,
     "solve": gate_solve,
     "post": gate_post,
@@ -871,14 +1641,14 @@ GATES = {
 
 # 子命令名 → 步骤编号。GATES 的键是命令名，Result.gate 是编号 —— 两套，
 # 写日志时要用命令名查。以前直接拿 Result.gate 查这张表，一跑就 KeyError。
+#
+# 这张表曾经被抄成两份（STAGE_MAP / GATE_OF_COMMAND），内容一字不差。
+# 两份一模一样的东西就是两处会漂移的地方 —— 留着别名，但只维护一份。
 STAGE_MAP = {
     "requirements": "G0", "brief": "G1", "scheme": "G2",
     "geometry": "G3", "mesh": "G4", "solve": "G5", "post": "G6",
 }
-GATE_OF_COMMAND = {
-    "requirements": "G0", "brief": "G1", "scheme": "G2",
-    "geometry": "G3", "mesh": "G4", "solve": "G5", "post": "G6",
-}
+GATE_OF_COMMAND = STAGE_MAP
 
 # 编号 → 第几步。与 plain-language.json 的 step 必须一致，
 # audit 会核对（见 cmd_audit 的白话覆盖检查）。
@@ -951,7 +1721,13 @@ def main(argv=None):
                 criteria=criteria,
                 note="",
                 extra={
-                    "命令": "python tools/gate_check.py " + result.gate + " --case " + args.case,
+                    # 记的是**子命令名**（geometry），不是编号（G3）。
+                    # 以前写 result.gate，于是日志里躺着
+                    # "python tools/gate_check.py G3 --case ..." ——
+                    # 抄下来直接 argparse 报错。日志里的命令必须能原样跑。
+                    "命令": "python tools/gate_check.py " + command
+                            + " --case " + args.case
+                            + ((" --version " + args.version) if args.version else ""),
                     "实测": measured,
                 },
             )

@@ -40,6 +40,10 @@ if hasattr(sys.stdout, "reconfigure"):
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 
+# 「当前版本是哪个」只从闸门取一份定义，不在这里另抄。
+sys.path.insert(0, str(HERE))
+from gate_check import latest_version  # noqa: E402
+
 sys.path.insert(0, str(HERE))
 
 BG = "#0d1117"
@@ -151,12 +155,20 @@ def geom_metal_angles(geomturbo: Path):
 
 
 # ── 对照表 ─────────────────────────────────────────────────────────────────
-def build_rows(case: Path):
-    """产出逐项对照。每项：名称 / 设计值 / 实测值 / 偏离 / 结论。"""
-    tbl = read_table(case / "01-scheme" / "v1" / "叶片几何参数表.csv")
-    annulus_rows = read_table(case / "01-scheme" / "v1" / "流道尺寸表.csv")
+def build_rows(case: Path, scheme_version=None, geom_version=None):
+    """产出逐项对照。每项：名称 / 设计值 / 实测值 / 偏离 / 结论。
+
+    scheme_version / geom_version：闸门带 --version 检查时，这里必须看同一版。
+    以前这里写死 `01-scheme/v1`，几何又是**全版本** glob —— 于是同一份报告里
+    「截面数 / 展向」查的是 v9 的副本，「几何 vs 参数表」查的却是 v8 的真交付物，
+    而 `--version` 对它逐字无影响（审核实测）。
+    """
+    sv = scheme_version or latest_version(case / "01-scheme")
+    gv = geom_version or latest_version(case / "02-geometry")
+    tbl = read_table(case / "01-scheme" / sv / "叶片几何参数表.csv")
+    annulus_rows = read_table(case / "01-scheme" / sv / "流道尺寸表.csv")
     geoms = {}
-    for p in sorted((case / "02-geometry").glob("**/*.geomTurbo")):
+    for p in sorted((case / "02-geometry" / gv).glob("**/*.geomTurbo")):
         if ".bak" not in p.name.lower():
             geoms[p.stem] = p
 

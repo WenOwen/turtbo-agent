@@ -187,7 +187,20 @@ def _append_log(case, stage, action, verdict, criteria, note, extra=None):
     if note:
         lines.append("- 备注：" + note)
     lines.append("")
-    append_text(Path(case) / "LOG.md", LF.join(lines) + LF)
+    log = Path(case) / "LOG.md"
+    # 追加前先确认上一段以换行收尾。以前直接追加 —— 只要文件末尾少一个换行，
+    # 新条目的 "## " 就粘在上一行屁股后面（实测 DF90-001 的 LOG.md 开头变成
+    # "x## 2026-09-19T16:03:33+08:00"，第一条日志的标题被吃掉一个字节）。
+    prefix = ""
+    try:
+        if log.is_file() and log.stat().st_size:
+            with log.open("rb") as fh:
+                fh.seek(-1, 2)
+                if fh.read(1) not in (b"\n", b"\r"):
+                    prefix = LF
+    except OSError:
+        prefix = ""
+    append_text(log, prefix + LF.join(lines) + LF)
 
 
 def cmd_new(args):
