@@ -74,6 +74,8 @@ BUILTIN_CHECK_IDS = {
     "G3-0", "G3-1", "G3-2", "G3-3", "G3-4", "G3-5", "G3-6", "G3-7", "G3-8", "G3-9",
     "G4-0", "G4-1", "G4-2", "G4-3", "G4-4",
     "G5-1", "G5-2", "G5-4",
+    # G5-6 的判据正文写在 requirements.yaml 的 verification_plan 与 gates.md#G5 里
+    "G5-6",
     "G6-0", "G6-1",
 }
 
@@ -1397,7 +1399,35 @@ def gate_solve(case: Path, args) -> Result:
           "振荡侧边界的 state 必须被记录；rejected（策略）与 stopped（人为）语义不同，不得混为一谈",
           "states=" + str(distinct), "PASS" if len(distinct) <= 1 else "WARN",
           "cases/DF90-001/memory.md#2026-09-17", {"lines": lines})
+    # G5-6 同转速 + 同环形几何 锚点对照
+    #
+    # requirements.yaml 的 verification_plan.first_point 写着这个案例的核实点，
+    # 但在这之前**没有任何工具会去读它** —— 于是 5000 rpm 的算例被拿去比
+    # 6100 rpm 的设计目标（90 kgf），得出「差 -29.7%、达不到要求」，
+    # 而那是两个不同工况的数直接相减。这跟 G2-7 是同一类错：口径不同，而没人查。
+    #
+    # 而且不能只比转速：本轮转速对上了（5000 = 5000），环形几何没对上
+    # （v7 锚点入口轮毂 0.103457 vs 本次 0.08，差 22.7%）。
+    # 只比转速不比几何，等于换个方式再犯同一个错。
+    try:
+        import anchor_check
+        cmp6 = anchor_check.compare(case)
+        r.add("G5-6", "同转速 + 同环形几何 锚点对照",
+              "requirements.yaml 的 verification_plan.first_point 定义了核实点；"
+              "必须用**同转速**的算例去比，且环形几何必须同源。"
+              "转速对不上记「还查不了」，因为拿不同转速的数直接相减正是这条要防的错",
+              anchor_check.headline(cmp6), cmp6.get("verdict", "SKIP"),
+              "requirements.yaml#verification_plan.first_point",
+              {"rpm": cmp6.get("rpm"), "annulus_rows": cmp6.get("annulus_rows"),
+               "items": cmp6.get("items"), "reasons": cmp6.get("reasons"),
+               "anchor_annulus_source": (cmp6.get("anchor") or {}).get("annulus_source")})
+    except Exception as exc:
+        r.add("G5-6", "同转速 + 同环形几何 锚点对照",
+              "requirements.yaml 的 verification_plan.first_point 定义了核实点",
+              "对照工具不可用或失败：" + repr(exc), "SKIP",
+              "requirements.yaml#verification_plan.first_point")
     return r
+
 
 
 # ── G6 后处理与交付 ────────────────────────────────────────────────────────

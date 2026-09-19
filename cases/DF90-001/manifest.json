@@ -2,8 +2,8 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-19T16:39:50+08:00",
-  "revision": 55,
+  "updated": "2026-09-19T18:47:46+08:00",
+  "revision": 63,
   "requirement_ref": {
     "file": "requirements.yaml",
     "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
@@ -372,6 +372,81 @@
       "provenance": {
         "from": "02-geometry/v8/PROVENANCE.md",
         "from_sha256": "f41a2e7f37d9dd700ea1bd4a4a10313f0828fc7fb0856d5e52ce1047c6bb77f5"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "solve",
+      "path": "04-solve/v2/n05000_p101325/setup.json",
+      "version": "v2",
+      "sha256": "85578df67517904822fac2fe4b8b896c65b6288237baa499be7afbb1d5881871",
+      "bytes": 3265,
+      "verdict": "INFO",
+      "ts": "2026-09-19T18:11:18+08:00",
+      "note": "把 5000rpm/101325Pa 算例重新布置进案例。另需 03-mesh/v2/mesh-v2.cgns（求解器按 GRID_FILE 换扩展名索取）",
+      "provenance": {
+        "from": "03-mesh/v2/mesh-v2.igg",
+        "from_sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "evidence",
+      "path": "04-solve/v2/n05000_p101325/outlet-area-audit.json",
+      "version": "v2",
+      "sha256": "542688cc10efd13f9f93141af0405bfd47e8a31c8e472a095f10f78fd1169fb7",
+      "bytes": 757,
+      "verdict": "PASS",
+      "ts": "2026-09-19T18:11:18+08:00",
+      "note": "【这条与流场收不收敛无关，可独立成立】面积只由网格几何与叶排周期数决定",
+      "provenance": {
+        "from": "04-solve/v2/n05000_p101325/n05000_p101325.xmf",
+        "from_sha256": "1357ddf5c1a14bd9f2465ddf7dd7112b940a00e170ab3b7a39ae0719febfb1d9"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "performance",
+      "path": "04-solve/v2/n05000_p101325/thrust_closure.csv",
+      "version": "v2",
+      "sha256": "6649e94a40bb943d8741b313a79755ff98077f0a818adc692aa81d8124502305",
+      "bytes": 723,
+      "verdict": "WARN",
+      "ts": "2026-09-19T18:47:22+08:00",
+      "note": "重登记（登记后文件被重新生成过，哈希不符）。未收敛中间值，不得用于任何结论。",
+      "provenance": {
+        "from": "04-solve/v2/n05000_p101325/n05000_p101325.xmf",
+        "from_sha256": "9273c190665cd0d16b47fe3bad997b7ac4a734136ec89c624e7e859365938324"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "evidence",
+      "path": "04-solve/v2/n05000_p101325/convergence.json",
+      "version": "v2",
+      "sha256": "0c37c98c9433e8f06b630837e4d3ae838c8750da61b39da3bac269bb45bf8c84",
+      "bytes": 2851,
+      "verdict": "INFO",
+      "ts": "2026-09-19T18:47:22+08:00",
+      "note": "重登记（求解器在登记后仍在写，哈希不符）。实测：积分量全平（最大 0.185%），残差仍缓降；求解器在第 657 步被截断，无正常结束标记。",
+      "provenance": {
+        "from": "04-solve/v2/n05000_p101325/n05000_p101325.std",
+        "from_sha256": "fa483e464a10d1de3338836c2f7ba7052ea5b3d6d3c46b3c3f5c4ffa67e2f536"
+      }
+    },
+    {
+      "stage": "G5",
+      "kind": "anchor",
+      "path": "04-solve/v2/n05000_p101325/anchor_comparison.json",
+      "version": "v2",
+      "sha256": "461fa73b809de13bbade6aa147edf2b10d873357393e292b75c2de66237b8580",
+      "bytes": 6121,
+      "verdict": "FAIL",
+      "ts": "2026-09-19T18:47:46+08:00",
+      "note": "跨血缘对照（环形几何差 22.7%）+ 扭矩超容差 6.53%",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
       }
     }
   ],

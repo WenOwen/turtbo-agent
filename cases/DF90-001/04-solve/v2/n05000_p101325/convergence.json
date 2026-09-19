@@ -1,0 +1,122 @@
+{
+  "window": 100,
+  "checks": [
+    {
+      "id": "S0",
+      "title": "窗口长度",
+      "verdict": "PASS",
+      "measured": "100 个连续细网格迭代（558..657）"
+    },
+    {
+      "id": "S1",
+      "title": "逐步质量不平衡 <= 0.1%",
+      "verdict": "PASS",
+      "measured": "窗口内最大 0.0812%"
+    },
+    {
+      "id": "S2",
+      "title": "进口流量相对极差 <= 0.2%",
+      "verdict": "PASS",
+      "measured": "0.1846%"
+    },
+    {
+      "id": "S3",
+      "title": "出口流量相对极差 <= 0.2%",
+      "verdict": "PASS",
+      "measured": "0.0886%"
+    },
+    {
+      "id": "S4",
+      "title": "残差窗口极差 <= 0.3 个量级",
+      "verdict": "FAIL",
+      "measured": "0.374 个量级"
+    },
+    {
+      "id": "S5",
+      "title": "积分量窗口极差 <= 0.5%",
+      "verdict": "PASS",
+      "measured": "进口流量 0.1846%；出口流量 0.0886%；转子轴向力 0.1227%；扭矩 0.0310%"
+    },
+    {
+      "id": "L1",
+      "title": "残差窗口均值 <= -4.0",
+      "verdict": "PASS",
+      "measured": "log10(RMS) 均值 -4.064"
+    },
+    {
+      "id": "H1",
+      "title": "窗口内数值有限",
+      "verdict": "PASS",
+      "measured": "无 NaN/Inf"
+    },
+    {
+      "id": "H2",
+      "title": "窗口内 GL 恒为 1",
+      "verdict": "PASS",
+      "measured": "已是连续细网格段"
+    },
+    {
+      "id": "H3",
+      "title": "窗口内迭代号不跳变",
+      "verdict": "PASS",
+      "measured": "558..657 连续"
+    }
+  ],
+  "verdict": "工程收敛（积分量已平，残差仍缓降）",
+  "integral_quantities": [
+    {
+      "key": "mf_in",
+      "label": "进口流量",
+      "mean": 13.54154,
+      "range_pct": 0.18461711149544555,
+      "flat": true
+    },
+    {
+      "key": "mf_out",
+      "label": "出口流量",
+      "mean": 13.5417,
+      "range_pct": 0.0886151664857474,
+      "flat": true
+    },
+    {
+      "key": "force",
+      "label": "转子轴向力",
+      "mean": 464.5385,
+      "range_pct": 0.12270242401867514,
+      "flat": true
+    },
+    {
+      "key": "torque",
+      "label": "扭矩",
+      "mean": -32.24204,
+      "range_pct": 0.0310154072136813,
+      "flat": true
+    }
+  ],
+  "all_integral_flat": true,
+  "latest_iter": 657,
+  "max_iter": 2000,
+  "iter_range": [
+    558,
+    657
+  ],
+  "latest": {
+    "iter": 657,
+    "gl": 1,
+    "rms": -4.1537,
+    "maxres": -2.4803,
+    "mf_in": 13.543,
+    "mf_out": 13.547,
+    "force": 464.63,
+    "torque": -32.245
+  },
+  "std": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.std",
+  "criteria": {
+    "window": 100,
+    "mass_imbalance_pct": 0.1,
+    "flow_range_pct": 0.2,
+    "residual_range_decade": 0.3,
+    "residual_level_log10": -4.0,
+    "source": "numeca-fine-solver SKILL.md 的 v7 口径 + 合同 C-002"
+  }
+}

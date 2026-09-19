@@ -1,10 +1,13 @@
 {
   "initialized": true,
   "baseline_at": "2026-09-19T00:34:14+08:00",
-  "files": 91,
+  "files": 93,
   "history_stored": 0,
   "last_tick": "2026-09-19T01:31:17+08:00",
   "last_tick_epoch": 1789752677.7988505,
-  "total_changes": 0,
-  "hashes": {}
+  "total_changes": 4,
+  "hashes": {
+    "04-solve/v2/n05000_p101325/n05000_p101325.run": "8e712dd78832d94e88fdc5f37779926d066429231c32528a91c4481446ea883a",
+    "04-solve/v2/n05000_p101325/thrust_closure.csv": "6649e94a40bb943d8741b313a79755ff98077f0a818adc692aa81d8124502305"
+  }
 }

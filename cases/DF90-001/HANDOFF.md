@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-19T16:39:51+08:00　·　当前阶段 **G5**　·　revision 55
+> 生成于 2026-09-19T18:47:49+08:00　·　当前阶段 **G5**　·　revision 63
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -10,24 +10,36 @@
 **但工具不这么认为：**G2 最近一次闸门判定是 **WARN**
 「已完成」说的是这一步**有产物**，闸门说的是这一步**过没过判据**。两者不一致时以后者为准 —— 明细见 LOG.md。
 
-最近一次记录：2026-09-19T16:39:50+08:00　FAIL　闸门判定 G6
+最近一次记录：2026-09-19T18:47:46+08:00　FAIL　登记产物 04-solve/v2/n05000_p101325/anchor_comparison.json
 
-## 未登记的改动
+## 未登记的改动（近 14 天 3 条，历史共 3 条）
 
-无。所有文件变动都能在 LOG.md 里找到对应条目。
+这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
+可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
+
+- 18:00:32　**算例参数**　added　04-solve/v2/n05000_p101325/n05000_p101325.run　0 -> 268409 bytes
+- 18:05:44　**算例参数**　added　04-solve/v2/n05000_p101325/thrust_closure.csv　0 -> 724 bytes
+- 18:11:07　**算例参数**　modified　04-solve/v2/n05000_p101325/thrust_closure.csv　724 -> 724 bytes
 
 ## 最近 10 次变更
 
-（本次基线建立后尚无变更记录）
+| 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
+|---|---|---|---|---|---|
+| 09-19 18:35:36 | 算例参数 | agent | modified | 04-solve/v2/n05000_p101325/thrust_closure.csv | 724 -> 723 |
+| 09-19 18:11:07 | 算例参数 | **unknown** | modified | 04-solve/v2/n05000_p101325/thrust_closure.csv | 724 -> 724 |
+| 09-19 18:05:44 | 算例参数 | **unknown** | added | 04-solve/v2/n05000_p101325/thrust_closure.csv | 0 -> 724 |
+| 09-19 18:00:32 | 算例参数 | **unknown** | added | 04-solve/v2/n05000_p101325/n05000_p101325.run | 0 -> 268409 |
 
 ## 你接手前必须知道
 
-**结论非 PASS 的产物（4 条）**
+**结论非 PASS 的产物（6 条）**
 
 - [WARN] 02-geometry/v8/PROVENANCE.md　— 同时记录 build-par/v8_build_manifest.json 已过期（hub 与 lean 均与交付不符）
 - [WARN] 02-geometry/v8/autoblade/R1_13span/R1.geomTurbo　— 转子；REVERSE_THETA=0，导出后负向，与 v7 交付件方向一致
 - [WARN] 02-geometry/v8/autoblade/R2_13span/R2.geomTurbo　— 静子；REVERSE_THETA=0，导出后正向
 - [WARN] 03-mesh/v1/mesh-v1.qualityReport　— new-project 基线，非交付件
+- [WARN] 04-solve/v2/n05000_p101325/thrust_closure.csv　— 重登记（登记后文件被重新生成过，哈希不符）。未收敛中间值，不得用于任何结论。
+- [FAIL] 04-solve/v2/n05000_p101325/anchor_comparison.json　— 跨血缘对照（环形几何差 22.7%）+ 扭矩超容差 6.53%
 
 **待晋升的经验（2 条）**
 
@@ -47,7 +59,7 @@
 - 轴向长度　来源：open　轴向总长是否有约束
 - `acceptance.ACC-1` 之外　来源：待细化　是否还有其他验收口径（如效率下限、噪声、重量）
 
-## 产物（26 条）
+## 产物（31 条）
 
 | 阶段 | 结论 | 版本 | 路径 | sha256 |
 |---|---|---|---|---|
@@ -77,10 +89,15 @@
 | G5 | INFO | v1 | 04-solve/v1/v8-optimized_n05000_p101325/v8-optimized_n05000_p101325.std | 349a129c |
 | G5 | INFO | v8 | _external/v8-large-binaries.json | f03c9f6d |
 | G5 | PASS | v8 | _automation/v8/scan_plan.csv | 2242a13f |
+| G5 | INFO | v2 | 04-solve/v2/n05000_p101325/setup.json | 85578df6 |
+| G5 | PASS | v2 | 04-solve/v2/n05000_p101325/outlet-area-audit.json | 542688cc |
+| G5 | WARN | v2 | 04-solve/v2/n05000_p101325/thrust_closure.csv | 6649e94a |
+| G5 | INFO | v2 | 04-solve/v2/n05000_p101325/convergence.json | 0c37c98c |
+| G5 | FAIL | v2 | 04-solve/v2/n05000_p101325/anchor_comparison.json | 461fa73b |
 
 ---
 
-看守状态：监视 91 个文件　·　累计变更 0 条　·　历史库 285 份内容
+看守状态：监视 93 个文件　·　累计变更 4 条　·　历史库 288 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。

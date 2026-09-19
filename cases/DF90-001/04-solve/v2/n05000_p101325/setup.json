@@ -1,0 +1,62 @@
+{
+  "case": "DF90-001",
+  "version": "v2",
+  "case_name": "n05000_p101325",
+  "work_point": {
+    "rpm": 5000,
+    "outlet_static_pressure_pa": 101325,
+    "omega_rad_s": 523.598775571636,
+    "source": "原始算例目录的 boundary_audit.json（实测）"
+  },
+  "why_redo": [
+    "04-solve/v1 下 60 个工况只有 1 个留下结果，且残差停在 1e-3.5 未收敛。",
+    "这一版把那个唯一的真解重新布置进案例，让产物落在案例内。"
+  ],
+  "mesh_rebind": {
+    "reason": "案例自带网格与原网格逐字节相同，改绑是纯路径变化，物理零变化",
+    "from": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+    "to": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v2\\mesh-v2.igg",
+    "from_sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d",
+    "to_sha256": "433150fa56c18ecaa91e4190dc2f078bbabaf3f19ad4de08c22d9f45d00fac3d",
+    "identical": true,
+    "bytes": 483468
+  },
+  "edits": [
+    {
+      "src": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.run",
+      "dst": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.run",
+      "src_bytes": 268415,
+      "dst_bytes": 268409,
+      "src_sha256": "cdb9dad8c9983bc697b8c1544ba6a02c3779eece018cbfff778477cf7c09b3ca",
+      "dst_sha256": "8e712dd78832d94e88fdc5f37779926d066429231c32528a91c4481446ea883a",
+      "替换": [
+        {
+          "旧": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\mesh\\mesh-v2\\mesh-v2.igg",
+          "新": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v2\\mesh-v2.igg",
+          "替换次数": 1
+        }
+      ]
+    },
+    {
+      "src": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.steering",
+      "dst": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.steering",
+      "src_bytes": 4872,
+      "dst_bytes": 4836,
+      "src_sha256": "c7958efb329dc998371a6f55018031dae97a004acc45d6719fbd367135f120ba",
+      "dst_sha256": "78ab775a4e4432e11f95cccf669101bb1841af1c84535d54ff53b0aad070d726",
+      "替换": [
+        {
+          "旧": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325\\v8-optimized_n05000_p101325.steering",
+          "新": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.steering",
+          "替换次数": 1
+        }
+      ]
+    }
+  ],
+  "leftover_source_refs": [],
+  "source": {
+    "orig_case_dir": "D:\\Project\\Research\\Ducted-Fan\\run\\90kg-duct-fan-v8\\fine\\v8-optimized\\v8-optimized_n05000_p101325",
+    "orig_stem": "v8-optimized_n05000_p101325"
+  },
+  "command": "D:\\NUMECA_SOFTWARE\\fine161\\bin64\\euranusx86_64.exe \"D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.run\" -steering \"D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.steering\" -niversion \"161\" -seq"
+}

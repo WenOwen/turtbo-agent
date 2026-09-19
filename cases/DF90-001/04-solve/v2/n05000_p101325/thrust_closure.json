@@ -1,0 +1,126 @@
+{
+  "xmf": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.xmf",
+  "station": "Outlet",
+  "inputs": {
+    "mass_flow_kg_s": 13.48909,
+    "axial_velocity_m_s": 45.86467,
+    "static_pressure_pa_abs": 101325.2,
+    "ambient_static_pressure_pa_abs": 101325.0
+  },
+  "outlet_area": {
+    "sector_area_m2": 0.02204477,
+    "periodicity": 11,
+    "full_area_m2": 0.24249247000000002,
+    "analytic_annulus_m2": 0.2425015071419443,
+    "hub_radius_m": 0.1131785,
+    "shroud_radius_m": 0.3,
+    "rel_diff": 3.726633310773379e-05,
+    "verdict": "PASS",
+    "how": "全周面积 = XMF 周期扇区面积 x 出口叶排周期数；与 pi*(r_shroud^2-r_hub^2) 交叉核验"
+  },
+  "result": {
+    "momentum_thrust_n": 618.6726614502999,
+    "pressure_thrust_n": 0.048498493999294255,
+    "static_thrust_n": 618.7211599442992,
+    "static_thrust_kgf": 63.091999810771185,
+    "closure_rel_err": 0.0
+  },
+  "solver_reported": {
+    "axial_thrust_n_wall_only": 464.1698,
+    "torque_nm": -32.2546,
+    "power_w": -16888.47,
+    "isentropic_efficiency_tt": 0.8330844,
+    "total_pressure_ratio": 1.01286
+  },
+  "note": [
+    "solver_reported.axial_thrust_n_wall_only 是**壁面力**，只积分转子叶片与轮毂。",
+    "C-004 明说它不是整机推力，列在这里只为对照，不得当结论。"
+  ],
+  "convergence": {
+    "window": 100,
+    "checks": [
+      {
+        "id": "S0",
+        "title": "窗口长度",
+        "verdict": "PASS",
+        "measured": "100 个连续细网格迭代（550..649）"
+      },
+      {
+        "id": "S1",
+        "title": "逐步质量不平衡 <= 0.1%",
+        "verdict": "PASS",
+        "measured": "窗口内最大 0.0812%"
+      },
+      {
+        "id": "S2",
+        "title": "进口流量相对极差 <= 0.2%",
+        "verdict": "PASS",
+        "measured": "0.1920%"
+      },
+      {
+        "id": "S3",
+        "title": "出口流量相对极差 <= 0.2%",
+        "verdict": "PASS",
+        "measured": "0.1034%"
+      },
+      {
+        "id": "S4",
+        "title": "残差窗口极差 <= 0.3 个量级",
+        "verdict": "FAIL",
+        "measured": "0.383 个量级"
+      },
+      {
+        "id": "L1",
+        "title": "残差窗口均值 <= -4.0",
+        "verdict": "PASS",
+        "measured": "log10(RMS) 均值 -4.057"
+      },
+      {
+        "id": "H1",
+        "title": "窗口内数值有限",
+        "verdict": "PASS",
+        "measured": "无 NaN/Inf"
+      },
+      {
+        "id": "H2",
+        "title": "窗口内 GL 恒为 1",
+        "verdict": "PASS",
+        "measured": "已是连续细网格段"
+      },
+      {
+        "id": "H3",
+        "title": "窗口内迭代号不跳变",
+        "verdict": "PASS",
+        "measured": "550..649 连续"
+      }
+    ],
+    "verdict": "没算完",
+    "latest_iter": 649,
+    "max_iter": 2000,
+    "iter_range": [
+      550,
+      649
+    ],
+    "latest": {
+      "iter": 649,
+      "gl": 1,
+      "rms": -3.9775,
+      "maxres": -2.4807,
+      "mf_in": 13.552,
+      "mf_out": 13.543,
+      "force": 464.6,
+      "torque": -32.244
+    },
+    "std": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\04-solve\\v2\\n05000_p101325\\n05000_p101325.std",
+    "criteria": {
+      "window": 100,
+      "mass_imbalance_pct": 0.1,
+      "flow_range_pct": 0.2,
+      "residual_range_decade": 0.3,
+      "residual_level_log10": -4.0,
+      "source": "numeca-fine-solver SKILL.md 的 v7 口径 + 合同 C-002"
+    }
+  },
+  "usable_for_conclusions": false,
+  "provisional_warning": "此值建立在**未收敛**的解上（收敛判定：没算完）。**不得用于任何结论**，仅作中间量留痕。"
+}
