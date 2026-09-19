@@ -2,14 +2,14 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-20T04:07:01+08:00",
-  "revision": 91,
+  "updated": "2026-09-20T04:27:05+08:00",
+  "revision": 95,
   "requirement_ref": {
     "file": "requirements.yaml",
     "sha256": "32cdab3d9f27350bc243a50fa419f11940fe4e14d9484762c40e750c087f7883",
     "bytes": 5719
   },
-  "current_stage": "G3",
+  "current_stage": "G4",
   "artifacts": [
     {
       "stage": "G0",
@@ -838,9 +838,84 @@
         "from": "01-scheme/v4/叶片几何参数表.csv",
         "from_sha256": "72d70364734cc1abfb185f7856bda4dc1288cafe8e49e6b544aa17c10e3d9a30"
       }
+    },
+    {
+      "stage": "G4",
+      "kind": "mesh",
+      "path": "03-mesh/v3/mesh-v3.igg",
+      "version": "v3",
+      "sha256": "a11cef26d56d7673fc3f4287931909322e8796df7b2818d9b7b2d72af618c93c",
+      "bytes": 456301,
+      "verdict": "PASS",
+      "ts": "2026-09-20T04:22:47+08:00",
+      "note": "",
+      "provenance": {
+        "from": "02-geometry/v11/autoblade/R1_13span/R1.geomTurbo",
+        "from_sha256": "87dba87cabb4dee512ae32adc3dd70ccc929028c36b4c8c4c8b7a548bdc5c40e"
+      }
+    },
+    {
+      "stage": "G4",
+      "kind": "other",
+      "path": "03-mesh/v3/mesh-v3.qualityReport",
+      "version": "v3",
+      "sha256": "1522861575e6840ed03a69567fe3a23464ef046904bf561350790b717fc06d8d",
+      "bytes": 4463,
+      "verdict": "PASS",
+      "ts": "2026-09-20T04:22:47+08:00",
+      "note": "",
+      "provenance": {
+        "from": "03-mesh/v3/mesh-v3.igg",
+        "from_sha256": "a11cef26d56d7673fc3f4287931909322e8796df7b2818d9b7b2d72af618c93c"
+      }
+    },
+    {
+      "stage": "G4",
+      "kind": "mesh",
+      "path": "03-mesh/v4/mesh-v4.igg",
+      "version": "v4",
+      "sha256": "2314a3453b1b366507df4e75624cc9d13195e10a16facb87dcc7af60a0328efa",
+      "bytes": 459893,
+      "verdict": "PASS",
+      "ts": "2026-09-20T04:27:05+08:00",
+      "note": "",
+      "provenance": {
+        "from": "02-geometry/v11/autoblade/R1_13span/R1.geomTurbo",
+        "from_sha256": "87dba87cabb4dee512ae32adc3dd70ccc929028c36b4c8c4c8b7a548bdc5c40e"
+      }
+    },
+    {
+      "stage": "G4",
+      "kind": "other",
+      "path": "03-mesh/v4/mesh-v4.qualityReport",
+      "version": "v4",
+      "sha256": "824b2164b1cfcfe9499a947241d0104f51e4132ef3f2eb62c56b417eb179dd52",
+      "bytes": 4462,
+      "verdict": "PASS",
+      "ts": "2026-09-20T04:27:05+08:00",
+      "note": "",
+      "provenance": {
+        "from": "03-mesh/v4/mesh-v4.igg",
+        "from_sha256": "2314a3453b1b366507df4e75624cc9d13195e10a16facb87dcc7af60a0328efa"
+      }
     }
   ],
   "supporting": [
+    {
+      "path": "_automation/v10/v10_build_par.py",
+      "sha256": "197cf63c71faf98c56f23fe791748cb807705a110ed7fd7a61410222854b337f",
+      "bytes": 5373
+    },
+    {
+      "path": "_automation/v11/v11_build_par.py",
+      "sha256": "71bada71b608db727ee766344c485947116a6c09b5ef7c7d9807a9b5dff00aea",
+      "bytes": 3536
+    },
+    {
+      "path": "_automation/v11/v11_manifest.py",
+      "sha256": "4b94dd8762eee853de7b108435ed43e389465ac3d1bcdd557c7b4f2bf93010bf",
+      "bytes": 3706
+    },
     {
       "path": "_automation/v8/audit_run.py",
       "sha256": "90759e7b8b5b72f084ae77df538fc83c78365d18245e5774b18887207d9fdef3",

@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-20T04:17:14+08:00　·　当前阶段 **G3**　·　revision 91
+> 生成于 2026-09-20T04:27:10+08:00　·　当前阶段 **G4**　·　revision 95
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -10,37 +10,37 @@
 **但工具不这么认为：**G2 最近一次闸门判定是 **WARN**
 「已完成」说的是这一步**有产物**，闸门说的是这一步**过没过判据**。两者不一致时以后者为准 —— 明细见 LOG.md。
 
-最近一次记录：2026-09-20T04:07:01+08:00　PASS　登记产物 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json
+最近一次记录：2026-09-20T04:27:05+08:00　PASS　登记产物 03-mesh/v4/mesh-v4.qualityReport
 
-## 未登记的改动（近 14 天 52 条，历史共 52 条）
+## 未登记的改动（近 14 天 64 条，历史共 64 条）
 
 这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
 可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
 
-- 04:16:28　**网格**　added　03-mesh/v3/mesh-v3.bak.trb　0 -> 34395 bytes
-- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.bcs　669 -> 15972 bytes
-- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.config　597 -> 13326 bytes
-- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.trb　34395 -> 36031 bytes
-- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.igg　0 -> 0 bytes
-- 04:17:08　**网格**　modified　03-mesh/v3/mesh-v3.igg　0 -> 456301 bytes
-- 04:17:08　**网格**　modified　03-mesh/v3/mesh-v3.bcs　15972 -> 15972 bytes
-- 04:17:08　**网格**　modified　03-mesh/v3/mesh-v3.config　13326 -> 13326 bytes
-- …另有 44 条，见 _watch/changes.jsonl
+- 04:26:27　**网格**　modified　03-mesh/v4/mesh-v4.igg　6675 -> 459893 bytes
+- 04:26:27　**网格**　modified　03-mesh/v4/mesh-v4.bcs　669 -> 15981 bytes
+- 04:26:27　**网格**　modified　03-mesh/v4/mesh-v4.config　597 -> 13326 bytes
+- 04:25:49　**网格**　added　03-mesh/v4/mesh-v4.bak.trb　0 -> 34403 bytes
+- 04:26:27　**网格**　modified　03-mesh/v4/mesh-v4.trb　34403 -> 36042 bytes
+- 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.igg　459893 -> 459893 bytes
+- 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.bcs　15981 -> 15981 bytes
+- 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.config　13326 -> 13326 bytes
+- …另有 56 条，见 _watch/changes.jsonl
 
 ## 最近 10 次变更
 
 | 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
 |---|---|---|---|---|---|
-| 09-20 04:17:08 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.config | 13326 -> 13326 |
-| 09-20 04:17:08 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.bcs | 15972 -> 15972 |
-| 09-20 04:17:08 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.igg | 0 -> 456301 |
-| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.igg | 0 -> 0 |
-| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.trb | 34395 -> 36031 |
-| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.config | 597 -> 13326 |
-| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.bcs | 669 -> 15972 |
-| 09-20 04:16:28 | 网格 | **unknown** | added | 03-mesh/v3/mesh-v3.bak.trb | 0 -> 34395 |
-| 09-20 04:17:03 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.igg | 6675 -> 0 |
-| 09-20 04:16:28 | 网格 | **unknown** | added | 03-mesh/v3/mesh-v3.config | 0 -> 597 |
+| 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.config | 13326 -> 13326 |
+| 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.bcs | 15981 -> 15981 |
+| 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.igg | 459893 -> 459893 |
+| 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.trb | 34403 -> 36042 |
+| 09-20 04:25:49 | 网格 | **unknown** | added | 03-mesh/v4/mesh-v4.bak.trb | 0 -> 34403 |
+| 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.config | 597 -> 13326 |
+| 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.bcs | 669 -> 15981 |
+| 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.igg | 6675 -> 459893 |
+| 09-20 04:25:49 | 网格 | **unknown** | added | 03-mesh/v4/mesh-v4.config | 0 -> 597 |
+| 09-20 04:25:49 | 网格 | **unknown** | added | 03-mesh/v4/mesh-v4.bcs | 0 -> 669 |
 
 ## 你接手前必须知道
 
@@ -73,7 +73,7 @@
 - 轴向长度　来源：open　轴向总长是否有约束
 - `acceptance.ACC-1` 之外　来源：待细化　是否还有其他验收口径（如效率下限、噪声、重量）
 
-## 产物（57 条）
+## 产物（61 条）
 
 | 阶段 | 结论 | 版本 | 路径 | sha256 |
 |---|---|---|---|---|
@@ -134,10 +134,14 @@
 | G3 | PASS | v11 | 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo | 7ab3080a |
 | G3 | PASS | v11 | 02-geometry/v11/autoblade/R1_13span/R1.geomTurbo.manifest.json | ddebdbb6 |
 | G3 | PASS | v11 | 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json | 96bb7ae2 |
+| G4 | PASS | v3 | 03-mesh/v3/mesh-v3.igg | a11cef26 |
+| G4 | PASS | v3 | 03-mesh/v3/mesh-v3.qualityReport | 15228615 |
+| G4 | PASS | v4 | 03-mesh/v4/mesh-v4.igg | 2314a345 |
+| G4 | PASS | v4 | 03-mesh/v4/mesh-v4.qualityReport | 824b2164 |
 
 ---
 
-看守状态：监视 147 个文件　·　累计变更 71 条　·　历史库 344 份内容
+看守状态：监视 152 个文件　·　累计变更 83 条　·　历史库 349 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。

@@ -435,3 +435,39 @@
 - 判据：由 v4 参数表展开；law=linear
 - 结论：PASS
 
+## 2026-09-20T04:22:47+08:00 | G4 网格 | PASS
+- 动作：登记产物 03-mesh/v3/mesh-v3.igg
+- 操作者：agent
+- 输入：03-mesh/v3/mesh-v3.igg  sha256=a11cef26d56d7673  bytes=456301
+- 上游：02-geometry/v11/autoblade/R1_13span/R1.geomTurbo
+- 产物：03-mesh/v3/mesh-v3.igg  sha256=a11cef26d56d7673fc3f4287931909322e8796df7b2818d9b7b2d72af618c93c
+- 判据：new-project 从 v11 几何初始化；16 块；负单元 0；最小偏斜角 14.896 度（低于 15 度验收线，待 v4 优化）
+- 结论：PASS
+
+## 2026-09-20T04:22:47+08:00 | G4 网格 | PASS
+- 动作：登记产物 03-mesh/v3/mesh-v3.qualityReport
+- 操作者：agent
+- 输入：03-mesh/v3/mesh-v3.qualityReport  sha256=1522861575e6840e  bytes=4463
+- 上游：03-mesh/v3/mesh-v3.igg
+- 产物：03-mesh/v3/mesh-v3.qualityReport  sha256=1522861575e6840ed03a69567fe3a23464ef046904bf561350790b717fc06d8d
+- 判据：Mesh Validity OK；No Negative Cell；1779880->1573124 点
+- 结论：PASS
+
+## 2026-09-20T04:27:05+08:00 | G4 网格 | PASS
+- 动作：登记产物 03-mesh/v4/mesh-v4.igg
+- 操作者：agent
+- 输入：03-mesh/v4/mesh-v4.igg  sha256=2314a3453b1b3665  bytes=459893
+- 上游：02-geometry/v11/autoblade/R1_13span/R1.geomTurbo
+- 产物：03-mesh/v4/mesh-v4.igg  sha256=2314a3453b1b366507df4e75624cc9d13195e10a16facb87dcc7af60a0328efa
+- 判据：单因素优化 streamwise_blade_upper_points 97->101；最小偏斜角 14.896->16.496 度；16 块；负单元 0；issues 空
+- 结论：PASS
+
+## 2026-09-20T04:27:05+08:00 | G4 网格 | PASS
+- 动作：登记产物 03-mesh/v4/mesh-v4.qualityReport
+- 操作者：agent
+- 输入：03-mesh/v4/mesh-v4.qualityReport  sha256=824b2164b1cfcfe9  bytes=4462
+- 上游：03-mesh/v4/mesh-v4.igg
+- 产物：03-mesh/v4/mesh-v4.qualityReport  sha256=824b2164b1cfcfe9499a947241d0104f51e4132ef3f2eb62c56b417eb179dd52
+- 判据：Mesh Validity OK；No Negative Cell；1596448 点；最小偏斜角 16.496 度
+- 结论：PASS
+

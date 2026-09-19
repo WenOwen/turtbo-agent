@@ -1,0 +1,226 @@
+{
+  "mesh_dir": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4",
+  "stem": "mesh-v4",
+  "artifacts": {
+    ".trb": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.trb",
+      "exists": true,
+      "size": 36042
+    },
+    ".igg": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.igg",
+      "exists": true,
+      "size": 459893
+    },
+    ".cgns": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.cgns",
+      "exists": true,
+      "size": 49987584
+    },
+    ".bcs": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.bcs",
+      "exists": true,
+      "size": 15981
+    },
+    ".config": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.config",
+      "exists": true,
+      "size": 13326
+    },
+    ".qualityReport": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.qualityReport",
+      "exists": true,
+      "size": 4462
+    },
+    ".geomTurbo": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.geomTurbo",
+      "exists": true,
+      "size": 353777
+    }
+  },
+  "quality": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.qualityReport",
+    "mesh_validity": "OK  (No Overlapping Cells Generated)",
+    "negative_cell_ok": true,
+    "number_of_points": 1596448,
+    "number_of_rows": 2,
+    "entire": {
+      "min_skewness_angle": 16.496,
+      "max_aspect_ratio": 1084.1,
+      "max_expansion_ratio": 2.3496,
+      "min_wall_distance": 9.603e-06
+    },
+    "rows": {
+      "row 1": {
+        "main_blades": 9,
+        "points": 1084873,
+        "layers": 73,
+        "min_skewness_angle": 16.496,
+        "max_aspect_ratio": 1084.1,
+        "max_expansion_ratio": 2.3496,
+        "min_wall_distance": 9.603e-06,
+        "location_skewness_angle": "row_1_flux_1_Main_Blade_skin I,J,K:2,28,46",
+        "location_aspect_ratio": "row_1_flux_1_Main_Blade_skin I,J,K:0,20,115",
+        "location_expansion_ratio": "row_1_flux_1_Main_Blade_up I,J,K:15,71,59",
+        "location_wall_distance": "row_1_flux_1_Main_Blade_up I,J,K:5,0,93"
+      },
+      "row 2": {
+        "main_blades": 11,
+        "points": 511575,
+        "layers": 57,
+        "min_skewness_angle": 43.521,
+        "max_aspect_ratio": 992.23,
+        "max_expansion_ratio": 2.1417,
+        "min_wall_distance": 9.9199e-06,
+        "location_skewness_angle": "row_2_flux_1_Main_Blade_skin I,J,K:0,1,164",
+        "location_aspect_ratio": "row_2_flux_1_Main_Blade_skin I,J,K:0,23,110",
+        "location_expansion_ratio": "row_2_flux_1_Main_Blade_skin I,J,K:6,55,121",
+        "location_wall_distance": "row_2_flux_1_Main_Blade_downStream I,J,K:37,0,0"
+      }
+    }
+  },
+  "geomturbo": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.geomTurbo",
+    "channel": {
+      "hub": {
+        "point_count": 100,
+        "sha256": "cab31438337e90ebb54a89b9514c90bdbd3d083cb09c35442ecca6c393ab941d",
+        "first_zr_m": [
+          0.0,
+          0.08
+        ],
+        "last_zr_m": [
+          0.3,
+          0.1132
+        ]
+      },
+      "shroud": {
+        "point_count": 100,
+        "sha256": "f5a65d39907fbc723d2402d314724469367a90cddc9b380c2cf75876314037f2",
+        "first_zr_m": [
+          0.0,
+          0.3
+        ],
+        "last_zr_m": [
+          0.3,
+          0.3
+        ]
+      }
+    },
+    "rows": {
+      "row 1": {
+        "periodicity": 9,
+        "has_main_blade": true,
+        "has_tip_gap": true
+      },
+      "row 2": {
+        "periodicity": 11,
+        "has_main_blade": true,
+        "has_tip_gap": false
+      }
+    }
+  },
+  "config": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.config",
+    "inlet_rows": [
+      "row 1"
+    ],
+    "outlet_rows": [
+      "row 2"
+    ],
+    "rs_pairs": [
+      [
+        1,
+        2
+      ]
+    ],
+    "rotation_speed_rpm": {
+      "row 1": 6100.0,
+      "row 2": 0.0
+    },
+    "tip_gap_mentions": 14
+  },
+  "bcs": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.bcs",
+    "counts": {
+      "INL": 1,
+      "OUT": 1,
+      "ROT": 2,
+      "SOL": 36,
+      "PER": 12,
+      "PERNM": 0,
+      "CON": 78,
+      "NMB": 0
+    },
+    "row_blade_counts": {
+      "row 1": [
+        9
+      ],
+      "row 2": [
+        11
+      ]
+    }
+  },
+  "trb": {
+    "exists": true,
+    "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.trb",
+    "number_of_grid_levels": 3,
+    "first_cell_widths": [
+      1e-05,
+      1e-05
+    ],
+    "skin_clustering": [
+      1e-05,
+      1e-05
+    ],
+    "accuracy": [
+      2,
+      2
+    ],
+    "rows": {
+      "row 1": {
+        "type": "rotor",
+        "tip_gap": true,
+        "tip_gap_width_le_m": 0.0005,
+        "tip_gap_width_te_m": 0.0005,
+        "b2b_controls": {
+          "boundary_layer_points": 17,
+          "gap_boundary_layer_points": 17,
+          "streamwise_inlet_points": 17,
+          "streamwise_outlet_points": 17,
+          "streamwise_blade_upper_points": 101,
+          "streamwise_blade_lower_points": 101,
+          "azimuthal_inlet_points": 17,
+          "azimuthal_outlet_points": 17
+        }
+      },
+      "row 2": {
+        "type": "stator",
+        "tip_gap": false,
+        "tip_gap_width_le_m": 0.01105515748828121,
+        "tip_gap_width_te_m": 0.01105515748828121,
+        "b2b_controls": {
+          "boundary_layer_points": 17,
+          "gap_boundary_layer_points": 17,
+          "streamwise_inlet_points": 17,
+          "streamwise_outlet_points": 17,
+          "streamwise_blade_upper_points": 81,
+          "streamwise_blade_lower_points": 81,
+          "azimuthal_inlet_points": 17,
+          "azimuthal_outlet_points": 17
+        }
+      }
+    }
+  },
+  "log": {
+    "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v4\\mesh-v4.autogrid.log",
+    "required": true,
+    "exists": true,
+    "sentinel_ok": true
+  },
+  "issues": []
+}
