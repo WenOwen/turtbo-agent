@@ -1,0 +1,127 @@
+{
+  "schema_version": "1.0",
+  "fluid": {
+    "name": "dry_air",
+    "gas_constant": 287.05287,
+    "gamma": 1.4,
+    "heat_capacity_model": "temperature_dependent"
+  },
+  "inlet": {
+    "total_pressure_pa": 101325,
+    "total_temperature_k": 288.15,
+    "mass_flow_kg_s": 15.09343,
+    "absolute_flow_angle_deg": 0,
+    "total_pressure_profile": [],
+    "total_temperature_profile": [],
+    "swirl_profile": []
+  },
+  "shaft": {
+    "rpm": 6100
+  },
+  "design": {
+    "mass_flow_kg_s": 15.09343,
+    "total_pressure_ratio": 1.041818,
+    "stage_count": 1,
+    "target_efficiency_tt": 0.8931,
+    "flow_coefficient": 0.383833,
+    "loading_coefficient": 0.1037,
+    "reaction": 0.5,
+    "exit_swirl_deg": 0,
+    "stage_work_weights": [],
+    "auto_stage_count": false,
+    "stage_reactions": [],
+    "stage_flow_coefficients": []
+  },
+  "vortex_law": "free",
+  "numerics": {
+    "spanwise_points": 17,
+    "streamwise_points": 61,
+    "max_iterations": 120,
+    "mass_tolerance": 0.001,
+    "energy_tolerance": 1e-05,
+    "streamline_tolerance": 1e-05,
+    "relaxation": 0.35,
+    "momentum_tolerance": 0.001
+  },
+  "metadata": {
+    "motor_envelope": {
+      "model": "EMRAX 188",
+      "outer_radius_m": 0.094,
+      "axial_length_m": 0.079,
+      "axial_clearance_m": 0.008,
+      "footprint_x_m": [
+        0.0,
+        0.095
+      ],
+      "source": "requirements.yaml#motor（2026-09-19 补入）"
+    }
+  },
+  "name": "DF90-001 v2 custom annulus + 电机包络显式化",
+  "description": "v2：入口轮毂由设计流量系数反解（0.103457），电机圆柱段 95 mm 显式给出；流道加长到 240 mm 以容纳两排 90 mm 弦长",
+  "annulus": {
+    "strategy": "custom",
+    "inlet_hub_radius_m": 0.103457,
+    "inlet_tip_radius_m": 0.3,
+    "length_m": 0.24,
+    "hub_curve": [
+      {
+        "x": 0.0,
+        "r": 0.103457
+      },
+      {
+        "x": 0.095,
+        "r": 0.103457
+      },
+      {
+        "x": 0.15,
+        "r": 0.108
+      },
+      {
+        "x": 0.2,
+        "r": 0.112
+      },
+      {
+        "x": 0.24,
+        "r": 0.114
+      }
+    ],
+    "shroud_curve": [
+      {
+        "x": 0.0,
+        "r": 0.3
+      },
+      {
+        "x": 0.24,
+        "r": 0.3
+      }
+    ],
+    "inlet_blockage": 0.0,
+    "outlet_blockage": 0.0
+  },
+  "rows": [
+    {
+      "id": "R1",
+      "row_type": "rotor",
+      "stage": 1,
+      "x_m": 0.055,
+      "blade_count": 9,
+      "chord_m": 0.09,
+      "solidity": 0.639,
+      "aspect_ratio": 2.0,
+      "metal_angle_in_deg": 71.918,
+      "metal_angle_out_deg": 56.144
+    },
+    {
+      "id": "S1",
+      "row_type": "stator",
+      "stage": 1,
+      "x_m": 0.19,
+      "blade_count": 11,
+      "chord_m": 0.09,
+      "solidity": 0.766,
+      "aspect_ratio": 2.0,
+      "metal_angle_in_deg": 56.144,
+      "metal_angle_out_deg": 0.0
+    }
+  ]
+}

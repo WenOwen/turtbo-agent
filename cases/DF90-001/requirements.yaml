@@ -56,6 +56,17 @@ motor:
   pole_pairs: 10
   rotor_inertia_kg_m2: 0.00989
   mass_kg: 7.1
+  # 电机包络 —— **2026-09-19 补**。
+  # 为什么现在才补：v8 的轮毂型线在 P4..P5 之间保持 Ø188 平段，
+  # 轴向长 83.955 mm（= 79 mm 电机 + 4.96 mm 余量），这是**人工在几何端满足的**。
+  # 但需求里当时只有 `model: EMRAX 188`，没写外径和轴向长度 ——
+  # G1/G2 因此推不出轮毂最小直径，只能在 G3 手工调。
+  # 结果就是 G3-9 判 FAIL：几何证明不了由参数表导出。
+  # 正确的修法不是禁止手工调整，而是把约束补进需求。
+  outer_diameter_m: 0.188          # 数据表首行「直径 188 mm」= 外径
+  axial_length_m: 0.079            # 数据表首行「长度 79 mm」
+  axial_clearance_m: 0.00496       # 两端各留余量；取自 v8 实测 83.955 - 79 = 4.955 mm
+  envelope_source: "EMRAX 188 datasheet 首行：直径 188 mm | 长度 79 mm"
   source: user
 
 rows:

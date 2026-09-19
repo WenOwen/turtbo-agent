@@ -1,0 +1,76 @@
+{
+  "artifact": "motor-envelope-check",
+  "stage": "G2",
+  "time": "2026-09-19T22:44:21+08:00",
+  "source": "requirements.yaml#motor（outer_diameter_m / axial_length_m / axial_clearance_m）",
+  "motor": {
+    "model": "EMRAX 188",
+    "outer_radius_m": 0.094,
+    "axial_length_m": 0.079,
+    "axial_clearance_each_end_m": 0.008
+  },
+  "footprint_x_m": [
+    0.0,
+    0.095
+  ],
+  "footprint_length_m": 0.095,
+  "required_length_m": 0.095,
+  "hub_radius_in_footprint_min_m": 0.103457,
+  "radial_margin_m": 0.009457,
+  "checks": [
+    {
+      "id": "M-1",
+      "what": "电机轴向占位长度",
+      "need": 0.095,
+      "got": 0.095,
+      "verdict": "PASS"
+    },
+    {
+      "id": "M-2",
+      "what": "占位内轮毂半径 >= 电机半径",
+      "need": 0.094,
+      "got": 0.103457,
+      "verdict": "PASS"
+    },
+    {
+      "id": "M-3",
+      "what": "轴向单调递增",
+      "need": true,
+      "got": true,
+      "verdict": "PASS"
+    },
+    {
+      "id": "M-4",
+      "what": "机匣半径锁定 0.3",
+      "need": 0.3,
+      "got": 0.3,
+      "verdict": "PASS"
+    },
+    {
+      "id": "M-5",
+      "what": "两排弦长与排间的轴向需要",
+      "need": 0.19999999999999998,
+      "got": 0.24,
+      "verdict": "PASS"
+    }
+  ],
+  "annulus": {
+    "length_m": 0.24,
+    "inlet_area_m2": 0.24911777,
+    "outlet_area_m2": 0.241915201,
+    "contraction": 0.971088
+  },
+  "why_inlet_hub": "入口轮毂不是随手选的：由设计流量系数反解。phi_tip = 0.2581（v1 输入口径）-> Va = 49.462 m/s-> 需要流通面积 0.249106 m2 -> r_hub = 0.103475 m。取 0.103457（与 v1 参数表 INLET 一致，差 0.018 mm）。",
+  "comparison_to_v1_v7": {
+    "inlet_hub_v1": 0.103457,
+    "inlet_hub_v2": 0.103457,
+    "length_v1": 0.180135,
+    "length_v2": 0.24,
+    "note": "入口轮毂与 v1/v7 一致（同一设计点反解）；长度从 180.135 mm 加到 240 mm —— v1 的 180.135 mm 装不下两排各 90 mm 弦长（至少需要 200 mm）"
+  },
+  "comparison_to_v8": {
+    "inlet_hub_v8": 0.08,
+    "length_v8": 0.3,
+    "note": "v8 的入口轮毂 0.08 比电机半径还小 14 mm，说明它的电机不可能在入口段 —— 与它 PROVENANCE 里的说法不一致。实测 v8 的 geomTurbo 通道曲线：轮毂在 z=0.178 处最低到 0.093937 m，比 Ø188 的半径 0.094 还低 0.063 mm。"
+  }
+}

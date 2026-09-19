@@ -1,0 +1,849 @@
+{
+  "schema_version": "1.0",
+  "solver": "meanline-design",
+  "status": "converged",
+  "iterations": 2,
+  "residuals": {
+    "mass": 9.565073054351104e-10,
+    "row_closure": 9.782747952838509e-10,
+    "angular_momentum": 1.1642446401367492e-16,
+    "energy": 6.9113726804479e-15,
+    "global_mass": 0.0,
+    "torque_balance": 9.639150724495774e-16,
+    "pressure_ratio": 2.2268631383326465e-11,
+    "design_analysis": 5.731412538605332e-10
+  },
+  "summary": {
+    "mass_flow_kg_s": 15.09343,
+    "outlet_mass_flow_kg_s": 15.09343,
+    "rpm": 6100.0,
+    "corrected_speed_fraction": 1.0,
+    "total_pressure_ratio": 1.0418180000231998,
+    "efficiency_tt": 0.8726449513434362,
+    "power_w": 58954.081227155926,
+    "torque_nm": 92.29016501058665,
+    "outlet_static_pressure_pa": 103991.50747579992,
+    "max_diffusion_factor": 0.4686981514733979,
+    "max_relative_mach": 0.40814319214095807,
+    "choked_rows": [],
+    "engineering_feasible": false,
+    "stage_count": 1,
+    "generated_row_count": 2,
+    "target_efficiency_tt": 0.8931
+  },
+  "stations": [
+    {
+      "id": "INLET",
+      "index": 0,
+      "row_id": null,
+      "row_type": "inlet",
+      "stage": 0,
+      "x_m": 0.0,
+      "hub_radius_m": 0.103457,
+      "mean_radius_m": 0.20172849999999998,
+      "tip_radius_m": 0.3,
+      "area_m2": 0.2491177704270689,
+      "mass_flow_kg_s": 15.09343,
+      "total_temperature_k": 288.15,
+      "total_pressure_pa": 101325.0,
+      "static_temperature_k": 286.904863041841,
+      "static_pressure_pa": 99802.18212762754,
+      "density_kg_m3": 1.2118259104634042,
+      "meridional_velocity_m_s": 49.99689139687084,
+      "tangential_velocity_m_s": 0.0,
+      "absolute_flow_angle_deg": 0.0,
+      "absolute_mach": 0.14721279700071108,
+      "relative_mach": null,
+      "work_j_kg": 0.0,
+      "loss_coefficient": 0.0,
+      "diffusion_factor": 0.0,
+      "de_haller": 1.0,
+      "incidence_deg": 0.0,
+      "deviation_deg": 0.0,
+      "blockage": 0.0,
+      "choked": false,
+      "warnings": [],
+      "loss_components": {},
+      "reaction": null,
+      "blade_speed_m_s": 0.0,
+      "entropy_j_kg_k": 2252.5009376115977,
+      "relative_total_pressure_pa": null,
+      "throat_capacity_ratio": null
+    },
+    {
+      "id": "R1_EXIT",
+      "index": 1,
+      "row_id": "R1",
+      "row_type": "rotor",
+      "stage": 1,
+      "x_m": 0.055,
+      "hub_radius_m": 0.103457,
+      "mean_radius_m": 0.20172849999999998,
+      "tip_radius_m": 0.3,
+      "area_m2": 0.2441354150185275,
+      "mass_flow_kg_s": 15.09343,
+      "total_temperature_k": 292.040260417044,
+      "total_pressure_pa": 105691.80803720703,
+      "static_temperature_k": 290.3502085296568,
+      "static_pressure_pa": 103567.63971258447,
+      "density_kg_m3": 1.2426248752854376,
+      "meridional_velocity_m_s": 49.75275314048864,
+      "tangential_velocity_m_s": 30.31099677312079,
+      "absolute_flow_angle_deg": 31.351133243606263,
+      "absolute_mach": 0.17053024776177406,
+      "relative_mach": 0.3231470426332872,
+      "work_j_kg": 3905.9432632049793,
+      "loss_coefficient": 0.043361996157673055,
+      "diffusion_factor": 0.37461152669291287,
+      "de_haller": 0.7965076519831964,
+      "incidence_deg": 0.0,
+      "deviation_deg": -2.0,
+      "blockage": 0.02,
+      "choked": false,
+      "warnings": [],
+      "loss_components": {
+        "profile": 0.03751523562385363,
+        "incidence": 0.0,
+        "secondary": 0.00013135792968892586,
+        "endwall": 0.004,
+        "clearance": 0.0017154026041305036,
+        "shock": 0.0
+      },
+      "reaction": 0.8990059849335986,
+      "blade_speed_m_s": 128.86225063600332,
+      "entropy_j_kg_k": 2253.8535161868267,
+      "relative_total_pressure_pa": 111339.76940862305,
+      "throat_capacity_ratio": 0.7262381932428542
+    },
+    {
+      "id": "S1_EXIT",
+      "index": 2,
+      "row_id": "S1",
+      "row_type": "stator",
+      "stage": 1,
+      "x_m": 0.19,
+      "hub_radius_m": 0.11132350526683535,
+      "mean_radius_m": 0.20566175263341768,
+      "tip_radius_m": 0.3,
+      "area_m2": 0.23893362704948787,
+      "mass_flow_kg_s": 15.09343,
+      "total_temperature_k": 292.040260417044,
+      "total_pressure_pa": 105562.20885235073,
+      "static_temperature_k": 290.75934778584224,
+      "static_pressure_pa": 103951.39611645725,
+      "density_kg_m3": 1.2454742331503879,
+      "meridional_velocity_m_s": 50.7196118856646,
+      "tangential_velocity_m_s": -8.385353448488155e-10,
+      "absolute_flow_angle_deg": -9.472575685454625e-10,
+      "absolute_mach": 0.14835874939083332,
+      "relative_mach": null,
+      "work_j_kg": 0.0,
+      "loss_coefficient": 0.06066794063440378,
+      "diffusion_factor": 0.4686981514733979,
+      "de_haller": 0.8681165535652794,
+      "incidence_deg": 1.4818731131072127e-8,
+      "deviation_deg": 2.168283366520702,
+      "blockage": 0.02,
+      "choked": false,
+      "warnings": [],
+      "loss_components": {
+        "profile": 0.051941446762650945,
+        "incidence": 4.4444960287582696e-18,
+        "secondary": 0.004726493871752833,
+        "endwall": 0.004,
+        "clearance": 0.0,
+        "shock": 0.0
+      },
+      "reaction": null,
+      "blade_speed_m_s": 0.0,
+      "entropy_j_kg_k": 2254.205716094572,
+      "relative_total_pressure_pa": null,
+      "throat_capacity_ratio": 0.3298908021051086
+    },
+    {
+      "id": "OUTLET",
+      "index": 3,
+      "row_id": null,
+      "row_type": "inlet",
+      "stage": 0,
+      "x_m": 0.24,
+      "hub_radius_m": 0.11400000000000002,
+      "mean_radius_m": 0.20700000000000002,
+      "tip_radius_m": 0.3,
+      "area_m2": 0.2419152006970284,
+      "mass_flow_kg_s": 15.09343,
+      "total_temperature_k": 292.040260417044,
+      "total_pressure_pa": 105562.20885235073,
+      "static_temperature_k": 290.79141762919085,
+      "static_pressure_pa": 103991.50747579992,
+      "density_kg_m3": 1.245817410159409,
+      "meridional_velocity_m_s": 50.08070006122343,
+      "tangential_velocity_m_s": -8.331142447665443e-10,
+      "absolute_flow_angle_deg": -9.531402320454287e-10,
+      "absolute_mach": 0.14648189677880205,
+      "relative_mach": null,
+      "work_j_kg": 0.0,
+      "loss_coefficient": 0.0,
+      "diffusion_factor": 0.0,
+      "de_haller": 1.0,
+      "incidence_deg": 0.0,
+      "deviation_deg": 0.0,
+      "blockage": 0.0,
+      "choked": false,
+      "warnings": [],
+      "loss_components": {},
+      "reaction": null,
+      "blade_speed_m_s": 0.0,
+      "entropy_j_kg_k": 2254.205716094572,
+      "relative_total_pressure_pa": null,
+      "throat_capacity_ratio": null
+    }
+  ],
+  "row_inlets": [
+    {
+      "id": "R1_INLET",
+      "index": 1,
+      "row_id": "R1",
+      "row_type": "rotor",
+      "stage": 1,
+      "x_m": 0.0,
+      "hub_radius_m": 0.103457,
+      "mean_radius_m": 0.20172849999999998,
+      "tip_radius_m": 0.3,
+      "area_m2": 0.2441354150185275,
+      "mass_flow_kg_s": 15.09343,
+      "total_temperature_k": 288.15,
+      "total_pressure_pa": 101325.0,
+      "static_temperature_k": 286.85233330578234,
+      "static_pressure_pa": 99738.30318684572,
+      "density_kg_m3": 1.2112720477312322,
+      "meridional_velocity_m_s": 51.04056411221597,
+      "tangential_velocity_m_s": 0.0,
+      "absolute_flow_angle_deg": 0.0,
+      "absolute_mach": 0.15029943398562315,
+      "relative_mach": 0.40814319214095807,
+      "work_j_kg": 0.0,
+      "loss_coefficient": 0.0,
+      "diffusion_factor": 0.0,
+      "de_haller": 1.0,
+      "incidence_deg": 0.0,
+      "deviation_deg": 0.0,
+      "blockage": 0.02,
+      "choked": false,
+      "warnings": [],
+      "loss_components": {},
+      "reaction": null,
+      "blade_speed_m_s": 128.86225063600332,
+      "entropy_j_kg_k": 2252.5009376115977,
+      "relative_total_pressure_pa": 111865.63471160238,
+      "throat_capacity_ratio": null
+    },
+    {
+      "id": "S1_INLET",
+      "index": 2,
+      "row_id": "S1",
+      "row_type": "stator",
+      "stage": 1,
+      "x_m": 0.127,
+      "hub_radius_m": 0.10564841161204,
+      "mean_radius_m": 0.20282420580602,
+      "tip_radius_m": 0.3,
+      "area_m2": 0.24272461590076214,
+      "mass_flow_kg_s": 15.09343,
+      "total_temperature_k": 292.040260417044,
+      "total_pressure_pa": 105691.80803720703,
+      "static_temperature_k": 290.34056041144765,
+      "static_pressure_pa": 103555.60259655563,
+      "density_kg_m3": 1.2425217396632895,
+      "meridional_velocity_m_s": 50.04608697699299,
+      "tangential_velocity_m_s": 30.14724937907293,
+      "absolute_flow_angle_deg": 31.064328397011124,
+      "absolute_mach": 0.17101908327729426,
+      "relative_mach": null,
+      "work_j_kg": 0.0,
+      "loss_coefficient": 0.0,
+      "diffusion_factor": 0.0,
+      "de_haller": 1.0,
+      "incidence_deg": 0.0,
+      "deviation_deg": 0.0,
+      "blockage": 0.02,
+      "choked": false,
+      "warnings": [],
+      "loss_components": {},
+      "reaction": null,
+      "blade_speed_m_s": 0.0,
+      "entropy_j_kg_k": 2253.8535161868267,
+      "relative_total_pressure_pa": null,
+      "throat_capacity_ratio": null
+    }
+  ],
+  "stage_results": [
+    {
+      "stage": 1,
+      "total_pressure_ratio": 1.0418180000231998,
+      "efficiency_tt": 0.8726449513434362,
+      "work_j_kg": 3905.943263205001,
+      "mass_flow_kg_s": 15.09343
+    }
+  ],
+  "constraints": [
+    {
+      "row_id": "R1",
+      "name": "diffusion_factor",
+      "value": 0.37461152669291287,
+      "limit": 0.6,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "row_id": "R1",
+      "name": "de_haller",
+      "value": 0.7965076519831964,
+      "limit": 0.72,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "row_id": "R1",
+      "name": "incidence_deg",
+      "value": 0.0,
+      "limit": 10,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "row_id": "R1",
+      "name": "throat_capacity_estimate",
+      "value": 0.7262381932428542,
+      "limit": 1,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "row_id": "S1",
+      "name": "diffusion_factor",
+      "value": 0.4686981514733979,
+      "limit": 0.6,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "row_id": "S1",
+      "name": "de_haller",
+      "value": 0.8681165535652794,
+      "limit": 0.72,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "row_id": "S1",
+      "name": "incidence_deg",
+      "value": 1.4818731131072127e-8,
+      "limit": 10,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "row_id": "S1",
+      "name": "throat_capacity_estimate",
+      "value": 0.3298908021051086,
+      "limit": 1,
+      "passed": true,
+      "kind": "engineering"
+    },
+    {
+      "name": "target_efficiency_tt",
+      "value": 0.8726449513434362,
+      "limit": 0.8931,
+      "passed": false,
+      "kind": "design"
+    },
+    {
+      "row_id": "R1",
+      "name": "reaction_target",
+      "value": 0.8990059849335986,
+      "target": 0.5,
+      "limit": 0.01,
+      "passed": false,
+      "kind": "design"
+    },
+    {
+      "row_id": "R1",
+      "name": "flow_coefficient_target",
+      "value": 0.3860925359826676,
+      "target": 0.383833,
+      "limit": 0.1,
+      "passed": true,
+      "kind": "design"
+    }
+  ],
+  "spanwise": [],
+  "convergence_history": [
+    {
+      "iteration": 1.0,
+      "mass": 9.18139184968179e-10,
+      "row_closure": 9.378530850628399e-10,
+      "entropy_rise": 1.3525785752290027
+    },
+    {
+      "iteration": 2.0,
+      "mass": 9.565073054351104e-10,
+      "row_closure": 9.782747952838509e-10,
+      "entropy_rise": 0.35219990774534204
+    }
+  ],
+  "warnings": [],
+  "metadata": {
+    "generated_rows": [
+      {
+        "id": "R1",
+        "row_type": "rotor",
+        "stage": 1,
+        "x_m": 0.055,
+        "blade_count": 9,
+        "chord_m": 0.09,
+        "axial_chord_m": null,
+        "solidity": 0.639,
+        "solidity_profile": [],
+        "aspect_ratio": 2.0,
+        "metal_angle_in_deg": -68.39216311152622,
+        "metal_angle_out_deg": -61.213465343274365,
+        "metal_angle_in_profile": [],
+        "metal_angle_out_profile": [],
+        "work_profile": [],
+        "blockage": 0.02,
+        "tip_clearance_m": 0.0005,
+        "throat_area_ratio": 0.88,
+        "deviation_base_deg": 2.0,
+        "variable_schedule": [],
+        "bleed_after": null,
+        "loss_model": "lieblein_engineering_v1",
+        "reference_efficiency_tt": null,
+        "reference_incidence_deg": 0.0,
+        "pressure_loss_fraction": null
+      },
+      {
+        "id": "S1",
+        "row_type": "stator",
+        "stage": 1,
+        "x_m": 0.19,
+        "blade_count": 11,
+        "chord_m": 0.09,
+        "axial_chord_m": null,
+        "solidity": 0.766,
+        "solidity_profile": [],
+        "aspect_ratio": 2.0,
+        "metal_angle_in_deg": 31.064328382192393,
+        "metal_angle_out_deg": -2.168283360589785,
+        "metal_angle_in_profile": [],
+        "metal_angle_out_profile": [],
+        "work_profile": [],
+        "blockage": 0.02,
+        "tip_clearance_m": 0.0005,
+        "throat_area_ratio": 0.88,
+        "deviation_base_deg": 2.0,
+        "variable_schedule": [],
+        "bleed_after": null,
+        "loss_model": "lieblein_engineering_v1",
+        "reference_efficiency_tt": null,
+        "reference_incidence_deg": 0.0,
+        "pressure_loss_fraction": null
+      }
+    ],
+    "effective_project": {
+      "schema_version": "1.0",
+      "name": "DF90-001 v2 custom annulus + 电机包络显式化",
+      "description": "v2：入口轮毂由设计流量系数反解（0.103457），电机圆柱段 95 mm 显式给出；流道加长到 240 mm 以容纳两排 90 mm 弦长",
+      "fluid": {
+        "name": "dry_air",
+        "gas_constant": 287.05287,
+        "gamma": 1.4,
+        "heat_capacity_model": "temperature_dependent"
+      },
+      "inlet": {
+        "total_pressure_pa": 101325.0,
+        "total_temperature_k": 288.15,
+        "mass_flow_kg_s": 15.09343,
+        "absolute_flow_angle_deg": 0.0,
+        "total_pressure_profile": [],
+        "total_temperature_profile": [],
+        "swirl_profile": []
+      },
+      "shaft": {
+        "rpm": 6100.0
+      },
+      "annulus": {
+        "strategy": "custom",
+        "inlet_hub_radius_m": 0.103457,
+        "inlet_tip_radius_m": 0.3,
+        "length_m": 0.24,
+        "hub_curve": [
+          {
+            "x": 0.0,
+            "r": 0.103457
+          },
+          {
+            "x": 0.095,
+            "r": 0.103457
+          },
+          {
+            "x": 0.15,
+            "r": 0.108
+          },
+          {
+            "x": 0.2,
+            "r": 0.112
+          },
+          {
+            "x": 0.24,
+            "r": 0.114
+          }
+        ],
+        "shroud_curve": [
+          {
+            "x": 0.0,
+            "r": 0.3
+          },
+          {
+            "x": 0.24,
+            "r": 0.3
+          }
+        ],
+        "inlet_blockage": 0.0,
+        "outlet_blockage": 0.0
+      },
+      "design": {
+        "mass_flow_kg_s": 15.09343,
+        "total_pressure_ratio": 1.041818,
+        "stage_count": 1,
+        "target_efficiency_tt": 0.8931,
+        "flow_coefficient": 0.383833,
+        "loading_coefficient": 0.1037,
+        "reaction": 0.5,
+        "exit_swirl_deg": 0.0,
+        "stage_work_weights": [],
+        "auto_stage_count": false,
+        "stage_reactions": [],
+        "stage_flow_coefficients": []
+      },
+      "rows": [
+        {
+          "id": "R1",
+          "row_type": "rotor",
+          "stage": 1,
+          "x_m": 0.055,
+          "blade_count": 9,
+          "chord_m": 0.09,
+          "axial_chord_m": null,
+          "solidity": 0.639,
+          "solidity_profile": [],
+          "aspect_ratio": 2.0,
+          "metal_angle_in_deg": -68.39216311152622,
+          "metal_angle_out_deg": -61.213465343274365,
+          "metal_angle_in_profile": [],
+          "metal_angle_out_profile": [],
+          "work_profile": [],
+          "blockage": 0.02,
+          "tip_clearance_m": 0.0005,
+          "throat_area_ratio": 0.88,
+          "deviation_base_deg": 2.0,
+          "variable_schedule": [],
+          "bleed_after": null,
+          "loss_model": "lieblein_engineering_v1",
+          "reference_efficiency_tt": null,
+          "reference_incidence_deg": 0.0,
+          "pressure_loss_fraction": null
+        },
+        {
+          "id": "S1",
+          "row_type": "stator",
+          "stage": 1,
+          "x_m": 0.19,
+          "blade_count": 11,
+          "chord_m": 0.09,
+          "axial_chord_m": null,
+          "solidity": 0.766,
+          "solidity_profile": [],
+          "aspect_ratio": 2.0,
+          "metal_angle_in_deg": 31.064328382192393,
+          "metal_angle_out_deg": -2.168283360589785,
+          "metal_angle_in_profile": [],
+          "metal_angle_out_profile": [],
+          "work_profile": [],
+          "blockage": 0.02,
+          "tip_clearance_m": 0.0005,
+          "throat_area_ratio": 0.88,
+          "deviation_base_deg": 2.0,
+          "variable_schedule": [],
+          "bleed_after": null,
+          "loss_model": "lieblein_engineering_v1",
+          "reference_efficiency_tt": null,
+          "reference_incidence_deg": 0.0,
+          "pressure_loss_fraction": null
+        }
+      ],
+      "vortex_law": "free",
+      "numerics": {
+        "spanwise_points": 17,
+        "streamwise_points": 61,
+        "max_iterations": 120,
+        "mass_tolerance": 0.001,
+        "energy_tolerance": 0.00001,
+        "streamline_tolerance": 0.00001,
+        "relaxation": 0.35,
+        "row_relaxation": 1.0,
+        "momentum_tolerance": 0.001
+      },
+      "metadata": {
+        "motor_envelope": {
+          "model": "EMRAX 188",
+          "outer_radius_m": 0.094,
+          "axial_length_m": 0.079,
+          "axial_clearance_m": 0.008,
+          "footprint_x_m": [
+            0.0,
+            0.095
+          ],
+          "source": "requirements.yaml#motor（2026-09-19 补入）"
+        }
+      }
+    },
+    "failure_reason": null,
+    "loss_definition": "relative/absolute total pressure loss coefficient",
+    "software_version": "0.3.1",
+    "project_name": "DF90-001 v2 custom annulus + 电机包络显式化",
+    "generated_project": {
+      "schema_version": "1.0",
+      "name": "DF90-001 v2 custom annulus + 电机包络显式化",
+      "description": "v2：入口轮毂由设计流量系数反解（0.103457），电机圆柱段 95 mm 显式给出；流道加长到 240 mm 以容纳两排 90 mm 弦长",
+      "fluid": {
+        "name": "dry_air",
+        "gas_constant": 287.05287,
+        "gamma": 1.4,
+        "heat_capacity_model": "temperature_dependent"
+      },
+      "inlet": {
+        "total_pressure_pa": 101325.0,
+        "total_temperature_k": 288.15,
+        "mass_flow_kg_s": 15.09343,
+        "absolute_flow_angle_deg": 0.0,
+        "total_pressure_profile": [],
+        "total_temperature_profile": [],
+        "swirl_profile": []
+      },
+      "shaft": {
+        "rpm": 6100.0
+      },
+      "annulus": {
+        "strategy": "custom",
+        "inlet_hub_radius_m": 0.103457,
+        "inlet_tip_radius_m": 0.3,
+        "length_m": 0.24,
+        "hub_curve": [
+          {
+            "x": 0.0,
+            "r": 0.103457
+          },
+          {
+            "x": 0.095,
+            "r": 0.103457
+          },
+          {
+            "x": 0.15,
+            "r": 0.108
+          },
+          {
+            "x": 0.2,
+            "r": 0.112
+          },
+          {
+            "x": 0.24,
+            "r": 0.114
+          }
+        ],
+        "shroud_curve": [
+          {
+            "x": 0.0,
+            "r": 0.3
+          },
+          {
+            "x": 0.24,
+            "r": 0.3
+          }
+        ],
+        "inlet_blockage": 0.0,
+        "outlet_blockage": 0.0
+      },
+      "design": {
+        "mass_flow_kg_s": 15.09343,
+        "total_pressure_ratio": 1.041818,
+        "stage_count": 1,
+        "target_efficiency_tt": 0.8931,
+        "flow_coefficient": 0.383833,
+        "loading_coefficient": 0.1037,
+        "reaction": 0.5,
+        "exit_swirl_deg": 0.0,
+        "stage_work_weights": [],
+        "auto_stage_count": false,
+        "stage_reactions": [],
+        "stage_flow_coefficients": []
+      },
+      "rows": [
+        {
+          "id": "R1",
+          "row_type": "rotor",
+          "stage": 1,
+          "x_m": 0.055,
+          "blade_count": 9,
+          "chord_m": 0.09,
+          "axial_chord_m": null,
+          "solidity": 0.639,
+          "solidity_profile": [],
+          "aspect_ratio": 2.0,
+          "metal_angle_in_deg": -68.39216311152622,
+          "metal_angle_out_deg": -61.213465343274365,
+          "metal_angle_in_profile": [],
+          "metal_angle_out_profile": [],
+          "work_profile": [],
+          "blockage": 0.02,
+          "tip_clearance_m": 0.0005,
+          "throat_area_ratio": 0.88,
+          "deviation_base_deg": 2.0,
+          "variable_schedule": [],
+          "bleed_after": null,
+          "loss_model": "lieblein_engineering_v1",
+          "reference_efficiency_tt": null,
+          "reference_incidence_deg": 0.0,
+          "pressure_loss_fraction": null
+        },
+        {
+          "id": "S1",
+          "row_type": "stator",
+          "stage": 1,
+          "x_m": 0.19,
+          "blade_count": 11,
+          "chord_m": 0.09,
+          "axial_chord_m": null,
+          "solidity": 0.766,
+          "solidity_profile": [],
+          "aspect_ratio": 2.0,
+          "metal_angle_in_deg": 31.064328382192393,
+          "metal_angle_out_deg": -2.168283360589785,
+          "metal_angle_in_profile": [],
+          "metal_angle_out_profile": [],
+          "work_profile": [],
+          "blockage": 0.02,
+          "tip_clearance_m": 0.0005,
+          "throat_area_ratio": 0.88,
+          "deviation_base_deg": 2.0,
+          "variable_schedule": [],
+          "bleed_after": null,
+          "loss_model": "lieblein_engineering_v1",
+          "reference_efficiency_tt": null,
+          "reference_incidence_deg": 0.0,
+          "pressure_loss_fraction": null
+        }
+      ],
+      "vortex_law": "free",
+      "numerics": {
+        "spanwise_points": 17,
+        "streamwise_points": 61,
+        "max_iterations": 120,
+        "mass_tolerance": 0.001,
+        "energy_tolerance": 0.00001,
+        "streamline_tolerance": 0.00001,
+        "relaxation": 0.35,
+        "row_relaxation": 1.0,
+        "momentum_tolerance": 0.001
+      },
+      "metadata": {
+        "motor_envelope": {
+          "model": "EMRAX 188",
+          "outer_radius_m": 0.094,
+          "axial_length_m": 0.079,
+          "axial_clearance_m": 0.008,
+          "footprint_x_m": [
+            0.0,
+            0.095
+          ],
+          "source": "requirements.yaml#motor（2026-09-19 补入）"
+        }
+      }
+    },
+    "design_method": "inverse metal angles + entropy losses + pressure-ratio shooting + forward verification",
+    "annulus_method": "total-state sizing seed; frozen during aerodynamic inverse solve",
+    "target_efficiency_role": "initial work estimate and feasibility constraint, not imposed result",
+    "design_history": [
+      {
+        "work_scale": 1.0,
+        "pressure_ratio_error": -0.0008824062194718874,
+        "status": "converged"
+      },
+      {
+        "work_scale": 0.85,
+        "pressure_ratio_error": -0.00662958929808255,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.15,
+        "pressure_ratio_error": 0.0046886404764860945,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.0,
+        "pressure_ratio_error": -0.0008824062194718874,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.15,
+        "pressure_ratio_error": 0.0046886404764860945,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.0237587189884472,
+        "pressure_ratio_error": 0.000011957525804850988,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.0234410680361419,
+        "pressure_ratio_error": 2.9307357207741802e-8,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.0234402876010098,
+        "pressure_ratio_error": -3.219646771412954e-15,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.0234402886127298,
+        "pressure_ratio_error": 3.798406034150048e-11,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.0234402876010098,
+        "pressure_ratio_error": -3.219646771412954e-15,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.02354263162977,
+        "pressure_ratio_error": 3.843242841528038e-6,
+        "status": "converged"
+      },
+      {
+        "work_scale": 1.0234402876010098,
+        "pressure_ratio_error": -3.219646771412954e-15,
+        "status": "converged"
+      }
+    ]
+  },
+  "units": {
+    "length": "m",
+    "pressure": "Pa",
+    "temperature": "K",
+    "velocity": "m/s",
+    "mass_flow": "kg/s",
+    "power": "W",
+    "angle": "deg",
+    "specific_work": "J/kg"
+  }
+}

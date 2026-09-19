@@ -2,25 +2,25 @@
   "schema": "turtbo-agent/case-manifest@1",
   "case_id": "DF90-001",
   "created": "2026-09-17T14:56:27+08:00",
-  "updated": "2026-09-19T18:47:46+08:00",
-  "revision": 63,
+  "updated": "2026-09-19T22:51:01+08:00",
+  "revision": 71,
   "requirement_ref": {
     "file": "requirements.yaml",
-    "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
-    "bytes": 3853
+    "sha256": "62b217c1579797d28fd574661e523d2617d3bd56782e594edcc7961367afb32d",
+    "bytes": 4724
   },
-  "current_stage": "G5",
+  "current_stage": "G2",
   "artifacts": [
     {
       "stage": "G0",
-      "kind": "schema",
+      "kind": "requirements",
       "path": "requirements.yaml",
       "version": "v1",
-      "sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1",
-      "bytes": 3853,
+      "sha256": "62b217c1579797d28fd574661e523d2617d3bd56782e594edcc7961367afb32d",
+      "bytes": 4724,
       "verdict": "PASS",
-      "ts": "2026-09-17T15:02:34+08:00",
-      "note": "环境按 ISA 海平面假设，待用户确认",
+      "ts": "2026-09-19T22:27:28+08:00",
+      "note": "",
       "provenance": null
     },
     {
@@ -447,6 +447,111 @@
       "provenance": {
         "from": "requirements.yaml",
         "from_sha256": "76749d8bbef054a096235800aab48bb1e540e157f65eae56450f0c3f446f35a1"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v2/inputs/turbo-flow-v2.json",
+      "version": "v2",
+      "sha256": "7c0b335138ffc943d06ec6ea36bc2ed203d3cbb17f0e4e7c952652424cf29e0f",
+      "bytes": 2825,
+      "verdict": "PASS",
+      "ts": "2026-09-19T22:46:32+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "62b217c1579797d28fd574661e523d2617d3bd56782e594edcc7961367afb32d"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v2/流道尺寸表.csv",
+      "version": "v2",
+      "sha256": "82242eb8c380ac1653392aa7fbf71cac221778ff5c2b3efc1840443dc38a50e1",
+      "bytes": 352,
+      "verdict": "PASS",
+      "ts": "2026-09-19T22:46:32+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v2/inputs/turbo-flow-v2.json",
+        "from_sha256": "7c0b335138ffc943d06ec6ea36bc2ed203d3cbb17f0e4e7c952652424cf29e0f"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v2/叶片几何参数表.csv",
+      "version": "v2",
+      "sha256": "4a0a7e0ecab50cf8a67a73458ff1559f67ff41c881c62b4b9b608306bd44f5f0",
+      "bytes": 338,
+      "verdict": "PASS",
+      "ts": "2026-09-19T22:46:32+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v2/流道尺寸表.csv",
+        "from_sha256": "82242eb8c380ac1653392aa7fbf71cac221778ff5c2b3efc1840443dc38a50e1"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "scheme",
+      "path": "01-scheme/v2/通流计算结果表.csv",
+      "version": "v2",
+      "sha256": "dfe9fac0f13319caff6138d0d9b859131bf9308edb54e3f1d68e0d2972c19228",
+      "bytes": 873,
+      "verdict": "PASS",
+      "ts": "2026-09-19T22:46:32+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v2/叶片几何参数表.csv",
+        "from_sha256": "4a0a7e0ecab50cf8a67a73458ff1559f67ff41c881c62b4b9b608306bd44f5f0"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "report",
+      "path": "01-scheme/v2/benchmark_gate.json",
+      "version": "v2",
+      "sha256": "17eb10ee34f137025273c07446c672a775fcf17677a8562a9723e14e2a8d5df7",
+      "bytes": 3701,
+      "verdict": "WARN",
+      "ts": "2026-09-19T22:46:32+08:00",
+      "note": "",
+      "provenance": {
+        "from": "01-scheme/v2/通流计算结果表.csv",
+        "from_sha256": "dfe9fac0f13319caff6138d0d9b859131bf9308edb54e3f1d68e0d2972c19228"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "report",
+      "path": "01-scheme/v2/motor-envelope-check.json",
+      "version": "v2",
+      "sha256": "84d1b80f0a3e59e9fc6458b9a42b6a0f04e1e3205d863b6c26876d6a0d86da39",
+      "bytes": 2354,
+      "verdict": "PASS",
+      "ts": "2026-09-19T22:46:33+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "62b217c1579797d28fd574661e523d2617d3bd56782e594edcc7961367afb32d"
+      }
+    },
+    {
+      "stage": "G2",
+      "kind": "report",
+      "path": "01-scheme/v2/NOTES.md",
+      "version": "v2",
+      "sha256": "a1358b3ec2bebada2e75ea9d8f89753eed5dd51ba69278a3e09c9ba6039d3c8b",
+      "bytes": 4913,
+      "verdict": "INFO",
+      "ts": "2026-09-19T22:51:01+08:00",
+      "note": "",
+      "provenance": {
+        "from": "requirements.yaml",
+        "from_sha256": "62b217c1579797d28fd574661e523d2617d3bd56782e594edcc7961367afb32d"
       }
     }
   ],

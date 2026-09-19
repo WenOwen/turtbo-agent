@@ -183,3 +183,75 @@
 - 结论：FAIL
 - 备注：跨血缘对照（环形几何差 22.7%）+ 扭矩超容差 6.53%
 
+## 2026-09-19T22:27:28+08:00 | G0 需求 | PASS
+- 动作：登记产物 requirements.yaml
+- 操作者：agent
+- 输入：requirements.yaml  sha256=62b217c1579797d2  bytes=4724
+- 上游：无
+- 产物：requirements.yaml  sha256=62b217c1579797d28fd574661e523d2617d3bd56782e594edcc7961367afb32d
+- 判据：补入电机包络：外径 188 mm / 轴向长 79 mm / 端部余量 4.96 mm
+- 结论：PASS
+
+## 2026-09-19T22:46:32+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v2/inputs/turbo-flow-v2.json
+- 操作者：agent
+- 输入：01-scheme/v2/inputs/turbo-flow-v2.json  sha256=7c0b335138ffc943  bytes=2825
+- 上游：requirements.yaml
+- 产物：01-scheme/v2/inputs/turbo-flow-v2.json  sha256=7c0b335138ffc943d06ec6ea36bc2ed203d3cbb17f0e4e7c952652424cf29e0f
+- 判据：电机包络显式；入口轮毂由 phi_tip=0.2581 反解；流道 240 mm
+- 结论：PASS
+
+## 2026-09-19T22:46:32+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v2/流道尺寸表.csv
+- 操作者：agent
+- 输入：01-scheme/v2/流道尺寸表.csv  sha256=82242eb8c380ac16  bytes=352
+- 上游：01-scheme/v2/inputs/turbo-flow-v2.json
+- 产物：01-scheme/v2/流道尺寸表.csv  sha256=82242eb8c380ac1653392aa7fbf71cac221778ff5c2b3efc1840443dc38a50e1
+- 判据：站位单调；轮毂<中径<机匣；机匣锁定 0.3 偏差 0
+- 结论：PASS
+
+## 2026-09-19T22:46:32+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v2/叶片几何参数表.csv
+- 操作者：agent
+- 输入：01-scheme/v2/叶片几何参数表.csv  sha256=4a0a7e0ecab50cf8  bytes=338
+- 上游：01-scheme/v2/流道尺寸表.csv
+- 产物：01-scheme/v2/叶片几何参数表.csv  sha256=4a0a7e0ecab50cf8a67a73458ff1559f67ff41c881c62b4b9b608306bd44f5f0
+- 判据：叶排数 2 == rows.count；叶片数 9/11
+- 结论：PASS
+
+## 2026-09-19T22:46:32+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v2/通流计算结果表.csv
+- 操作者：agent
+- 输入：01-scheme/v2/通流计算结果表.csv  sha256=dfe9fac0f13319ca  bytes=873
+- 上游：01-scheme/v2/叶片几何参数表.csv
+- 产物：01-scheme/v2/通流计算结果表.csv  sha256=dfe9fac0f13319caff6138d0d9b859131bf9308edb54e3f1d68e0d2972c19228
+- 判据：质量守恒 <=1e-6；求解 converged
+- 结论：PASS
+
+## 2026-09-19T22:46:32+08:00 | G2 1D通流方案 | WARN
+- 动作：登记产物 01-scheme/v2/benchmark_gate.json
+- 操作者：agent
+- 输入：01-scheme/v2/benchmark_gate.json  sha256=17eb10ee34f13702  bytes=3701
+- 上游：01-scheme/v2/通流计算结果表.csv
+- 产物：01-scheme/v2/benchmark_gate.json  sha256=17eb10ee34f137025273c07446c672a775fcf17677a8562a9723e14e2a8d5df7
+- 判据：对标 B-1 效率 -2.05pp 未过；B-2..B-6 通过；不阻塞下一步但须标注未通过独立验证
+- 结论：WARN
+
+## 2026-09-19T22:46:33+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v2/motor-envelope-check.json
+- 操作者：agent
+- 输入：01-scheme/v2/motor-envelope-check.json  sha256=84d1b80f0a3e59e9  bytes=2354
+- 上游：requirements.yaml
+- 产物：01-scheme/v2/motor-envelope-check.json  sha256=84d1b80f0a3e59e9fc6458b9a42b6a0f04e1e3205d863b6c26876d6a0d86da39
+- 判据：M-1..M-5 全通过；占位 95 mm >= 79+16；径向余量 9.46 mm
+- 结论：PASS
+
+## 2026-09-19T22:51:01+08:00 | G2 1D通流方案 | INFO
+- 动作：登记产物 01-scheme/v2/NOTES.md
+- 操作者：agent
+- 输入：01-scheme/v2/NOTES.md  sha256=a1358b3ec2bebada  bytes=4913
+- 上游：requirements.yaml
+- 产物：01-scheme/v2/NOTES.md  sha256=a1358b3ec2bebada2e75ea9d8f89753eed5dd51ba69278a3e09c9ba6039d3c8b
+- 判据：v2 来源说明：反解依据、电机包络、对标结果、未实现项
+- 结论：INFO
+

@@ -21,6 +21,30 @@ description: "涵道风扇一维/通流方案段合同 / ducted-fan meanline & t
 | 轴系 | `shaft.rpm_design` 或允许 G2 自选的标记 |
 | 叶排 | `rows.count`、`rows.configuration` |
 | 动力 | `motor.*`（用于交叉检查轴功率） |
+| **电机包络** | `motor.outer_diameter_m`、`motor.axial_length_m`、`motor.axial_clearance_m` |
+
+### 电机包络是**硬输入**，不是备注
+
+**为什么单列**：DF90-001 的 v8 几何在轮毂上人工调出一段 Ø188 平段来装 EMRAX 188，
+而当时需求里只有 `motor.model: EMRAX 188`，没有外径与轴向长度 ——
+G1/G2 因此**推不出轮毂最小直径**，只能在 G3 手工满足，
+结果 `gate_check.py geometry` 的 G3-9「由参数表导出」判 FAIL，几何证明不了由参数表导出。
+
+**补进需求之后，G2 必须做三件事：**
+
+1. 轮毂型线在**电机轴向占位内**保持 `>= outer_diameter_m / 2`，两端各留 `axial_clearance_m`
+2. 把占位区间与实测最小轮毂半径写进产物（DF90-001 的样例：`01-scheme/v2/motor-envelope-check.json`）
+3. **逐条给出实测**，不是声明"已考虑"
+
+### 另外两条 G2 常常漏掉的几何约束
+
+- **流道长度必须装得下全部叶排**：两排各 `chord_m` + 排间间隙。
+  DF90-001 的 v1 流道 180.135 mm，两排各 90 mm 弦长至少需要 200 mm —— **装不下**。
+  v8 把流道加到 300 mm 是对的，但它的理由写成了"电机包络"，而电机包络并不要求加长。
+- **入口轮毂半径通常不是自由变量**：它由设计流量系数反解。
+  `phi_tip` → `Va = phi_tip * U_tip` → `A = mdot / (rho * Va)` → `r_hub = sqrt(r_tip^2 - A/pi)`。
+  DF90-001：0.2581 → 49.462 m/s → 0.249106 m² → **r_hub = 0.103475**，与参数表的 0.103457 差 0.018 mm。
+  **选它之前先反解一次**，别默默抄一个数。
 
 ## 输出契约
 
@@ -88,11 +112,20 @@ description: "涵道风扇一维/通流方案段合同 / ducted-fan meanline & t
 
 ### 两条硬要求
 
+> **这两条不是"最好这样"，是"不然会得到看起来合理的错答案"。**
+> 默认的 `annulus.strategy=constant_mean` 会**静默重算整个流道** ——
+> 它既不知道**被需求锁死的机匣半径**，也不知道**电机占位**，
+> 两样都会在你没察觉的情况下被改掉。所以必须 `custom` + 显式 `hub_curve`。
+
 #### A. `annulus.strategy` 必须是 `custom`
 
 默认的 `constant_mean` 会按"总状态定尺寸"**静默重算整个流道**。
 实测：输入机匣 r=0.300 m，输出被改成 0.3486 m —— **违反被需求锁定的 D=0.600 m**。
 且轮毂半径从 0.1035 被改成 0.0495。
+
+**电机包络只有在 `custom` 下才可能被满足**：`hub_curve` 是你给的，
+你才能保证它在电机轴向占位内 `>= outer_diameter_m / 2`。
+交给工具自动生成，它没有任何理由知道那里要装一个 Ø188 的电机。
 
 必须显式给出 `hub_curve` / `shroud_curve`（`[{x, r}, ...]`）：
 
