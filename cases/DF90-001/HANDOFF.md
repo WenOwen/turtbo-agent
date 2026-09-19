@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-20T04:07:05+08:00　·　当前阶段 **G3**　·　revision 91
+> 生成于 2026-09-20T04:17:14+08:00　·　当前阶段 **G3**　·　revision 91
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -12,35 +12,35 @@
 
 最近一次记录：2026-09-20T04:07:01+08:00　PASS　登记产物 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json
 
-## 未登记的改动（近 14 天 39 条，历史共 39 条）
+## 未登记的改动（近 14 天 52 条，历史共 52 条）
 
 这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
 可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
 
-- 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2/model07ec.abm　0 -> 645350 bytes
-- 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2.par　0 -> 612367 bytes
-- 04:04:28　**几何**　added　02-geometry/v11/autoblade/R1_13span/R1/model2f47.abm　0 -> 644369 bytes
-- 04:04:28　**几何**　added　02-geometry/v11/autoblade/R1_13span/R1.abp　0 -> 1445 bytes
-- 04:04:28　**几何**　added　02-geometry/v11/autoblade/R1_13span/R1.par　0 -> 611383 bytes
-- 04:04:29　**几何**　added　02-geometry/v11/autoblade/R2_13span/R2/model2899.abm　0 -> 645282 bytes
-- 04:04:29　**几何**　added　02-geometry/v11/autoblade/R2_13span/R2.abp　0 -> 1445 bytes
-- 04:04:29　**几何**　added　02-geometry/v11/autoblade/R2_13span/R2.par　0 -> 612299 bytes
-- …另有 31 条，见 _watch/changes.jsonl
+- 04:16:28　**网格**　added　03-mesh/v3/mesh-v3.bak.trb　0 -> 34395 bytes
+- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.bcs　669 -> 15972 bytes
+- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.config　597 -> 13326 bytes
+- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.trb　34395 -> 36031 bytes
+- 04:17:06　**网格**　modified　03-mesh/v3/mesh-v3.igg　0 -> 0 bytes
+- 04:17:08　**网格**　modified　03-mesh/v3/mesh-v3.igg　0 -> 456301 bytes
+- 04:17:08　**网格**　modified　03-mesh/v3/mesh-v3.bcs　15972 -> 15972 bytes
+- 04:17:08　**网格**　modified　03-mesh/v3/mesh-v3.config　13326 -> 13326 bytes
+- …另有 44 条，见 _watch/changes.jsonl
 
 ## 最近 10 次变更
 
 | 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
 |---|---|---|---|---|---|
-| 09-20 04:04:29 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R2_13span/R2.par | 0 -> 612299 |
-| 09-20 04:04:29 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R2_13span/R2.abp | 0 -> 1445 |
-| 09-20 04:04:29 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R2_13span/R2/model2899.abm | 0 -> 645282 |
-| 09-20 04:04:28 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R1_13span/R1.par | 0 -> 611383 |
-| 09-20 04:04:28 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R1_13span/R1.abp | 0 -> 1445 |
-| 09-20 04:04:28 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R1_13span/R1/model2f47.abm | 0 -> 644369 |
-| 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2.par | 0 -> 612367 |
-| 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2/model07ec.abm | 0 -> 645350 |
-| 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2.abp | 0 -> 1443 |
-| 09-20 03:29:46 | 几何 | **unknown** | modified | 02-geometry/v10/autoblade/R1_13span/R1.par | 611427 -> 611427 |
+| 09-20 04:17:08 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.config | 13326 -> 13326 |
+| 09-20 04:17:08 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.bcs | 15972 -> 15972 |
+| 09-20 04:17:08 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.igg | 0 -> 456301 |
+| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.igg | 0 -> 0 |
+| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.trb | 34395 -> 36031 |
+| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.config | 597 -> 13326 |
+| 09-20 04:17:06 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.bcs | 669 -> 15972 |
+| 09-20 04:16:28 | 网格 | **unknown** | added | 03-mesh/v3/mesh-v3.bak.trb | 0 -> 34395 |
+| 09-20 04:17:03 | 网格 | **unknown** | modified | 03-mesh/v3/mesh-v3.igg | 6675 -> 0 |
+| 09-20 04:16:28 | 网格 | **unknown** | added | 03-mesh/v3/mesh-v3.config | 0 -> 597 |
 
 ## 你接手前必须知道
 
@@ -137,7 +137,7 @@
 
 ---
 
-看守状态：监视 142 个文件　·　累计变更 58 条　·　历史库 336 份内容
+看守状态：监视 147 个文件　·　累计变更 71 条　·　历史库 344 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。

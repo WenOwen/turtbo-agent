@@ -1,0 +1,30 @@
+NUMBER_OF_BLOCKS 1 
+invalid invalid FLUID
+9 9 9
+NONE
+1 
+unknown UND 1 1 9 9 
+1 
+unknown UND 1 1 9 9 
+1 
+unknown UND 1 1 9 9 
+1 
+unknown UND 1 1 9 9 
+1 
+unknown UND 1 1 9 9 
+1 
+unknown UND 1 1 9 9 
+NUMBER_OF_BLADES  0
+NI_BEGIN NITurbomachineryConfigurationMesh
+BYPASS       0
+NI_BEGIN NITurbomachineryRow row
+  NAME                      row 1
+  TYPE                      0
+  BOUNDARIES_ROTATION_SPEED 6100
+NI_END   NITurbomachineryRow row
+NI_BEGIN NITurbomachineryRow row
+  NAME                      row 2
+  TYPE                      0
+  BOUNDARIES_ROTATION_SPEED 0
+NI_END   NITurbomachineryRow row
+NI_END NITurbomachineryConfigurationMesh

@@ -1,0 +1,15 @@
+NI_BEGIN NIProjectConfiguration mainProject
+NI_BEGIN NIProjectConfigurationDomain
+   NAME                       Main Project
+   ROTATING                   -1
+   PHYSICAL_STATE             0
+   CONTAINER                  0
+   NI_BEGIN NIProjectConfigurationDomain
+      NAME                       IGG Core Flow 1
+      ROTATING                   -1
+      PHYSICAL_STATE             0
+      CONTAINER                  0
+      BLOCK_NAME                 invalid
+   NI_END   NIProjectConfigurationDomain
+NI_END   NIProjectConfigurationDomain
+NI_END   NIProjectConfiguration mainProject

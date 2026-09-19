@@ -1,0 +1,56 @@
+{
+  "mesh": {
+    "first_cell_height_m": 1e-05,
+    "accuracy": "medium",
+    "grid_levels": 3
+  },
+  "channel": {
+    "source_geomturbo": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R1_13span\\R1.geomTurbo",
+    "hub": {
+      "point_count": 100,
+      "sha256": "cab31438337e90ebb54a89b9514c90bdbd3d083cb09c35442ecca6c393ab941d",
+      "first_zr_m": [
+        0.0,
+        0.08
+      ],
+      "last_zr_m": [
+        0.3,
+        0.1132
+      ]
+    },
+    "shroud": {
+      "point_count": 100,
+      "sha256": "f5a65d39907fbc723d2402d314724469367a90cddc9b380c2cf75876314037f2",
+      "first_zr_m": [
+        0.0,
+        0.3
+      ],
+      "last_zr_m": [
+        0.3,
+        0.3
+      ]
+    }
+  },
+  "rows": {
+    "row 1": {
+      "machine_row": "R1",
+      "blades": 9,
+      "type": "rotor",
+      "tip_gap": true,
+      "tip_gap_width_m": 0.0005,
+      "rotation_speed_rpm": 6100.0,
+      "spanwise_layers": 73,
+      "b2b_controls": {
+        "streamwise_blade_upper_points": 97
+      }
+    },
+    "row 2": {
+      "machine_row": "R2",
+      "blades": 11,
+      "type": "stator",
+      "tip_gap": false,
+      "rotation_speed_rpm": 0.0,
+      "spanwise_layers": 57
+    }
+  }
+}

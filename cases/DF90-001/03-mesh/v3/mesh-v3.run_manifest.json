@@ -1,0 +1,59 @@
+{
+  "schema": "numeca-autogrid-run/v1",
+  "created_utc": "2026-09-19T20:17:10.980196+00:00",
+  "config": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\_automation\\g4\\mesh-v3.request.json",
+  "config_sha256": "a8076d8d358b9b1ba366b6ccaf0e776de982f7045c686b2b836f121c9cccc4bb",
+  "inputs": {
+    "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R1_13span\\R1.geomTurbo": "87dba87cabb4dee512ae32adc3dd70ccc929028c36b4c8c4c8b7a548bdc5c40e",
+    "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R2_13span\\R2.geomTurbo": "7ab3080ac0bbadeb8ddceaa5a04a8398b313bf4da4ede262433649dfaf861197"
+  },
+  "template_trb": null,
+  "command": [
+    "D:\\NUMECA_SOFTWARE\\fine161\\bin64\\iggx86_64.exe",
+    "-autogrid5",
+    "-batch",
+    "-script",
+    "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.autogrid_job.py",
+    "-print"
+  ],
+  "autogrid_returncode": 0,
+  "sentinel_ok": true,
+  "audit_returncode": 0,
+  "artifacts": {
+    ".trb": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.trb",
+      "exists": true,
+      "size": 36031
+    },
+    ".igg": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.igg",
+      "exists": true,
+      "size": 456301
+    },
+    ".cgns": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.cgns",
+      "exists": true,
+      "size": 49188864
+    },
+    ".bcs": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.bcs",
+      "exists": true,
+      "size": 15972
+    },
+    ".config": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.config",
+      "exists": true,
+      "size": 13326
+    },
+    ".qualityReport": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.qualityReport",
+      "exists": true,
+      "size": 4463
+    },
+    ".geomTurbo": {
+      "path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\03-mesh\\v3\\mesh-v3.geomTurbo",
+      "exists": true,
+      "size": 353777
+    }
+  }
+}
