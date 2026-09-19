@@ -255,3 +255,84 @@
 - 判据：v2 来源说明：反解依据、电机包络、对标结果、未实现项
 - 结论：INFO
 
+## 2026-09-20T01:55:11+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v3/inputs/turbo-flow-v3.json
+- 操作者：agent
+- 输入：01-scheme/v3/inputs/turbo-flow-v3.json  sha256=c89df2e414cc1616  bytes=3134
+- 上游：requirements.yaml
+- 产物：01-scheme/v3/inputs/turbo-flow-v3.json  sha256=c89df2e414cc1616d89880672757d0abb78e8eafa4d5fb0ad4ab39fb8fc75f64
+- 判据：G2-1..G2-8；电机段在转子与静子之间；面积单调收缩 7.69%
+- 结论：PASS
+
+## 2026-09-20T01:55:11+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v3/流道尺寸表.csv
+- 操作者：agent
+- 输入：01-scheme/v3/流道尺寸表.csv  sha256=ce722e735575376c  bytes=352
+- 上游：requirements.yaml
+- 产物：01-scheme/v3/流道尺寸表.csv  sha256=ce722e735575376cd3f61fab5d9c95e56b9a5c9f9967a0d33be7a203081baa64
+- 判据：G2-1..G2-8；电机段在转子与静子之间；面积单调收缩 7.69%
+- 结论：PASS
+
+## 2026-09-20T01:55:12+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v3/叶片几何参数表.csv
+- 操作者：agent
+- 输入：01-scheme/v3/叶片几何参数表.csv  sha256=210e5597ffadb382  bytes=338
+- 上游：requirements.yaml
+- 产物：01-scheme/v3/叶片几何参数表.csv  sha256=210e5597ffadb382ed3086e89721b3f375c65c9c40bd62be38bac5e84e59c187
+- 判据：G2-1..G2-8；电机段在转子与静子之间；面积单调收缩 7.69%
+- 结论：PASS
+
+## 2026-09-20T01:55:12+08:00 | G2 1D通流方案 | PASS
+- 动作：登记产物 01-scheme/v3/通流计算结果表.csv
+- 操作者：agent
+- 输入：01-scheme/v3/通流计算结果表.csv  sha256=274149a97cff0735  bytes=873
+- 上游：requirements.yaml
+- 产物：01-scheme/v3/通流计算结果表.csv  sha256=274149a97cff0735c92d59f296403cc5ed72065f0c0fd2785d0a69ed94277e04
+- 判据：G2-1..G2-8；电机段在转子与静子之间；面积单调收缩 7.69%
+- 结论：PASS
+
+## 2026-09-20T01:55:12+08:00 | G2 1D通流方案 | WARN
+- 动作：登记产物 01-scheme/v3/benchmark_gate.json
+- 操作者：agent
+- 输入：01-scheme/v3/benchmark_gate.json  sha256=79cc19a1848d6772  bytes=3700
+- 上游：01-scheme/v3/通流计算结果表.csv
+- 产物：01-scheme/v3/benchmark_gate.json  sha256=79cc19a1848d677211bbcfcf9d00c45c6d09d2e7699090e345fd52223a328686
+- 判据：对标 6 通过 / 1 注意 / 0 没通过
+- 结论：WARN
+
+## 2026-09-20T01:55:12+08:00 | G2 1D通流方案 | WARN
+- 动作：登记产物 01-scheme/v3/thrust_1d.json
+- 操作者：agent
+- 输入：01-scheme/v3/thrust_1d.json  sha256=637cace15d257d2e  bytes=3221
+- 上游：01-scheme/v3/通流计算结果表.csv
+- 产物：01-scheme/v3/thrust_1d.json  sha256=637cace15d257d2e105e0d28bda93481333a94ea19bb9ae2d40e657db592b862
+- 判据：C-004 三列；已知答案校核 0.363%；设计点总压升比三维高 2.2 倍，数值不可用
+- 结论：WARN
+
+## 2026-09-20T01:55:12+08:00 | G2 1D通流方案 | WARN
+- 动作：登记产物 01-scheme/v3/thrust_1d.csv
+- 操作者：agent
+- 输入：01-scheme/v3/thrust_1d.csv  sha256=3cb8eb489655b6aa  bytes=317
+- 上游：01-scheme/v3/thrust_1d.json
+- 产物：01-scheme/v3/thrust_1d.csv  sha256=3cb8eb489655b6aa0142f92ee323d1803766cd8c111f11cb6a83a34e27a7badf
+- 判据：static_thrust_n / momentum_thrust_n / pressure_thrust_n 三列
+- 结论：WARN
+
+## 2026-09-20T01:55:12+08:00 | G2 1D通流方案 | INFO
+- 动作：登记产物 01-scheme/v3/NOTES.md
+- 操作者：agent
+- 输入：01-scheme/v3/NOTES.md  sha256=6352f6619e268e9f  bytes=7056
+- 上游：01-scheme/v3/流道尺寸表.csv
+- 产物：01-scheme/v3/NOTES.md  sha256=6352f6619e268e9f2d89ed59d4ca4048de0a9b1a085a5404933239fcffbf793e
+- 判据：哪些是数据、哪些是模型假设
+- 结论：INFO
+
+## 2026-09-20T01:55:49+08:00 | G0 需求 | PASS
+- 动作：登记产物 requirements.yaml
+- 操作者：agent
+- 输入：requirements.yaml  sha256=32cdab3d9f27350b  bytes=5719
+- 上游：无
+- 产物：requirements.yaml  sha256=32cdab3d9f27350bc243a50fa419f11940fe4e14d9484762c40e750c087f7883
+- 判据：补入电机轴向位置 between_rotor_and_stator / duct_contraction required / inlet_hub_constrained_by_motor false
+- 结论：PASS
+

@@ -29,8 +29,12 @@ geometry:
   tip_radius_m: 0.300
   disk_area_m2: 0.282743
   constraint: locked
+  # 流道必须收缩（环形面积沿轴向递减）。用户 2026-09-19 明确。
+  # 机匣锁定 0.300 不变，所以收缩靠**轮毂上升**实现 —— 实测 v8：
+  # 面积 0.2626 m2（进口）-> 0.2425 m2（出口），-7.7%。
+  duct_contraction: required
   source: user
-  user_statement: "锁 0.6 m，承袭 v7 机匣"
+  user_statement: "锁 0.6 m，承袭 v7 机匣；流道要求收缩"
   heritage: "Ducted-Fan/run/90kg-duct-fan-v7 机匣半径 0.300 m；PPT 指导页机匣直径 0.600 m"
 
 shaft:
@@ -66,7 +70,16 @@ motor:
   outer_diameter_m: 0.188          # 数据表首行「直径 188 mm」= 外径
   axial_length_m: 0.079            # 数据表首行「长度 79 mm」
   axial_clearance_m: 0.00496       # 两端各留余量；取自 v8 实测 83.955 - 79 = 4.955 mm
-  envelope_source: "EMRAX 188 datasheet 首行：直径 188 mm | 长度 79 mm"
+  # **轴向位置：装在转子与静子之间**（用户 2026-09-19 确认）。
+  # 这一条 2026-09-19 修正过 —— 第一版只写了「占位内轮毂 >= 0.094」却没写占位在哪，
+  # 下游就把它当成「从进口起 95 mm 都要 >=0.094」，做出一个进口 Ø207 的方案，
+  # 与用户手改的 v8（进口 Ø160）**正好相反**。
+  axial_position: between_rotor_and_stator
+  # 由此推出的两条：
+  #   1. 进口段轮毂**不受**电机直径约束，可以小于 Ø188（v8 实测进口 Ø160）
+  #   2. 电机段（转子之后、静子之前）轮毂 >= 0.094，且要留径向余量
+  inlet_hub_constrained_by_motor: false
+  envelope_source: "EMRAX 188 datasheet 首行：直径 188 mm | 长度 79 mm；轴向位置由用户确认"
   source: user
 
 rows:
