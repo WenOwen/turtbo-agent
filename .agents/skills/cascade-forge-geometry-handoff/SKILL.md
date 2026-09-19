@@ -66,6 +66,25 @@ DF90-001 的 v8 就是这么过去的 —— 见 `02-geometry/v8/PROVENANCE.md`�
 
 ---
 
+## 金属角：一维方案 → AutoBlade 的 `CAMBER_BETA`
+
+**约定已实测确认（2026-09-20）**，全文见 `references/metal-angle-contract.md`。三条要点：
+
+1. **两边都是从轴向量起，符号也一致 —— 换算就是直通**，不需要 `90 − x` 之类的变换。
+   证据：`.par` 的 `CAMBER_GAMMA` 与从 `geomTurbo` 反算的截面安装角逐截面吻合（叶尖差 0.0000°），
+   `BETA1/BETA2` 与中弧线前后缘切线角同样吻合；用 turbo-flow 的公式重算 v3 的参数表，
+   R1 的出口金属角**差 −0.000°**。
+2. **一维给不出展向分布** —— `result.json` 的 `metal_angle_in_profile` / `metal_angle_out_profile`
+   **全是空数组**。从一维到几何，展向律是**设计选择**，不是数据。
+   用 `python tools/metal_angle_convert.py --case <case> --scheme <vN> --row <叶排>` 展开，
+   它会把所有假设写进 `assumptions`，**不许当数据用**。
+3. **数值对不上不等于约定错。** 实测 v8 的叶片来自 **v7 的 AutoBlade**（`v8_build_par.py` 自己写着
+   "5-section -> 13-section PCHIP 插值，nothing else is touched"），而 v3 的金属角来自 turbo-flow ——
+   **两条独立来源**。G3-5 里 `S1 出口金属角` 那条 FAIL 是**真差异**，要消掉它必须真的按参数表重做叶片，
+   **不许改比对口径**。
+
+---
+
 ## cascade-forge 调用面（已探明，端到端未验证）
 
 > ⚠️ **状态声明**：以下命令面已通过 `--help` 探明，**尚未在本工作流内完成端到端验证**。
