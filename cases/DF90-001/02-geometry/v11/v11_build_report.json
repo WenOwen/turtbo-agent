@@ -1,0 +1,93 @@
+{
+ "scheme": "v4",
+ "law": "linear",
+ "hub_points": [
+  [
+   0.0,
+   0.08
+  ],
+  [
+   0.05,
+   0.086
+  ],
+  [
+   0.095,
+   0.0945
+  ],
+  [
+   0.185,
+   0.0958
+  ],
+  [
+   0.23,
+   0.0985
+  ],
+  [
+   0.3,
+   0.1132
+  ]
+ ],
+ "shroud_points": [
+  [
+   0.0,
+   0.3
+  ],
+  [
+   0.3,
+   0.3
+  ]
+ ],
+ "rows": {
+  "R1": {
+   "table_beta1": -68.276,
+   "table_beta2": -60.562,
+   "ref_gap_beta1": -0.4033,
+   "ref_gap_beta2": -0.0005,
+   "mid": {
+    "span_fraction": 0.5,
+    "radius_m": 0.193,
+    "CAMBER_GAMMA_approx_deg": -64.772,
+    "CAMBER_BETA1_deg": -68.9816,
+    "CAMBER_BETA2_deg": -60.5625,
+    "blade_speed_m_s": 123.2866
+   },
+   "ok": true,
+   "changes": 65,
+   "par": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R1_13span\\R1.par",
+   "geomTurbo": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R1_13span\\R1.geomTurbo",
+   "geom_bytes": 204504,
+   "abm": [
+    "model2f47.abm"
+   ]
+  },
+  "R2": {
+   "table_beta1": 32.126,
+   "table_beta2": -2.319,
+   "ref_gap_beta1": 1.1836,
+   "ref_gap_beta2": 0.319,
+   "mid": {
+    "span_fraction": 0.5,
+    "radius_m": 0.19925,
+    "CAMBER_GAMMA_approx_deg": 16.0764,
+    "CAMBER_BETA1_deg": 34.1528,
+    "CAMBER_BETA2_deg": -2.0,
+    "blade_speed_m_s": 0.0
+   },
+   "ok": true,
+   "changes": 65,
+   "par": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R2_13span\\R2.par",
+   "geomTurbo": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R2_13span\\R2.geomTurbo",
+   "geom_bytes": 202712,
+   "abm": [
+    "model2899.abm"
+   ]
+  }
+ },
+ "converter_assumptions": [
+  "Vm 沿展向取常数（圆柱面假设）—— 真值要三维才算得出来",
+  "展向律 linear 是设计选择，不是数据；result.json 的 metal_angle_*_profile 是空数组",
+  "CAMBER_GAMMA 用 (BETA1+BETA2)/2 近似 —— 中弧线弯曲时它不是严格解",
+  "deviation 固定 2.0 度，与 turbo-flow 的 deviation_base_deg 默认值一致"
+ ],
+ "law_note": "linear 是待用户确认的默认选择，见 PLAN.md 的展向律对比"
+}

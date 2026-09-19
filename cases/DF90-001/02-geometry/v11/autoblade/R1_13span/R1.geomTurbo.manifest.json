@@ -1,0 +1,114 @@
+{
+ "schema_version": "1.0.0",
+ "blade_id": "v11-R1",
+ "geomturbo_path": "D:\\Project\\Research\\turtbo-agent\\cases\\DF90-001\\02-geometry\\v11\\autoblade\\R1_13span\\R1.geomTurbo",
+ "geomturbo_sha256": "87dba87cabb4dee512ae32adc3dd70ccc929028c36b4c8c4c8b7a548bdc5c40e",
+ "schedule": {
+  "name": "DF90-001-R1",
+  "blade_count": 9,
+  "rotation_direction": "ccw",
+  "sections": [
+   {
+    "span_fraction": 0.0,
+    "radius_m": 0.087919057,
+    "chord_m": 0.099211951,
+    "stagger_deg": -42.7419,
+    "index": 1
+   },
+   {
+    "span_fraction": 0.01706208,
+    "radius_m": 0.091537599,
+    "chord_m": 0.098799131,
+    "stagger_deg": -43.8471,
+    "index": 2
+   },
+   {
+    "span_fraction": 0.067022872,
+    "radius_m": 0.102133331,
+    "chord_m": 0.097723224,
+    "stagger_deg": -46.9871,
+    "index": 3
+   },
+   {
+    "span_fraction": 0.146148874,
+    "radius_m": 0.118914448,
+    "chord_m": 0.09629415,
+    "stagger_deg": -51.6069,
+    "index": 4
+   },
+   {
+    "span_fraction": 0.249184643,
+    "radius_m": 0.140766371,
+    "chord_m": 0.094641223,
+    "stagger_deg": -56.816,
+    "index": 5
+   },
+   {
+    "span_fraction": 0.369191668,
+    "radius_m": 0.166217574,
+    "chord_m": 0.092488193,
+    "stagger_deg": -62.0552,
+    "index": 6
+   },
+   {
+    "span_fraction": 0.498071097,
+    "radius_m": 0.193550445,
+    "chord_m": 0.089911968,
+    "stagger_deg": -66.2768,
+    "index": 7
+   },
+   {
+    "span_fraction": 0.627415967,
+    "radius_m": 0.220982027,
+    "chord_m": 0.087339508,
+    "stagger_deg": -68.7074,
+    "index": 8
+   },
+   {
+    "span_fraction": 0.748242929,
+    "radius_m": 0.246607123,
+    "chord_m": 0.084983009,
+    "stagger_deg": -70.5327,
+    "index": 9
+   },
+   {
+    "span_fraction": 0.852314241,
+    "radius_m": 0.268678665,
+    "chord_m": 0.082930653,
+    "stagger_deg": -72.1491,
+    "index": 10
+   },
+   {
+    "span_fraction": 0.932365243,
+    "radius_m": 0.285655957,
+    "chord_m": 0.081336347,
+    "stagger_deg": -73.3343,
+    "index": 11
+   },
+   {
+    "span_fraction": 0.982784648,
+    "radius_m": 0.296348952,
+    "chord_m": 0.080338034,
+    "stagger_deg": -74.0525,
+    "index": 12
+   },
+   {
+    "span_fraction": 1.0,
+    "radius_m": 0.3,
+    "chord_m": 0.08,
+    "stagger_deg": -74.2925,
+    "index": 13
+   }
+  ],
+  "source": {
+   "flowpath": "01-scheme/v3/流道尺寸表.csv（轮毂 6 控制点，机匣锁 0.300）",
+   "blade_sections": "02-geometry/v8/autoblade/R1_13span/R1.par"
+  }
+ },
+ "warnings": [
+  "叶片截面沿用 v8，**不是**由 01-scheme/v3/叶片几何参数表.csv 导出。v3 的金属角每排单值（R1 beta1 -68.276 / beta2 -60.531），",
+  "而几何的 CAMBER_BETA 逐截面变化（BETA1 -56..-59、BETA2 -28..-34）——",
+  "单值铺到 13 个截面会抹平扭转，且两个工具的角度约定未查证，故未改。",
+  "弦长同理：v3 表给 0.090，几何实测见 sections[].chord_m。"
+ ]
+}

@@ -399,3 +399,39 @@
 - 判据：G3-8 预览图：子午面
 - 结论：PASS
 
+## 2026-09-20T04:07:01+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v11/autoblade/R1_13span/R1.geomTurbo
+- 操作者：agent
+- 输入：02-geometry/v11/autoblade/R1_13span/R1.geomTurbo  sha256=87dba87cabb4dee5  bytes=204504
+- 上游：01-scheme/v4/叶片几何参数表.csv
+- 产物：02-geometry/v11/autoblade/R1_13span/R1.geomTurbo  sha256=87dba87cabb4dee512ae32adc3dd70ccc929028c36b4c8c4c8b7a548bdc5c40e
+- 判据：由 v4 参数表展开；law=linear
+- 结论：PASS
+
+## 2026-09-20T04:07:01+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo
+- 操作者：agent
+- 输入：02-geometry/v11/autoblade/R2_13span/R2.geomTurbo  sha256=7ab3080ac0bbadeb  bytes=202712
+- 上游：01-scheme/v4/叶片几何参数表.csv
+- 产物：02-geometry/v11/autoblade/R2_13span/R2.geomTurbo  sha256=7ab3080ac0bbadeb8ddceaa5a04a8398b313bf4da4ede262433649dfaf861197
+- 判据：由 v4 参数表展开；law=linear
+- 结论：PASS
+
+## 2026-09-20T04:07:01+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v11/autoblade/R1_13span/R1.geomTurbo.manifest.json
+- 操作者：agent
+- 输入：02-geometry/v11/autoblade/R1_13span/R1.geomTurbo.manifest.json  sha256=ddebdbb62aaf8295  bytes=2989
+- 上游：01-scheme/v4/叶片几何参数表.csv
+- 产物：02-geometry/v11/autoblade/R1_13span/R1.geomTurbo.manifest.json  sha256=ddebdbb62aaf829508a19984781127cc8c968cecf67efbce0bd3e9db34e1671a
+- 判据：由 v4 参数表展开；law=linear
+- 结论：PASS
+
+## 2026-09-20T04:07:01+08:00 | G3 叶片造型 | PASS
+- 动作：登记产物 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json
+- 操作者：agent
+- 输入：02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json  sha256=96bb7ae2553e5e5d  bytes=2964
+- 上游：01-scheme/v4/叶片几何参数表.csv
+- 产物：02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json  sha256=96bb7ae2553e5e5d29a51241ad437731dcf0463e515cd801fb5eb662e33b742c
+- 判据：由 v4 参数表展开；law=linear
+- 结论：PASS
+

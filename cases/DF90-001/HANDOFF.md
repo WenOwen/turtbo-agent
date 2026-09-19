@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-20T03:29:49+08:00　·　当前阶段 **G3**　·　revision 87
+> 生成于 2026-09-20T04:07:05+08:00　·　当前阶段 **G3**　·　revision 91
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -10,37 +10,37 @@
 **但工具不这么认为：**G2 最近一次闸门判定是 **WARN**
 「已完成」说的是这一步**有产物**，闸门说的是这一步**过没过判据**。两者不一致时以后者为准 —— 明细见 LOG.md。
 
-最近一次记录：2026-09-20T02:26:04+08:00　PASS　登记产物 02-geometry/v9/figures/R1/meridional.svg
+最近一次记录：2026-09-20T04:07:01+08:00　PASS　登记产物 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json
 
-## 未登记的改动（近 14 天 33 条，历史共 33 条）
+## 未登记的改动（近 14 天 39 条，历史共 39 条）
 
 这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
 可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
 
-- 03:28:24　**几何**　added　02-geometry/v10/autoblade/R1_13span/R1.par　0 -> 611427 bytes
-- 03:29:48　**几何**　deleted　02-geometry/v10/autoblade/R1_13span/R1/model495b.abm　644413 -> 0 bytes
-- 03:29:46　**几何**　modified　02-geometry/v10/autoblade/R1_13span/R1.abp　1445 -> 1445 bytes
-- 03:29:46　**几何**　added　02-geometry/v10/autoblade/R1_13span/R1/model3e6c.abm　0 -> 644413 bytes
-- 03:29:46　**几何**　modified　02-geometry/v10/autoblade/R1_13span/R1.par　611427 -> 611427 bytes
-- 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2.abp　0 -> 1443 bytes
 - 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2/model07ec.abm　0 -> 645350 bytes
 - 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2.par　0 -> 612367 bytes
-- …另有 25 条，见 _watch/changes.jsonl
+- 04:04:28　**几何**　added　02-geometry/v11/autoblade/R1_13span/R1/model2f47.abm　0 -> 644369 bytes
+- 04:04:28　**几何**　added　02-geometry/v11/autoblade/R1_13span/R1.abp　0 -> 1445 bytes
+- 04:04:28　**几何**　added　02-geometry/v11/autoblade/R1_13span/R1.par　0 -> 611383 bytes
+- 04:04:29　**几何**　added　02-geometry/v11/autoblade/R2_13span/R2/model2899.abm　0 -> 645282 bytes
+- 04:04:29　**几何**　added　02-geometry/v11/autoblade/R2_13span/R2.abp　0 -> 1445 bytes
+- 04:04:29　**几何**　added　02-geometry/v11/autoblade/R2_13span/R2.par　0 -> 612299 bytes
+- …另有 31 条，见 _watch/changes.jsonl
 
 ## 最近 10 次变更
 
 | 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
 |---|---|---|---|---|---|
+| 09-20 04:04:29 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R2_13span/R2.par | 0 -> 612299 |
+| 09-20 04:04:29 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R2_13span/R2.abp | 0 -> 1445 |
+| 09-20 04:04:29 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R2_13span/R2/model2899.abm | 0 -> 645282 |
+| 09-20 04:04:28 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R1_13span/R1.par | 0 -> 611383 |
+| 09-20 04:04:28 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R1_13span/R1.abp | 0 -> 1445 |
+| 09-20 04:04:28 | 几何 | **unknown** | added | 02-geometry/v11/autoblade/R1_13span/R1/model2f47.abm | 0 -> 644369 |
 | 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2.par | 0 -> 612367 |
 | 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2/model07ec.abm | 0 -> 645350 |
 | 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2.abp | 0 -> 1443 |
 | 09-20 03:29:46 | 几何 | **unknown** | modified | 02-geometry/v10/autoblade/R1_13span/R1.par | 611427 -> 611427 |
-| 09-20 03:29:46 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1/model3e6c.abm | 0 -> 644413 |
-| 09-20 03:29:46 | 几何 | **unknown** | modified | 02-geometry/v10/autoblade/R1_13span/R1.abp | 1445 -> 1445 |
-| 09-20 03:29:48 | 几何 | **unknown** | deleted | 02-geometry/v10/autoblade/R1_13span/R1/model495b.abm | 644413 -> 0 |
-| 09-20 03:28:24 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1.par | 0 -> 611427 |
-| 09-20 03:28:24 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1.abp | 0 -> 1445 |
-| 09-20 03:28:24 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1/model495b.abm | 0 -> 644413 |
 
 ## 你接手前必须知道
 
@@ -73,7 +73,7 @@
 - 轴向长度　来源：open　轴向总长是否有约束
 - `acceptance.ACC-1` 之外　来源：待细化　是否还有其他验收口径（如效率下限、噪声、重量）
 
-## 产物（53 条）
+## 产物（57 条）
 
 | 阶段 | 结论 | 版本 | 路径 | sha256 |
 |---|---|---|---|---|
@@ -130,10 +130,14 @@
 | G3 | PASS | v9 | 02-geometry/v9/figures/R2/meridional.svg | cf6570dc |
 | G3 | INFO | v9 | 02-geometry/v9/v9_build_report.json | 3e29de7b |
 | G3 | PASS | v9 | 02-geometry/v9/figures/R1/meridional.svg | a028f475 |
+| G3 | PASS | v11 | 02-geometry/v11/autoblade/R1_13span/R1.geomTurbo | 87dba87c |
+| G3 | PASS | v11 | 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo | 7ab3080a |
+| G3 | PASS | v11 | 02-geometry/v11/autoblade/R1_13span/R1.geomTurbo.manifest.json | ddebdbb6 |
+| G3 | PASS | v11 | 02-geometry/v11/autoblade/R2_13span/R2.geomTurbo.manifest.json | 96bb7ae2 |
 
 ---
 
-看守状态：监视 136 个文件　·　累计变更 52 条　·　历史库 330 份内容
+看守状态：监视 142 个文件　·　累计变更 58 条　·　历史库 336 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。
