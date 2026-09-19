@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-20T04:33:14+08:00　·　当前阶段 **G4**　·　revision 95
+> 生成于 2026-09-20T05:17:52+08:00　·　当前阶段 **G4**　·　revision 95
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -12,25 +12,27 @@
 
 最近一次记录：2026-09-20T04:27:05+08:00　PASS　登记产物 03-mesh/v4/mesh-v4.qualityReport
 
-## 未登记的改动（近 14 天 65 条，历史共 65 条）
+## 未登记的改动（近 14 天 67 条，历史共 67 条）
 
 这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
 可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
 
-- 04:26:27　**网格**　modified　03-mesh/v4/mesh-v4.bcs　669 -> 15981 bytes
-- 04:26:27　**网格**　modified　03-mesh/v4/mesh-v4.config　597 -> 13326 bytes
 - 04:25:49　**网格**　added　03-mesh/v4/mesh-v4.bak.trb　0 -> 34403 bytes
 - 04:26:27　**网格**　modified　03-mesh/v4/mesh-v4.trb　34403 -> 36042 bytes
 - 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.igg　459893 -> 459893 bytes
 - 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.bcs　15981 -> 15981 bytes
 - 04:26:29　**网格**　modified　03-mesh/v4/mesh-v4.config　13326 -> 13326 bytes
 - 04:33:11　**算例参数**　added　04-solve/v3/n05000_p101325/n05000_p101325.run　0 -> 268409 bytes
-- …另有 57 条，见 _watch/changes.jsonl
+- 05:03:43　**算例参数**　added　04-solve/v3/mesh-v4.iec　0 -> 24365931 bytes
+- 05:17:50　**算例参数**　added　04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.run　0 -> 268397 bytes
+- …另有 59 条，见 _watch/changes.jsonl
 
 ## 最近 10 次变更
 
 | 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
 |---|---|---|---|---|---|
+| 09-20 05:17:50 | 算例参数 | **unknown** | added | 04-solve/v3/mesh-v4_n05000_p101325/mesh-v4_n05000_p101325.run | 0 -> 268397 |
+| 09-20 05:03:43 | 算例参数 | **unknown** | added | 04-solve/v3/mesh-v4.iec | 0 -> 24365931 |
 | 09-20 04:33:11 | 算例参数 | **unknown** | added | 04-solve/v3/n05000_p101325/n05000_p101325.run | 0 -> 268409 |
 | 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.config | 13326 -> 13326 |
 | 09-20 04:26:29 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.bcs | 15981 -> 15981 |
@@ -39,8 +41,6 @@
 | 09-20 04:25:49 | 网格 | **unknown** | added | 03-mesh/v4/mesh-v4.bak.trb | 0 -> 34403 |
 | 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.config | 597 -> 13326 |
 | 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.bcs | 669 -> 15981 |
-| 09-20 04:26:27 | 网格 | **unknown** | modified | 03-mesh/v4/mesh-v4.igg | 6675 -> 459893 |
-| 09-20 04:25:49 | 网格 | **unknown** | added | 03-mesh/v4/mesh-v4.config | 0 -> 597 |
 
 ## 你接手前必须知道
 
@@ -141,7 +141,7 @@
 
 ---
 
-看守状态：监视 153 个文件　·　累计变更 84 条　·　历史库 350 份内容
+看守状态：监视 155 个文件　·　累计变更 86 条　·　历史库 351 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。
