@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0",
+  "name": "DF90-001 v4 修正 solidity（按当前流道中径重算）",
+  "description": "v4：v3 的 rows[].solidity 沿用了 v1 的值（R1 0.639），未按 v3 新流道重算。本版按各自站位中径重算 sigma = chord*Z/(2*pi*r)。流道/弦长/叶片数/金属角沿用 v3。",
+  "fluid": {
+    "name": "dry_air",
+    "gas_constant": 287.05287,
+    "gamma": 1.4,
+    "heat_capacity_model": "temperature_dependent"
+  },
+  "inlet": {
+    "total_pressure_pa": 101325.0,
+    "total_temperature_k": 288.15,
+    "mass_flow_kg_s": 15.09343,
+    "absolute_flow_angle_deg": 0.0,
+    "total_pressure_profile": [],
+    "total_temperature_profile": [],
+    "swirl_profile": []
+  },
+  "shaft": {
+    "rpm": 6100.0
+  },
+  "annulus": {
+    "strategy": "custom",
+    "inlet_hub_radius_m": 0.08,
+    "inlet_tip_radius_m": 0.3,
+    "length_m": 0.3,
+    "hub_curve": [
+      {
+        "x": 0.0,
+        "r": 0.08
+      },
+      {
+        "x": 0.05,
+        "r": 0.086
+      },
+      {
+        "x": 0.095,
+        "r": 0.0945
+      },
+      {
+        "x": 0.185,
+        "r": 0.0958
+      },
+      {
+        "x": 0.23,
+        "r": 0.0985
+      },
+      {
+        "x": 0.3,
+        "r": 0.1132
+      }
+    ],
+    "shroud_curve": [
+      {
+        "x": 0.0,
+        "r": 0.3
+      },
+      {
+        "x": 0.3,
+        "r": 0.3
+      }
+    ],
+    "inlet_blockage": 0.0,
+    "outlet_blockage": 0.0
+  },
+  "design": {
+    "mass_flow_kg_s": 15.09343,
+    "total_pressure_ratio": 1.041818,
+    "stage_count": 1,
+    "target_efficiency_tt": 0.8931,
+    "flow_coefficient": 0.3866,
+    "loading_coefficient": 0.1037,
+    "reaction": 0.5,
+    "exit_swirl_deg": 0.0,
+    "stage_work_weights": [],
+    "auto_stage_count": false,
+    "stage_reactions": [],
+    "stage_flow_coefficients": []
+  },
+  "rows": [
+    {
+      "id": "R1",
+      "row_type": "rotor",
+      "stage": 1,
+      "x_m": 0.05,
+      "blade_count": 9,
+      "chord_m": 0.09,
+      "axial_chord_m": null,
+      "solidity": 0.667956,
+      "solidity_profile": [],
+      "aspect_ratio": 2.0,
+      "metal_angle_in_deg": -68.27627691411625,
+      "metal_angle_out_deg": -60.562450069583825,
+      "metal_angle_in_profile": [],
+      "metal_angle_out_profile": [],
+      "work_profile": [],
+      "blockage": 0.02,
+      "tip_clearance_m": 0.0005,
+      "throat_area_ratio": 0.88,
+      "deviation_base_deg": 2.0,
+      "variable_schedule": [],
+      "bleed_after": null,
+      "loss_model": "lieblein_engineering_v1",
+      "reference_efficiency_tt": null,
+      "reference_incidence_deg": 0.0,
+      "pressure_loss_fraction": null
+    },
+    {
+      "id": "S1",
+      "row_type": "stator",
+      "stage": 1,
+      "x_m": 0.23,
+      "blade_count": 11,
+      "chord_m": 0.09,
+      "axial_chord_m": null,
+      "solidity": 0.790782,
+      "solidity_profile": [],
+      "aspect_ratio": 2.0,
+      "metal_angle_in_deg": 32.12555411757223,
+      "metal_angle_out_deg": -2.3186275419489712,
+      "metal_angle_in_profile": [],
+      "metal_angle_out_profile": [],
+      "work_profile": [],
+      "blockage": 0.02,
+      "tip_clearance_m": 0.0005,
+      "throat_area_ratio": 0.88,
+      "deviation_base_deg": 2.0,
+      "variable_schedule": [],
+      "bleed_after": null,
+      "loss_model": "lieblein_engineering_v1",
+      "reference_efficiency_tt": null,
+      "reference_incidence_deg": 0.0,
+      "pressure_loss_fraction": null
+    }
+  ],
+  "vortex_law": "free",
+  "numerics": {
+    "spanwise_points": 17,
+    "streamwise_points": 61,
+    "max_iterations": 120,
+    "mass_tolerance": 0.001,
+    "energy_tolerance": 1e-05,
+    "streamline_tolerance": 1e-05,
+    "relaxation": 0.35,
+    "row_relaxation": 1.0,
+    "momentum_tolerance": 0.001
+  },
+  "metadata": {
+    "motor_envelope": {
+      "model": "EMRAX 188",
+      "outer_radius_m": 0.094,
+      "axial_length_m": 0.079,
+      "axial_position": "between_rotor_and_stator",
+      "bore_x_m": [
+        0.095,
+        0.185
+      ],
+      "bore_length_m": 0.09,
+      "motor_x_m": [
+        0.1005,
+        0.1795
+      ],
+      "source": "requirements.yaml#motor（2026-09-19 修正：电机在转子与静子之间）"
+    },
+    "correction": "v2 把电机放在进口段（轮毂恒 0.103457），与用户手改的 v8 相反。v3 按用户修正重做。",
+    "correction_v4": [
+      "R1: solidity 0.639000 -> 0.667956 (mid r=0.193000)",
+      "S1: solidity 0.766000 -> 0.790782 (mid r=0.199250)"
+    ]
+  }
+}

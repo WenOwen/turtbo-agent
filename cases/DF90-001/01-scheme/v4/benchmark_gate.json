@@ -1,0 +1,127 @@
+{
+  "time": "2026-09-20T03:20:26+08:00",
+  "targets": {
+    "source": "Ducted-Fan/PPT/涵道风扇文件创建计算指导-20260904.pptx 第3页（6100 rpm 设计点）+ requirements.yaml",
+    "note": "torque_nm 由 P/omega 反算：57695.871 / (6100*2*pi/60) = 90.32 N*m；非直接测量值。",
+    "rpm": 6100,
+    "inlet_total_pressure_pa": 101325,
+    "inlet_total_temperature_k": 288.15,
+    "mass_flow_kg_s": 15.09343,
+    "total_pressure_ratio": 1.041818,
+    "efficiency_tt": 0.8931,
+    "power_w": 57695.871,
+    "torque_nm": 90.32,
+    "tip_radius_m": 0.3,
+    "row_count": 2,
+    "tol_efficiency_abs": 0.02,
+    "tol_power_rel": 0.05,
+    "tol_torque_rel": 0.05
+  },
+  "items": [
+    {
+      "id": "B-1",
+      "title": "总总效率（绝对偏差）",
+      "target": 0.8931,
+      "actual": 0.8815583219878975,
+      "delta": -0.011541678012102485,
+      "delta_shown": "-0.01154",
+      "tol": 0.02,
+      "verdict": "PASS",
+      "source": "Ducted-Fan/PPT/涵道风扇文件创建计算指导-20260904.pptx 第3页（6100 rpm 设计点）+ requirements.yaml"
+    },
+    {
+      "id": "B-2",
+      "title": "轴功率（相对偏差）",
+      "target": 57695.871,
+      "actual": 58358.000928971196,
+      "delta": 662.1299289711969,
+      "delta_shown": "+1.15%",
+      "tol": 0.05,
+      "verdict": "PASS",
+      "source": "Ducted-Fan/PPT/涵道风扇文件创建计算指导-20260904.pptx 第3页（6100 rpm 设计点）+ requirements.yaml"
+    },
+    {
+      "id": "B-3",
+      "title": "扭矩（相对偏差）",
+      "target": 90.32,
+      "actual": 91.35702606695592,
+      "delta": 1.0370260669559315,
+      "delta_shown": "+1.15%",
+      "tol": 0.05,
+      "verdict": "PASS",
+      "source": "Ducted-Fan/PPT/涵道风扇文件创建计算指导-20260904.pptx 第3页（6100 rpm 设计点）+ requirements.yaml"
+    },
+    {
+      "id": "B-4",
+      "title": "机匣半径（绝对偏差, m）",
+      "target": 0.3,
+      "actual": 0.3,
+      "delta": 0.0,
+      "delta_shown": "0",
+      "tol": 0.0001,
+      "verdict": "PASS",
+      "source": "requirements.yaml#geometry.tip_radius_m（锁定）"
+    },
+    {
+      "id": "B-5",
+      "title": "叶排数",
+      "target": 2,
+      "actual": 2,
+      "delta": 0,
+      "delta_shown": "0",
+      "tol": 0,
+      "verdict": "PASS",
+      "source": "requirements.yaml#rows.count（转子+静子）"
+    },
+    {
+      "id": "B-6",
+      "title": "工程约束全部通过",
+      "target": "0 条不通过",
+      "actual": "0 条不通过",
+      "delta": null,
+      "delta_shown": "-",
+      "tol": 0,
+      "verdict": "PASS",
+      "source": "result.json#constraints(kind=engineering)",
+      "detail": []
+    },
+    {
+      "id": "B-7",
+      "title": "输入的设计目标自洽",
+      "target": "0 条不通过",
+      "actual": "2 条不通过",
+      "delta": null,
+      "delta_shown": "-",
+      "tol": 0,
+      "verdict": "WARN",
+      "source": "result.json#constraints(kind=design)",
+      "detail": [
+        {
+          "name": "target_efficiency_tt",
+          "value": 0.8815583219878975,
+          "limit": 0.8931,
+          "passed": false,
+          "kind": "design"
+        },
+        {
+          "row_id": "R1",
+          "name": "reaction_target",
+          "value": 0.8806558396734671,
+          "target": 0.5,
+          "limit": 0.01,
+          "passed": false,
+          "kind": "design"
+        }
+      ],
+      "note": "design 类约束不通过通常源于输入口径定义错误（如 flow_coefficient 按桨尖还是中径定义），不是求解器缺陷。"
+    }
+  ],
+  "verdict": "PASS",
+  "summary": {
+    "total": 7,
+    "pass": 6,
+    "warn": 1,
+    "fail": 0,
+    "skip": 0
+  }
+}

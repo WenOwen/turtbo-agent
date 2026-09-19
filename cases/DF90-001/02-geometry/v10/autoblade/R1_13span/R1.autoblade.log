@@ -1,0 +1,31 @@
+Info    : Using USERPROFILE Env.Var.: C:\Users\Administrator\ user name is Administrator
+Info    : AppData is C:\Users\Administrator\AppData\Roaming
+
+====================================================================
+
+          AutoBlade - version 16.1
+
+                      compiled for MS Windows x86-64
+                      on Feb 19 2021
+
+              NUMECA International S.A.
+
+====================================================================
+
+  AutoBlade is running in batch mode
+Using Parasolid V32.1.222
+PYTHONHOME = D:\NUMECA_SOFTWARE\Fine161\python64
+[info - 03:29:46]	Executing script from 'D:\Project\Research\turtbo-agent\cases\DF90-001\02-geometry\v10\autoblade\R1_13span\run_R1.py'
+
+[success - 03:29:46]	The file 'D:/Project/Research/turtbo-agent/cases/DF90-001/02-geometry/v10/autoblade/R1_13span/R1.par' has been loaded successfully.
+
+[success - 03:29:46]	The project has been saved successfully.
+
+
+
+  <***> Exit <***> 
+
+
+SCRIPT_BEGIN v8_build
+GEOMTURBO_EXPORT_RESULT None
+SCRIPT_RETURN_VALUE 1

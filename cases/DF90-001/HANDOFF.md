@@ -1,7 +1,7 @@
 # DF90-001 交接简报
 
 > **自动生成，勿手改。** 由 tools/case_watch.py 维护。
-> 生成于 2026-09-20T02:26:05+08:00　·　当前阶段 **G3**　·　revision 87
+> 生成于 2026-09-20T03:29:49+08:00　·　当前阶段 **G3**　·　revision 87
 > **新会话请先读完本文件再动手。**
 
 ## 一句话现状
@@ -12,35 +12,35 @@
 
 最近一次记录：2026-09-20T02:26:04+08:00　PASS　登记产物 02-geometry/v9/figures/R1/meridional.svg
 
-## 未登记的改动（近 14 天 15 条，历史共 15 条）
+## 未登记的改动（近 14 天 33 条，历史共 33 条）
 
 这些文件变了，但 LOG.md 里没有对应条目 —— 可能是 AutoBlade 等外部工具改的、
 可能是另一个 agent 直接写的、也可能是人手工改的。**接手前请先确认它们是什么。**
 
-- 01:50:53　**设计参数**　added　01-scheme/v3/turbo-flow-v3/result.json　0 -> 26347 bytes
-- 01:50:53　**设计参数**　added　01-scheme/v3/turbo-flow-v3/designed_project.json　0 -> 4399 bytes
-- 02:21:27　**几何**　added　02-geometry/v9/autoblade/R1_13span/R1.abp　0 -> 1441 bytes
-- 02:21:27　**几何**　added　02-geometry/v9/autoblade/R1_13span/R1/model02ed.abm　0 -> 644679 bytes
-- 02:21:27　**几何**　added　02-geometry/v9/autoblade/R1_13span/R1.par　0 -> 611693 bytes
-- 02:21:28　**几何**　added　02-geometry/v9/autoblade/R2_13span/R2/model02ed.abm　0 -> 645748 bytes
-- 02:21:28　**几何**　added　02-geometry/v9/autoblade/R2_13span/R2.abp　0 -> 1441 bytes
-- 02:21:28　**几何**　added　02-geometry/v9/autoblade/R2_13span/R2.par　0 -> 612765 bytes
-- …另有 7 条，见 _watch/changes.jsonl
+- 03:28:24　**几何**　added　02-geometry/v10/autoblade/R1_13span/R1.par　0 -> 611427 bytes
+- 03:29:48　**几何**　deleted　02-geometry/v10/autoblade/R1_13span/R1/model495b.abm　644413 -> 0 bytes
+- 03:29:46　**几何**　modified　02-geometry/v10/autoblade/R1_13span/R1.abp　1445 -> 1445 bytes
+- 03:29:46　**几何**　added　02-geometry/v10/autoblade/R1_13span/R1/model3e6c.abm　0 -> 644413 bytes
+- 03:29:46　**几何**　modified　02-geometry/v10/autoblade/R1_13span/R1.par　611427 -> 611427 bytes
+- 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2.abp　0 -> 1443 bytes
+- 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2/model07ec.abm　0 -> 645350 bytes
+- 03:29:47　**几何**　added　02-geometry/v10/autoblade/R2_13span/R2.par　0 -> 612367 bytes
+- …另有 25 条，见 _watch/changes.jsonl
 
 ## 最近 10 次变更
 
 | 时间 | 类别 | 谁 | 改动 | 文件 | 大小变化 |
 |---|---|---|---|---|---|
-| 09-20 02:21:28 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R2_13span/R2.par | 0 -> 612765 |
-| 09-20 02:21:28 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R2_13span/R2.abp | 0 -> 1441 |
-| 09-20 02:21:28 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R2_13span/R2/model02ed.abm | 0 -> 645748 |
-| 09-20 02:21:27 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R1_13span/R1.par | 0 -> 611693 |
-| 09-20 02:21:27 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R1_13span/R1/model02ed.abm | 0 -> 644679 |
-| 09-20 02:21:27 | 几何 | **unknown** | added | 02-geometry/v9/autoblade/R1_13span/R1.abp | 0 -> 1441 |
-| 09-20 01:54:27 | 设计参数 | agent | added | 01-scheme/v3/thrust_1d.json | 0 -> 3221 |
-| 09-20 01:54:27 | 设计参数 | agent | added | 01-scheme/v3/thrust_1d.csv | 0 -> 317 |
-| 09-20 01:53:52 | 设计参数 | agent | added | 01-scheme/v2/thrust_1d.json | 0 -> 2764 |
-| 09-20 01:53:52 | 设计参数 | agent | added | 01-scheme/v2/thrust_1d.csv | 0 -> 317 |
+| 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2.par | 0 -> 612367 |
+| 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2/model07ec.abm | 0 -> 645350 |
+| 09-20 03:29:47 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R2_13span/R2.abp | 0 -> 1443 |
+| 09-20 03:29:46 | 几何 | **unknown** | modified | 02-geometry/v10/autoblade/R1_13span/R1.par | 611427 -> 611427 |
+| 09-20 03:29:46 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1/model3e6c.abm | 0 -> 644413 |
+| 09-20 03:29:46 | 几何 | **unknown** | modified | 02-geometry/v10/autoblade/R1_13span/R1.abp | 1445 -> 1445 |
+| 09-20 03:29:48 | 几何 | **unknown** | deleted | 02-geometry/v10/autoblade/R1_13span/R1/model495b.abm | 644413 -> 0 |
+| 09-20 03:28:24 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1.par | 0 -> 611427 |
+| 09-20 03:28:24 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1.abp | 0 -> 1445 |
+| 09-20 03:28:24 | 几何 | **unknown** | added | 02-geometry/v10/autoblade/R1_13span/R1/model495b.abm | 0 -> 644413 |
 
 ## 你接手前必须知道
 
@@ -133,7 +133,7 @@
 
 ---
 
-看守状态：监视 122 个文件　·　累计变更 34 条　·　历史库 316 份内容
+看守状态：监视 136 个文件　·　累计变更 52 条　·　历史库 330 份内容
 
 **看守边界**：只记录四类工程实质变更 —— 设计参数 / 几何 / 网格 / 算例参数。
 跑了什么检查、生成了什么报告、点了什么按钮，都不进变更流。
