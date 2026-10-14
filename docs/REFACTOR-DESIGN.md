@@ -76,3 +76,12 @@
 2. `feat(agent-web)` 后端 + FastAPI + WebSocket + 命令路由 + agent_reply。
 3. `feat(agent-web-ui)` 前端 + start-agent-web.cmd。
 4. `docs(refactor)` README + 快速开始。
+
+## 落盘与验证记录（2026-10-14）
+
+- 1 → `da2899f chore(refactor): 起步三栏 agent web UI 设计`（design + memory + 远端）
+- 2 → `fb45edb feat(agent-web): 三栏对话界面后端 —— FastAPI 13 路由 + stub agent`
+  （`tools/agent_web.py` 446 行 + `tools/agent_reply.py` 192 行）
+- 3 → `fbeed1b feat(agent-web-ui): 三栏对话界面前端 + 启动脚本`
+  （`tools/agent_web_ui.html` ≈ 600 行 + `start-agent-web.cmd`）
+- 4 → 待办：README 三栏段已写在工作区，与平行会话 WIP 暂不混合提交。
