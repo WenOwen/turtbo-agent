@@ -221,6 +221,9 @@ img{max-width:100%;height:auto;display:block}
   let VIEW_GROUPS = [];
   let CASES = [];
   let WS = null;
+  // 截图/直链辅助：?case=DF90-001 进来自动选
+  const URL_PARAMS = new URLSearchParams(location.search);
+  if (URL_PARAMS.get("case")) CURRENT_CASE = URL_PARAMS.get("case");
 
   // ── 左栏：案例列表 ───────────────────────────────────────────
   function renderCases(filter){
@@ -251,7 +254,7 @@ img{max-width:100%;height:auto;display:block}
 
   async function loadCases(){
     try {
-      const r = await fetch("/api/cases");
+      const r = await fetch("/api/cases", {headers: JHEAD});
       const j = await r.json();
       CASES = j.cases || [];
       renderCases(document.getElementById("case-search").value);
@@ -951,6 +954,21 @@ img{max-width:100%;height:auto;display:block}
 
   // 启动
   loadCases();
+  if (CURRENT_CASE) {
+    // 直链 ?case=DF90-001：渲染中间面板（不依赖 setTimeout 触发的 setInterval）
+    const _tryRender = () => {
+      loadState();
+      loadJobs();
+    };
+    _tryRender();
+    // 8s 内若还在等其它依赖，每秒重试一次
+    let _tries = 0;
+    const _retry = setInterval(() => {
+      _tries++;
+      _tryRender();
+      if (_tries >= 3) clearInterval(_retry);
+    }, 800);
+  }
   setInterval(() => { if (CURRENT_CASE) loadState(); }, 8000);
 })();
 </script>
