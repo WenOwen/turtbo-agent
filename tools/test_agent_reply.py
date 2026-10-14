@@ -93,7 +93,8 @@ class TestReply:
         assert "可用命令" in r["text"]
         # 必须包含新增的 4 个只读 + 4 个扩展命令
         for kw in ("design", "manifest", "log", "summary",
-                   "pending", "get", "find", "note"):
+                   "pending", "get", "find", "note",
+                   "tree", "next", "plan", "ls"):
             assert kw in r["text"], f"help 缺少 {kw}"
 
     def test_status_has_stage(self, case_dir):
@@ -206,12 +207,48 @@ class TestReply:
         assert "测试 note 命令写入" in after
         assert len(after) > len(before)
 
+    def test_tree_returns_dir_structure(self, case_dir):
+        r = ar.reply(case_dir, "tree 1")
+        assert r["kind"] == "info"
+        assert "目录树" in r["text"]
+        # 必须列出案例根
+        assert case_dir.name in r["text"]
+
+    def test_ls_stage_lists_files(self, case_dir):
+        r = ar.reply(case_dir, "ls 00-brief")
+        assert r["kind"] == "info"
+        # 00-brief 一定有 requirements.yaml
+        if "未找到" not in r["text"]:
+            assert "00-brief" in r["text"]
+
+    def test_ls_no_args_lists_all_stages(self, case_dir):
+        r = ar.reply(case_dir, "ls")
+        assert r["kind"] == "info"
+        assert "阶段目录" in r["text"]
+        # 案例应至少有 00-brief
+        assert "00-brief" in r["text"]
+
+    def test_next_suggests_next_stage(self, case_dir):
+        r = ar.reply(case_dir, "next")
+        assert r["kind"] == "info"
+        assert "下一阶段" in r["text"] or "下一" in r["text"]
+        # 必须返回 next_stage 字段
+        assert "next_stage" in r
+
+    def test_plan_combines_three(self, case_dir):
+        r = ar.reply(case_dir, "plan")
+        assert r["kind"] == "info"
+        # plan = status + next + pending 三段
+        assert "现状" in r["text"] or "当前" in r["text"]
+        assert "下一步" in r["text"] or "下一" in r["text"]
+        assert "待办" in r["text"] or "LOG" in r["text"]
+
 
 # ── dispatch 完整性 ──────────────────────────────────────────
 def test_all_commands_have_handlers():
     """确保 COMMANDS 表里的每个动作都进了 dispatch dict。"""
-    handlers = {"status", "help", "switch", "open", "list", "where",
+    handlers = {"status", "help", "switch", "open", "list", "ls", "where",
                "refresh", "run", "design", "manifest", "log", "summary",
-               "pending", "get", "find", "note"}
+               "pending", "get", "find", "note", "tree", "next", "plan"}
     for cmd, action in ar.COMMANDS.items():
         assert action in handlers, f"COMMANDS['{cmd}']='{action}' 找不到 dispatcher"

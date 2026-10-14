@@ -344,6 +344,7 @@ async def api_chat_post(request: Request):
         **({"ok": reply["ok"], "exit": reply["exit"],
             "command": reply["command"]} if reply.get("kind") == "run" else {}),
         **({"path": reply["path"], "bytes": reply["bytes"]} if "path" in reply else {}),
+        **({"next_stage": reply["next_stage"]} if "next_stage" in reply else {}),
     }, target)
     return {"user": user_msg, "reply": reply_msg}
 

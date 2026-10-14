@@ -186,9 +186,13 @@ async def test_chat_post_note_writes_log(client, token, tmp_path):
         assert "已写入" in r2.json()["reply"]["text"]
         r3 = await c.get("/api/chat?case=DF90-001",
                          headers={"X-DSH-Token": token})
-        after = len(r3.json()["messages"])
-    # 至少新增 2 条（user + agent）
-    assert after >= before + 2
+        msgs = r3.json()["messages"]
+    # 不论是否已达 200 上限，新写入的两条必须出现在末尾
+    assert len(msgs) >= 2
+    last_user = next((m for m in reversed(msgs) if m.get("role") == "user"), None)
+    last_agent = next((m for m in reversed(msgs) if m.get("role") == "agent"), None)
+    assert last_user and "HTTP 测试写入" in last_user.get("text", "")
+    assert last_agent and "已写入" in last_agent.get("text", "")
 
 
 @pytest.mark.asyncio
@@ -200,6 +204,51 @@ async def test_chat_post_switch_kind(client, token):
     j = r.json()
     assert j["reply"]["kind"] == "switch"
     assert j["reply"]["switch_to"] == "DF90-002"
+
+
+@pytest.mark.asyncio
+async def test_chat_post_tree(client, token):
+    async with client as c:
+        r = await c.post("/api/chat",
+                         headers={"X-DSH-Token": token, "Content-Type": "application/json"},
+                         json={"case": "DF90-001", "text": "tree 1"})
+    j = r.json()
+    assert j["reply"]["kind"] == "info"
+    assert "目录树" in j["reply"]["text"]
+
+
+@pytest.mark.asyncio
+async def test_chat_post_next(client, token):
+    async with client as c:
+        r = await c.post("/api/chat",
+                         headers={"X-DSH-Token": token, "Content-Type": "application/json"},
+                         json={"case": "DF90-001", "text": "next"})
+    j = r.json()
+    assert j["reply"]["kind"] == "info"
+    assert "next_stage" in j["reply"]
+    assert "下一" in j["reply"]["text"]
+
+
+@pytest.mark.asyncio
+async def test_chat_post_plan(client, token):
+    async with client as c:
+        r = await c.post("/api/chat",
+                         headers={"X-DSH-Token": token, "Content-Type": "application/json"},
+                         json={"case": "DF90-001", "text": "plan"})
+    j = r.json()
+    assert j["reply"]["kind"] == "info"
+    assert "现状" in j["reply"]["text"] or "当前" in j["reply"]["text"]
+
+
+@pytest.mark.asyncio
+async def test_chat_post_ls(client, token):
+    async with client as c:
+        r = await c.post("/api/chat",
+                         headers={"X-DSH-Token": token, "Content-Type": "application/json"},
+                         json={"case": "DF90-001", "text": "ls"})
+    j = r.json()
+    assert j["reply"]["kind"] == "info"
+    assert "阶段目录" in j["reply"]["text"]
 
 
 @pytest.mark.asyncio

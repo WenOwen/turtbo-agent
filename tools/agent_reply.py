@@ -27,8 +27,10 @@ COMMANDS = {
     "case":      "switch",
     "open":      "open",
     "show":      "open",
-    "ls":        "list",
+    "ls":        "ls",
+    "dir":       "ls",
     "list":      "list",
+    "recent":    "list",
     "run":       "run",
     "refresh":   "refresh",
     "where":     "where",
@@ -46,6 +48,9 @@ COMMANDS = {
     "get":       "get",
     "find":      "find",
     "note":      "note",
+    "tree":      "tree",
+    "next":      "next",
+    "plan":      "plan",
 }
 
 
@@ -259,6 +264,8 @@ def cmd_help(_case_dir: Path, _args: List[str]) -> Dict[str, Any]:
         "  case <id>                切换左侧案例",
         "  open <path>              读文件并回灌首 200 字",
         "  list                     列出当前案例最近改动的 5 个文件",
+        "  ls [stage]               列某阶段目录文件（无参 → 列所有阶段摘要）",
+        "  tree [depth]             目录树（默认深度 2）",
         "  run preflight            跑环境预检",
         "  run gate G0..G6          跑对应闸门检查",
         "  run verify               校验产物与哈希",
@@ -270,10 +277,13 @@ def cmd_help(_case_dir: Path, _args: List[str]) -> Dict[str, Any]:
         "  get <key>                按点路径读 manifest 字段",
         "  log [N]                  LOG.md 尾 N 行（默认 20，最多 200）",
         "  pending                  最近 5 段 LOG 里的 WARN/FAIL 摘要",
+        "  next                     基于当前阶段给「下一动作」建议",
+        "  plan                     现状+下一步+待办的三段叙事",
         "  find <pattern>           在当前案例目录搜文本（最多 12 条）",
         "  note <text>              把一行手记追加到 LOG.md",
         "  summary                  status+design+list 的合并视图",
         "  refresh                  强制刷新中间面板",
+        "  where                    报当前案例目录",
         "  help                     显示本帮助",
         "无前缀或未知命令 → 视为 status。",
     ]
@@ -335,6 +345,114 @@ def cmd_list(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
 
 def cmd_refresh(_case_dir: Path, _args: List[str]) -> Dict[str, Any]:
     return {"kind": "refresh", "text": "已触发刷新，中间面板会重新拉数据。"}
+
+
+def cmd_tree(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    """列目录树（按 stage 排序，深度 2，跳过 noise）。"""
+    max_depth = 2
+    if args and args[0].isdigit():
+        max_depth = max(1, min(4, int(args[0])))
+    skip = {"__pycache__", ".git", "node_modules", ".venv", ".pytest_cache",
+            ".ruff_cache", ".playwright-cli", ".turbo-flow", "_watch",
+            "xmt", "abm", "figures", "history"}
+    lines = ["目录树（深度 " + str(max_depth) + "）："]
+    root_depth = len(case_dir.parts)
+    for dirpath, dirnames, filenames in os.walk(case_dir):
+        rel = Path(dirpath).relative_to(case_dir)
+        depth = len(rel.parts)
+        if depth > max_depth:
+            dirnames[:] = []
+            continue
+        dirnames[:] = [d for d in dirnames if d not in skip]
+        # 排序：阶段目录优先
+        dirnames.sort()
+        prefix = "  " * depth
+        if depth == 0:
+            lines.append(case_dir.name + "/")
+        else:
+            lines.append(prefix + rel.parts[-1] + "/")
+        sub = "  " * (depth + 1)
+        for fn in sorted(filenames):
+            lines.append(sub + fn)
+    return {"kind": "info", "text": "\n".join(lines[:200])}
+
+
+def cmd_ls(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    """ls <stage> —— 列某阶段目录的文件（不带参数 → 列所有阶段目录的 size 摘要）。"""
+    if not args:
+        # 列所有 0X-xxx 阶段目录
+        lines = ["阶段目录："]
+        for d in sorted(case_dir.iterdir()):
+            if not d.is_dir() or not re.match(r"^\d{2}-", d.name):
+                continue
+            size = sum(f.stat().st_size for f in d.rglob("*") if f.is_file())
+            count = sum(1 for _ in d.rglob("*") if _.is_file())
+            lines.append("  " + d.name + "　·　" + str(count) + " 文件　·　"
+                         + str(size // 1024) + " KB")
+        return {"kind": "info", "text": "\n".join(lines)}
+    stage = args[0]
+    target = case_dir / stage
+    if not target.is_dir():
+        # 容错：允许只给 '01' 这种前两位
+        cand = [d for d in case_dir.iterdir() if d.is_dir() and d.name.startswith(stage)]
+        if not cand:
+            return {"kind": "info", "text": "未找到阶段目录：" + stage}
+        target = cand[0]
+    lines = [target.name + "："]
+    for f in sorted(target.iterdir(), key=lambda p: (p.is_file(), p.name)):
+        if f.is_dir():
+            lines.append("  " + f.name + "/")
+        else:
+            lines.append("  " + f.name + "　" + str(f.stat().st_size // 1024) + " KB")
+    return {"kind": "info", "text": "\n".join(lines)}
+
+
+def cmd_next(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
+    """next —— 读 STATE.json + manifest.json 给出"下一动作"建议。"""
+    state = _read_json_safe(case_dir / "STATE.json") or {}
+    manifest = _read_json_safe(case_dir / "manifest.json") or {}
+    cur = manifest.get("current_stage") or state.get("current_stage") or "00-brief"
+    blockers = state.get("blockers") or []
+    lines = ["当前 " + cur + " →"]
+    STAGE_FLOW = ["00-brief", "01-scheme", "02-geometry", "03-mesh",
+                  "04-solve", "05-post", "06-delivery"]
+    try:
+        idx = STAGE_FLOW.index(cur)
+    except ValueError:
+        idx = 0
+    if idx >= len(STAGE_FLOW) - 1:
+        next_stage = "06-delivery"
+        next_act = "汇总交付三表（推力/扭矩/包络）"
+    else:
+        next_stage = STAGE_FLOW[idx + 1]
+        NEXT_ACT = {
+            "00-brief": "梳理需求 → 生成 6 张需求 yaml 卡片",
+            "01-scheme": "跑一维通流（turbo-flow）→ 出 3 张方案表",
+            "02-geometry": "AutoBlade 造型 → 出 geomTurbo + 3 截面",
+            "03-mesh": "AutoGrid 出网格 → 1k-50w 的 .cggr",
+            "04-solve": "FINE/Turbo 求解 → 收残差曲线",
+            "05-post": "CFView 后处理 → 推力/扭矩/包络",
+            "06-delivery": "写交付报告 + manifest 收尾",
+        }
+        next_act = NEXT_ACT.get(next_stage, "—")
+    lines.append("  下一阶段  " + next_stage + "：" + next_act)
+    if blockers:
+        lines.append("  当前阻塞  " + "; ".join(b.get("reason", "") for b in blockers))
+    # 试出 stage 目录是否存在 / 是否空
+    sd = case_dir / next_stage
+    if sd.is_dir():
+        n = sum(1 for _ in sd.rglob("*") if _.is_file())
+        lines.append("  现状      " + str(n) + " 个文件已落地")
+    return {"kind": "info", "text": "\n".join(lines), "next_stage": next_stage}
+
+
+def cmd_plan(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
+    """plan —— 把'现状 → 下一步 → 收尾'做成三段叙事。"""
+    s = cmd_status(case_dir, [])
+    n = cmd_next(case_dir, [])
+    p = cmd_pending(case_dir, [])
+    text = "【现状】\n" + s["text"] + "\n\n【下一步】\n" + n["text"] + "\n\n【待办】\n" + p["text"]
+    return {"kind": "info", "text": text}
 
 
 def cmd_where(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
@@ -405,6 +523,7 @@ def reply(case_dir: Path, text: str) -> Dict[str, Any]:
         "switch":   cmd_switch,
         "open":     cmd_open,
         "list":     cmd_list,
+        "ls":       cmd_ls,
         "where":    cmd_where,
         "refresh":  cmd_refresh,
         "run":      cmd_run,
@@ -416,5 +535,8 @@ def reply(case_dir: Path, text: str) -> Dict[str, Any]:
         "get":      cmd_get,
         "find":     cmd_find,
         "note":     cmd_note,
+        "tree":     cmd_tree,
+        "next":     cmd_next,
+        "plan":     cmd_plan,
     }.get(cmd, cmd_status)
     return handler(case_dir, args)
