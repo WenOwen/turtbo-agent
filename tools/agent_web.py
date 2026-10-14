@@ -253,12 +253,14 @@ async def index():
 
 # ── 数据路由 ─────────────────────────────────────────────────────────────
 @app.get("/api/cases")
-async def api_cases():
+async def api_cases(request: Request):
+    _token_required(request)
     return {"cases": lv.list_cases()}
 
 
 @app.get("/api/state")
-async def api_state(case: Optional[str] = None):
+async def api_state(request: Request, case: Optional[str] = None):
+    _token_required(request)
     target = resolve_case(case)
     if target is None:
         raise HTTPException(status_code=404, detail="案例不存在：" + str(case))
@@ -267,7 +269,8 @@ async def api_state(case: Optional[str] = None):
 
 
 @app.get("/api/views")
-async def api_views(case: Optional[str] = None, force: int = 0):
+async def api_views(request: Request, case: Optional[str] = None, force: int = 0):
+    _token_required(request)
     target = resolve_case(case)
     if target is None:
         raise HTTPException(status_code=404, detail="案例不存在：" + str(case))
@@ -275,7 +278,8 @@ async def api_views(case: Optional[str] = None, force: int = 0):
 
 
 @app.get("/api/asset")
-async def api_asset(path: str):
+async def api_asset(request: Request, path: str):
+    _token_required(request)
     p = lv.resolve_in_root(path)
     if not p.is_file() or p.suffix.lower() not in (".svg", ".png", ".jpg", ".jpeg"):
         raise HTTPException(status_code=404, detail="不是可展示的图片")
@@ -290,7 +294,8 @@ async def api_asset(path: str):
 
 
 @app.get("/api/file")
-async def api_file(path: str):
+async def api_file(request: Request, path: str):
+    _token_required(request)
     return lv.read_file_payload(path)
 
 
@@ -304,7 +309,8 @@ async def api_file_post(request: Request):
 
 # ── 聊天路由 ─────────────────────────────────────────────────────────────
 @app.get("/api/chat")
-async def api_chat_get(case: Optional[str] = None):
+async def api_chat_get(request: Request, case: Optional[str] = None):
+    _token_required(request)
     target = resolve_case(case)
     if target is None:
         return {"messages": []}
@@ -317,6 +323,7 @@ async def api_chat_get(case: Optional[str] = None):
 
 @app.post("/api/chat")
 async def api_chat_post(request: Request):
+    _token_required(request)
     body = await request.json()
     case_id = body.get("case")
     text = body.get("text") or ""
@@ -343,7 +350,8 @@ async def api_chat_post(request: Request):
 
 # ── 动作路由 ─────────────────────────────────────────────────────────────
 @app.get("/api/actions")
-async def api_actions():
+async def api_actions(request: Request):
+    _token_required(request)
     return {"actions": [{"id": k, "label": v[0], "params": v[1]}
                         for k, v in lv.ACTIONS.items()]}
 
