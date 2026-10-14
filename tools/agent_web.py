@@ -97,6 +97,45 @@ def _load_chat_for(case_id: str, case_dir: Optional[Path]) -> List[Dict[str, Any
     return out[-200:]
 
 
+CHAT_MAX_BYTES = 5 * 1024 * 1024  # 5 MB
+CHAT_KEEP_BACKUP = True  # 滚动后保留 chat.jsonl.bak
+
+
+def _maybe_rotate_chat(p: Path) -> None:
+    """当 chat.jsonl 超过 CHAT_MAX_BYTES 时，bak + 重开（保留尾部 50%）。"""
+    try:
+        size = p.stat().st_size
+    except OSError:
+        return
+    if size < CHAT_MAX_BYTES:
+        return
+    try:
+        # 保留尾部 50%（但不超过文件本身大小）；太小就全清
+        keep = min(max(size // 2, 64 * 1024), size)
+        with p.open("rb") as fh:
+            fh.seek(-keep, 2)
+            tail = fh.read()
+        # 找到下一行起点（避免半截行）
+        nl = tail.find(b"\n")
+        if nl >= 0 and nl + 1 < len(tail):
+            tail = tail[nl + 1:]
+        # 写新文件 → 重命名
+        tmp = p.with_suffix(".jsonl.tmp")
+        with tmp.open("wb") as fh:
+            fh.write(tail)
+        if CHAT_KEEP_BACKUP and p.exists():
+            bak = p.with_suffix(".jsonl.bak")
+            try:
+                if bak.exists():
+                    bak.unlink()
+                p.rename(bak)
+            except OSError:
+                pass
+        tmp.rename(p)
+    except OSError:
+        pass  # 旋转失败不阻塞主流程
+
+
 def _persist_chat_for(case_id: str, case_dir: Optional[Path], msg: Dict[str, Any]):
     """把一条消息追加到 _watch/chat.jsonl，失败也不抛（chat 不应阻塞主流程）。"""
     if case_dir is None:
@@ -107,6 +146,7 @@ def _persist_chat_for(case_id: str, case_dir: Optional[Path], msg: Dict[str, Any
         rec = {"v": CHAT_PERSIST_VERSION, "ts": now_iso(), "case": case_id, "msg": msg}
         with p.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        _maybe_rotate_chat(p)
     except OSError:
         pass
 

@@ -325,6 +325,43 @@ async def test_chat_run_async_starts_job(client, token):
     assert rec.get("status") in {"running", "done", "timeout", "error"}
 
 
+def test_maybe_rotate_chat_skips_small_file(tmp_path):
+    """小文件不旋转。"""
+    import agent_web
+    p = tmp_path / "chat.jsonl"
+    p.write_text("small content\n")
+    agent_web._maybe_rotate_chat(p)
+    assert p.exists()
+    assert not (tmp_path / "chat.jsonl.bak").exists()
+    # 原始内容应保留
+    assert p.read_text() == "small content\n"
+
+
+def test_maybe_rotate_chat_caps_large_file(tmp_path):
+    """大文件超过阈值时旋转，保留尾部 50%。"""
+    import agent_web
+    # 临时调小阈值
+    agent_web.CHAT_MAX_BYTES = 1024
+    p = tmp_path / "chat.jsonl"
+    lines = []
+    for i in range(500):
+        lines.append("line " + str(i) + " " + "x" * 20)
+    p.write_text("\n".join(lines) + "\n")
+    orig_size = p.stat().st_size
+    assert orig_size > 1024
+    agent_web._maybe_rotate_chat(p)
+    # 旋转后大小应 < 原大小
+    new_size = p.stat().st_size
+    assert new_size < orig_size
+    # 应保留 bak
+    bak = tmp_path / "chat.jsonl.bak"
+    assert bak.exists()
+    # 新文件应只含原内容的一部分（行数应 < 500）
+    new_lines = [ln for ln in p.read_text().splitlines() if ln.strip()]
+    assert len(new_lines) < 500
+    assert len(new_lines) > 0
+
+
 @pytest.mark.asyncio
 async def test_views_returns_groups(client, token):
     async with client as c:
