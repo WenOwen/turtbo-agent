@@ -78,3 +78,7 @@ undefined/
 
 # liveview 的单实例锁（防止开两个跑两套看守线程）
 .liveview.lock
+
+# agent-web 的单实例锁 + 启动时落盘的会话令牌（smoke 脚本可读但不入库）
+.agent_web.lock
+.agent_web.token

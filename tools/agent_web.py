@@ -689,8 +689,15 @@ def main(argv=None):
     print("  案例    : " + str(case_dir))
     print("  监视    : " + "；".join([str(case_dir)] + extra))
     print("  地址    : " + url)
+    print("  令牌    : " + SESSION_TOKEN)
     print("  停止    : 按 Ctrl+C")
     print("=" * 62)
+
+    # 写一份 token 到 .agent_web.token（smoke / 启动脚本可读）
+    try:
+        (ROOT / ".agent_web.token").write_text(SESSION_TOKEN, encoding="utf-8")
+    except Exception:
+        pass
 
     if not args.no_browser:
         threading.Timer(1.0, lambda: webbrowser.open(url)).start()
