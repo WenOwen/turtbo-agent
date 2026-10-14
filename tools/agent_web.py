@@ -411,6 +411,66 @@ async def api_chat_get(request: Request, case: Optional[str] = None):
     return {"messages": chat_log(target.name)}
 
 
+@app.get("/api/chat/export")
+async def api_chat_export(request: Request, case: Optional[str] = None,
+                          format: str = "md"):
+    """把当前案例的聊天历史导出为 markdown / json。"""
+    _token_required(request)
+    target = resolve_case(case)
+    if target is None:
+        return JSONResponse({"error": "no case"}, status_code=404)
+    with CHAT_LOCK:
+        if target.name not in CHAT_LOG:
+            CHAT_LOG[target.name] = _load_chat_for(target.name, target)
+        msgs = list(CHAT_LOG.get(target.name, []))
+    if format == "json":
+        body = json.dumps({"case": target.name, "messages": msgs},
+                          ensure_ascii=False, indent=2)
+        return Response(body, media_type="application/json; charset=utf-8",
+                        headers={"Content-Disposition":
+                                 f'attachment; filename="{target.name}-chat.json"'})
+    # markdown
+    lines = [f"# 案例 {target.name} — 聊天记录", ""]
+    for m in msgs:
+        role = m.get("role", "?")
+        who = "我" if role == "user" else "agent"
+        text = m.get("text", "")
+        ts = m.get("ts", "")
+        lines.append(f"## {who} ({ts})")
+        lines.append("")
+        lines.append(text)
+        lines.append("")
+    body = "\n".join(lines)
+    return Response(body, media_type="text/markdown; charset=utf-8",
+                    headers={"Content-Disposition":
+                             f'attachment; filename="{target.name}-chat.md"'})
+
+
+@app.get("/api/chat/search")
+async def api_chat_search(request: Request, q: str = "",
+                          case: Optional[str] = None):
+    """在当前案例聊天里搜关键词（大小写不敏感），返回最多 30 条命中。"""
+    _token_required(request)
+    target = resolve_case(case)
+    if target is None or not q.strip():
+        return {"hits": []}
+    with CHAT_LOCK:
+        if target.name not in CHAT_LOG:
+            CHAT_LOG[target.name] = _load_chat_for(target.name, target)
+        msgs = list(CHAT_LOG.get(target.name, []))
+    needle = q.lower()
+    hits = []
+    for i, m in enumerate(msgs):
+        text = (m.get("text") or "").lower()
+        if needle in text:
+            hits.append({"index": i, "ts": m.get("ts", ""),
+                         "role": m.get("role", "?"),
+                         "preview": (m.get("text") or "")[:200]})
+            if len(hits) >= 30:
+                break
+    return {"hits": hits, "q": q, "case": target.name}
+
+
 # ── 后台任务（preflight / gate G3 等慢任务） ──────────────────────────
 import job_state  # type: ignore
 

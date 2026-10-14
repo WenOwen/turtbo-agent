@@ -201,6 +201,8 @@ img{max-width:100%;height:auto;display:block}
       <input id="chat-input" placeholder="输入消息…" />
       <button id="chat-send">发送</button>
       <span class="chat-status" id="chat-status"></span>
+      <button id="chat-search" title="在历史里搜（点后再输关键词）" style="background:#1c2a3a;border-color:#2a4a5a">搜</button>
+      <button id="chat-export" title="导出当前案例聊天（markdown）" style="background:#1c3a1c;border-color:#2a5a2a">导</button>
       <button id="chat-clear" title="清屏（只清当前面板，不删 jsonl）" style="background:#3a1c1c;border-color:#5a2a2a">清</button>
     </div>
     <div class="inspector" id="inspector" style="display:none">
@@ -829,6 +831,49 @@ img{max-width:100%;height:auto;display:block}
     addMsg({role: "agent", kind: "info",
             text: "（屏幕已清。聊天历史仍在 cases/" + CURRENT_CASE + "/_watch/chat.jsonl，重启后或切换案例回来时会再次回灌。）",
             ts: new Date().toISOString()}, true);
+  };
+
+  document.getElementById("chat-export").onclick = async () => {
+    if (!CURRENT_CASE){ alert("请先选案例"); return; }
+    const url = "/api/chat/export?case=" + encodeURIComponent(CURRENT_CASE)
+                + "&format=md&_t=" + Date.now();
+    const r = await fetch(url, { headers: { "X-DSH-Token": SESSION_TOKEN } });
+    if (!r.ok){ addMsg({role:"agent", kind:"error", text:"导出失败："+r.status,
+                        ts:new Date().toISOString()}, true); return; }
+    const blob = await r.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = CURRENT_CASE + "-chat.md";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    addMsg({role:"agent", kind:"info",
+            text:"已导出 " + CURRENT_CASE + " 的聊天记录（markdown，" + blob.size + " 字节）。",
+            ts:new Date().toISOString()}, true);
+  };
+
+  document.getElementById("chat-search").onclick = async () => {
+    if (!CURRENT_CASE){ alert("请先选案例"); return; }
+    const q = prompt("在聊天历史里搜什么？");
+    if (!q) return;
+    const r = await fetch("/api/chat/search?case=" + encodeURIComponent(CURRENT_CASE)
+                         + "&q=" + encodeURIComponent(q),
+                         { headers: { "X-DSH-Token": SESSION_TOKEN } });
+    if (!r.ok){ addMsg({role:"agent", kind:"error", text:"搜索失败："+r.status,
+                        ts:new Date().toISOString()}, true); return; }
+    const j = await r.json();
+    const hits = j.hits || [];
+    if (!hits.length){
+      addMsg({role:"agent", kind:"info",
+              text:"没找到包含 “" + q + "” 的消息。", ts:new Date().toISOString()}, true);
+      return;
+    }
+    let text = "搜 “" + q + "” 命中 " + hits.length + " 条：\n";
+    for (const h of hits){
+      text += "  • [" + (h.role||"?") + " " + (h.ts||"") + "] "
+            + (h.preview || "").replace(/\n/g, " ") + "\n";
+    }
+    addMsg({role:"agent", kind:"info", text:text.trimEnd(),
+            ts:new Date().toISOString()}, true);
   };
 
   document.getElementById("chat-send").onclick = sendChat;

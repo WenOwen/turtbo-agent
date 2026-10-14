@@ -280,6 +280,58 @@ async def test_actions_list(client, token):
 
 
 @pytest.mark.asyncio
+async def test_chat_export_markdown(client, token):
+    """先发一条带关键词的消息，再导 md，应能找到那条。"""
+    async with client as c:
+        r = await c.post("/api/chat",
+                         headers={"X-DSH-Token": token, "Content-Type": "application/json"},
+                         json={"case": "DF90-001", "text": "status"})
+        assert r.status_code == 200
+        r = await c.get("/api/chat/export?case=DF90-001&format=md",
+                        headers={"X-DSH-Token": token})
+        assert r.status_code == 200
+        assert r.headers["content-type"].startswith("text/markdown")
+        body = r.text
+        assert "# 案例 DF90-001" in body
+        assert "DF90-001-chat.md" in r.headers.get("content-disposition", "")
+
+
+@pytest.mark.asyncio
+async def test_chat_export_json(client, token):
+    async with client as c:
+        r = await c.get("/api/chat/export?case=DF90-001&format=json",
+                        headers={"X-DSH-Token": token})
+        assert r.status_code == 200
+        assert r.headers["content-type"].startswith("application/json")
+        j = r.json()
+        assert j["case"] == "DF90-001"
+        assert isinstance(j["messages"], list)
+
+
+@pytest.mark.asyncio
+async def test_chat_search_finds_keyword(client, token):
+    """先发 'find requirements'，再搜，应能命中。"""
+    async with client as c:
+        await c.post("/api/chat",
+                     headers={"X-DSH-Token": token, "Content-Type": "application/json"},
+                     json={"case": "DF90-001", "text": "status"})
+        r = await c.get("/api/chat/search?case=DF90-001&q=案例",
+                        headers={"X-DSH-Token": token})
+        assert r.status_code == 200
+        j = r.json()
+        assert j["q"] == "案例"
+        assert j["case"] == "DF90-001"
+        assert isinstance(j["hits"], list)
+
+
+@pytest.mark.asyncio
+async def test_chat_export_no_token_403(client):
+    async with client as c:
+        r = await c.get("/api/chat/export?case=DF90-001")
+    assert r.status_code == 403
+
+
+@pytest.mark.asyncio
 async def test_jobs_list_empty(client, token):
     """新进程 /api/jobs 可能是空。"""
     async with client as c:
