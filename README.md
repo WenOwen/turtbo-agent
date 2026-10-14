@@ -100,6 +100,59 @@ templates/               需求 / 大纲 / 日志模板
 只开着 IGG 界面而没在算，会如实显示「NUMECA 界面打开着（未在计算）」。
 日志若停在几分钟前，也会如实写"最近写入 N 分钟前"。
 
+---
+
+## 与 agent 对话的三栏 Web 工作台（重构新增）
+
+`liveview` 是只读看板。重构在 `tools/agent_web.py` 里加了**可对话**的姊妹服务：
+
+```
+python tools/agent_web.py        # 默认 :8765
+```
+
+浏览器打开 `http://127.0.0.1:8765/`，是**三栏**布局：
+
+| 栏 | 内容 |
+|---|---|
+| **左 · 案例文件夹** | 当前案例目录树（深度 3）+ 最近改动的 12 个文件，点击直接发到聊天框 |
+| **中 · agent 操作可视化** | Tab 切换：「阶段」(G0-G6 七道闸门) / **版本**（节点/边/问题）/ **文件**（目录树）/ **日志**（实时 tail） |
+| **右 · 聊天框** | 10 个 quickbar 按钮 + 文本输入；mdLite 渲染；命中后回 `open`/`run`/`switch` 的可点 link |
+
+**全部命令清单**（聊天框输入即可）：
+
+| 命令 | 作用 | 类型 |
+|---|---|---|
+| `status` | 当前阶段/产物/阻塞 | 读 |
+| `summary` | 关键摘要 | 读 |
+| `design` | 目标推力/实测/差距 | 读 |
+| `manifest` | manifest 关键字段 | 读 |
+| `get <key>` | 按点路径读 manifest 字段 | 读 |
+| `pending` | LOG.md 末尾 5 段 PASS/WARN/FAIL | 读 |
+| `find <text>` | 案例目录文本片段搜 | 读 |
+| `tree` / `ls` | 目录树 / 阶段文件 | 读 |
+| `next` | 下一步建议（带 `next_stage` 字段） | 读 |
+| `plan` | 现状+下一步+待办三段 | 读 |
+| `open <path>` | 读文件回灌首 200 字 | 读 |
+| `log` | LOG.md 尾部 | 读 |
+| `where` | 当前 case_dir | 读 |
+| `list` | 5 个最近文件 | 读 |
+| `switch <id>` | 切到另一案例 | 写 |
+| `note <text>` | 把一行手记写进 LOG.md | 写 |
+| `run <tool> [args]` | 跑 `preflight` / `gate_check` / `gate G3` 等 | 写 |
+| `refresh` | 强制刷新 manifest | 写 |
+| `help` | 命令清单 | 读 |
+
+**未知命令**先尝试调 LLM（`ANTHROPIC_API_KEY` 在 env 时调 haiku 4.5），失败回退到
+**模糊建议**（"我下一步干嘛" → `next`；"推力差" → `design`；"找 requirements" → `find`）。
+
+**安全**：所有数据路由要求 `X-DSH-Token` 头或 `?token=` 查询；token 在启动时打印到控制台。
+HTML 注入 token 用 `__DSH_TOKEN__` 占位，根 `/` 与 `/api/ping` 开放用于浏览器/存活探针。
+
+**测试**：`python -m pytest tools/test_agent_reply.py tools/test_agent_web.py`
+—— 当前 74 passed（38 unit + 36 HTTP）。
+
+**详细文档**：[docs/AGENT-WEB-README.md](docs/AGENT-WEB-README.md)。
+
 **参数**
 
 ```powershell
