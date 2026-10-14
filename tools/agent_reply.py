@@ -14,6 +14,7 @@ import json
 import os
 import re
 import subprocess
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -41,6 +42,10 @@ COMMANDS = {
     "manifest":  "manifest",
     "log":       "log",
     "summary":   "summary",
+    "pending":   "pending",
+    "get":       "get",
+    "find":      "find",
+    "note":      "note",
 }
 
 
@@ -144,6 +149,110 @@ def cmd_summary(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
     return {"kind": "info", "text": "\n\n".join(p["text"] for p in parts)}
 
 
+def cmd_pending(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
+    """展示：当前阶段 + LOG.md 末尾最近 5 段结论中带 FAIL/WARN 的条目（若没有则说明）。"""
+    log = case_dir / "LOG.md"
+    if not log.is_file():
+        return {"kind": "info", "text": "（无 LOG.md）"}
+    text = log.read_text(encoding="utf-8", errors="replace")
+    # LOG.md 的每段以 "## " 开头
+    sections = re.split(r"(?m)^## ", text)
+    headers = [s for s in sections if s.strip() and re.match(r"\d{4}-", s)]
+    if not headers:
+        return {"kind": "info", "text": "（LOG.md 无条目）"}
+    recent = headers[-5:]
+    lines = ["最近 5 段 LOG（含 WARN/FAIL 标记）："]
+    bad = []
+    for h in recent:
+        first = h.splitlines()[0] if h.splitlines() else ""
+        verdict = re.search(r"\b(PASS|WARN|FAIL|SKIP)\b", h)
+        v = verdict.group(0) if verdict else "—"
+        lines.append("  [" + v + "] " + first.strip())
+        if v in ("WARN", "FAIL"):
+            # 抓 FAIL/WARN 那行的实测摘要
+            m = re.search(r"实测：([^\n]+)", h)
+            if m:
+                bad.append("    " + first.strip() + " → " + m.group(1).strip()[:120])
+    if bad:
+        lines.append("")
+        lines.append("未通过的实测摘要：")
+        lines.extend(bad)
+    return {"kind": "info", "text": "\n".join(lines)}
+
+
+def cmd_get(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    """按点路径读 manifest.json 字段（例：get requirement.thrust.target_n / get id）。"""
+    if not args:
+        return {"kind": "info", "text": "用法：get <key[.subkey]>\n例：get id / get requirement.thrust.target_n"}
+    path = args[0]
+    m = _read_json_safe(case_dir / "manifest.json") or {}
+    cur: Any = m
+    for piece in path.split("."):
+        if isinstance(cur, dict) and piece in cur:
+            cur = cur[piece]
+        else:
+            return {"kind": "info", "text": "（无该字段）"}
+    if isinstance(cur, (dict, list)):
+        return {"kind": "info", "text": path + " =\n" + json.dumps(cur, ensure_ascii=False, indent=2)}
+    return {"kind": "info", "text": path + " = " + str(cur)}
+
+
+def cmd_find(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    """在当前案例目录（除大目录外）下按文本片段搜，返回最多 12 条命中位置。"""
+    if not args:
+        return {"kind": "info", "text": "用法：find <pattern>\n例：find R1.abp"}
+    needle = " ".join(args)
+    skip_dirs = {"__pycache__", ".git", "node_modules", ".venv", ".pytest_cache",
+                 ".ruff_cache", ".playwright-cli", ".turbo-flow", "_watch",
+                 "figures", "xmt", "abm"}
+    hits: List[Tuple[str, int, str]] = []
+    for dirpath, dirnames, filenames in os.walk(case_dir):
+        dirnames[:] = [d for d in dirnames if d not in skip_dirs]
+        for fn in filenames:
+            p = Path(dirpath) / fn
+            if p.stat().st_size > 512 * 1024:
+                continue  # 跳过 >512K 的二进制
+            try:
+                with p.open("r", encoding="utf-8", errors="replace") as fp:
+                    for ln, line in enumerate(fp, 1):
+                        if needle in line:
+                            try:
+                                rel = p.relative_to(case_dir).as_posix()
+                            except ValueError:
+                                rel = str(p)
+                            hits.append((rel, ln, line.rstrip()[:160]))
+                            if len(hits) >= 12:
+                                break
+            except Exception:
+                continue
+            if len(hits) >= 12:
+                break
+        if len(hits) >= 12:
+            break
+    if not hits:
+        return {"kind": "info", "text": "（无命中）"}
+    lines = ["命中 " + needle + "（最多 12 条）："]
+    for rel, ln, line in hits:
+        lines.append("  " + rel + ":" + str(ln) + "  " + line)
+    return {"kind": "info", "text": "\n".join(lines)}
+
+
+def cmd_note(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    """把一行注释追加到 LOG.md，标注来源 agent 聊天。这是写命令，会动 case 目录。"""
+    if not args:
+        return {"kind": "info", "text": "用法：note <text>"}
+    log = case_dir / "LOG.md"
+    text = " ".join(args)
+    now = datetime.now().astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+    block = "\n## " + now + " | 笔记 | INFO\n- 动作：agent 聊天手记\n- 内容：" + text + "\n- 来源：tools/agent_reply.cmd_note\n"
+    try:
+        with log.open("a", encoding="utf-8") as fp:
+            fp.write(block)
+    except Exception as exc:
+        return {"kind": "error", "text": "写 LOG.md 失败：" + repr(exc)}
+    return {"kind": "info", "text": "已写入 LOG.md（" + now + "）"}
+
+
 def cmd_help(_case_dir: Path, _args: List[str]) -> Dict[str, Any]:
     lines = [
         "可用命令：",
@@ -158,7 +267,11 @@ def cmd_help(_case_dir: Path, _args: List[str]) -> Dict[str, Any]:
         "  status                   看当前案例阶段、产物、阻塞",
         "  design                   目标推力 / 实测最大 / 差距（design_summary 同源）",
         "  manifest                 关键字段（id/要求/电机/包络/转速）",
+        "  get <key>                按点路径读 manifest 字段",
         "  log [N]                  LOG.md 尾 N 行（默认 20，最多 200）",
+        "  pending                  最近 5 段 LOG 里的 WARN/FAIL 摘要",
+        "  find <pattern>           在当前案例目录搜文本（最多 12 条）",
+        "  note <text>              把一行手记追加到 LOG.md",
         "  summary                  status+design+list 的合并视图",
         "  refresh                  强制刷新中间面板",
         "  help                     显示本帮助",
@@ -299,5 +412,9 @@ def reply(case_dir: Path, text: str) -> Dict[str, Any]:
         "manifest": cmd_manifest,
         "log":      cmd_log,
         "summary":  cmd_summary,
+        "pending":  cmd_pending,
+        "get":      cmd_get,
+        "find":     cmd_find,
+        "note":     cmd_note,
     }.get(cmd, cmd_status)
     return handler(case_dir, args)

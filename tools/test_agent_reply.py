@@ -63,6 +63,18 @@ class TestParseCommand:
     def test_new_summary(self):
         assert ar.parse_command("summary") == ("summary", [])
 
+    def test_pending(self):
+        assert ar.parse_command("pending") == ("pending", [])
+
+    def test_get_dot_path(self):
+        assert ar.parse_command("get requirement.thrust") == ("get", ["requirement.thrust"])
+
+    def test_find(self):
+        assert ar.parse_command("find R1.abp") == ("find", ["R1.abp"])
+
+    def test_note(self):
+        assert ar.parse_command("note 记一下今天的发现") == ("note", ["记一下今天的发现"])
+
 
 # ── reply 端到端（用真实案例目录） ──────────────────────────────
 @pytest.fixture(scope="module")
@@ -79,8 +91,9 @@ class TestReply:
         r = ar.reply(case_dir, "help")
         assert r["kind"] == "info"
         assert "可用命令" in r["text"]
-        # 必须包含新增的 4 个命令
-        for kw in ("design", "manifest", "log", "summary"):
+        # 必须包含新增的 4 个只读 + 4 个扩展命令
+        for kw in ("design", "manifest", "log", "summary",
+                   "pending", "get", "find", "note"):
             assert kw in r["text"], f"help 缺少 {kw}"
 
     def test_status_has_stage(self, case_dir):
@@ -143,11 +156,62 @@ class TestReply:
         # 未识别命令 → status 文案
         assert "当前阶段" in r["text"]
 
+    def test_pending_returns_log_summary(self, case_dir):
+        r = ar.reply(case_dir, "pending")
+        assert r["kind"] == "info"
+        if "（无 LOG.md）" in r["text"] or "（LOG.md 无条目）" in r["text"]:
+            pytest.skip("本案例无 LOG.md 条目")
+        # 必须出现 [PASS]/[WARN]/[FAIL]/[—] 之一
+        assert any(tag in r["text"] for tag in ("[PASS]", "[WARN]", "[FAIL]", "[—]"))
+
+    def test_get_id_returns_known_field(self, case_dir):
+        r = ar.reply(case_dir, "get id")
+        assert r["kind"] == "info"
+        # DF90-001 案例 id 应该是 DF90-001
+        if "（无该字段）" not in r["text"]:
+            assert "=" in r["text"]
+
+    def test_get_missing_field(self, case_dir):
+        r = ar.reply(case_dir, "get totally.fake.key")
+        assert r["kind"] == "info"
+        assert "（无该字段）" in r["text"]
+
+    def test_get_no_args(self, case_dir):
+        r = ar.reply(case_dir, "get")
+        assert r["kind"] == "info"
+        assert "用法" in r["text"]
+
+    def test_find_returns_hits(self, case_dir):
+        r = ar.reply(case_dir, "find requirements.yaml")
+        assert r["kind"] == "info"
+        # DF90-001 一定有 requirements.yaml
+        assert "命中" in r["text"] or "（无命中）" in r["text"]
+
+    def test_find_no_match(self, case_dir):
+        r = ar.reply(case_dir, "find xyzzqnopenope_不可能存在的字符串_xyz")
+        assert r["kind"] == "info"
+        assert "（无命中）" in r["text"]
+
+    def test_note_writes_to_log(self, case_dir, tmp_path):
+        # 不破坏真实 LOG：复制到 tmp
+        import shutil
+        fake = tmp_path / "case"
+        shutil.copytree(case_dir, fake)
+        log = fake / "LOG.md"
+        before = log.read_text(encoding="utf-8") if log.is_file() else ""
+        r = ar.reply(fake, "note 测试 note 命令写入")
+        assert r["kind"] == "info"
+        assert "已写入" in r["text"]
+        after = log.read_text(encoding="utf-8")
+        assert "测试 note 命令写入" in after
+        assert len(after) > len(before)
+
 
 # ── dispatch 完整性 ──────────────────────────────────────────
 def test_all_commands_have_handlers():
     """确保 COMMANDS 表里的每个动作都进了 dispatch dict。"""
     handlers = {"status", "help", "switch", "open", "list", "where",
-               "refresh", "run", "design", "manifest", "log", "summary"}
+               "refresh", "run", "design", "manifest", "log", "summary",
+               "pending", "get", "find", "note"}
     for cmd, action in ar.COMMANDS.items():
         assert action in handlers, f"COMMANDS['{cmd}']='{action}' 找不到 dispatcher"
