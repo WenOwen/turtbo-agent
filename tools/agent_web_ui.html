@@ -118,11 +118,12 @@ img{max-width:100%;height:auto;display:block}
 .chat-input input{flex:1;background:#0a0d11;border:1px solid var(--line);
   color:var(--fg);border-radius:6px;padding:7px 11px;font-size:13px;outline:none}
 .chat-input input:focus{border-color:var(--run)}
-.chat-input button{padding:7px 14px;border-radius:6px;border:1px solid #1f4f86;
-  background:#152437;color:#cfe5ff;cursor:pointer;font-size:12.5px}
+.chat-input button{padding:7px 10px;border-radius:6px;border:1px solid #1f4f86;
+  background:#152437;color:#cfe5ff;cursor:pointer;font-size:11px}
 .chat-input button:disabled{opacity:.4;cursor:not-allowed}
-.chat-status{font-size:11px;color:var(--run);align-self:center;min-width:60px;font-weight:600}
-#chat-clear{padding:7px 11px;font-size:11px}
+.chat-status{font-size:11px;color:var(--run);align-self:center;min-width:0;font-weight:600;max-width:60px;overflow:hidden;text-overflow:ellipsis}
+#chat-send{padding:7px 12px;font-size:12px}
+#chat-clear,#chat-export,#chat-search{padding:6px 9px;font-size:11px}
 .quickbar{display:flex;gap:5px;padding:6px 12px;border-top:1px solid var(--line);
   background:#0c1118;flex-wrap:wrap}
 .quickbar .q{font-size:11px;background:#1a2230;border:1px solid var(--line);
