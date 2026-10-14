@@ -791,6 +791,13 @@ img{max-width:100%;height:auto;display:block}
     input.disabled = true;
     status.textContent = "发送中…";
     addMsg({role: "user", text, ts: new Date().toISOString()}, true);
+    // 记一条历史（去重：连续重复的同一条只记一次）
+    if (INPUT_HIST[INPUT_HIST.length - 1] !== text){
+      INPUT_HIST.push(text);
+      if (INPUT_HIST.length > 50) INPUT_HIST.shift();   // 上限 50
+    }
+    INPUT_HIST_IDX = -1;
+    INPUT_SAVED = "";
     input.value = "";
     const t0 = Date.now();
     try {
@@ -878,8 +885,39 @@ img{max-width:100%;height:auto;display:block}
   };
 
   document.getElementById("chat-send").onclick = sendChat;
+  // 输入历史（↑/↓ 浏览，只记本会话发过的、没被清空的）
+  const INPUT_HIST = [];
+  let INPUT_HIST_IDX = -1;     // -1 = 不在浏览；>=0 = 指向 HIST[IDX]
+  let INPUT_SAVED = "";        // 进入浏览前先存当前输入，离开浏览时还原
   document.getElementById("chat-input").onkeydown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendChat(); }
+    if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendChat(); return; }
+    const inp = document.getElementById("chat-input");
+    if (e.key === "ArrowUp" && !e.shiftKey && !e.ctrlKey && !e.metaKey){
+      if (!INPUT_HIST.length) return;
+      e.preventDefault();
+      if (INPUT_HIST_IDX === -1){ INPUT_SAVED = inp.value; INPUT_HIST_IDX = INPUT_HIST.length; }
+      INPUT_HIST_IDX = Math.max(0, INPUT_HIST_IDX - 1);
+      inp.value = INPUT_HIST[INPUT_HIST_IDX] || "";
+      setTimeout(() => inp.setSelectionRange(inp.value.length, inp.value.length), 0);
+    } else if (e.key === "ArrowDown" && !e.shiftKey && !e.ctrlKey && !e.metaKey){
+      if (INPUT_HIST_IDX === -1) return;
+      e.preventDefault();
+      INPUT_HIST_IDX = Math.min(INPUT_HIST.length, INPUT_HIST_IDX + 1);
+      inp.value = INPUT_HIST_IDX >= INPUT_HIST.length ? INPUT_SAVED : INPUT_HIST[INPUT_HIST_IDX];
+      setTimeout(() => inp.setSelectionRange(inp.value.length, inp.value.length), 0);
+    } else if (e.key === "k" && (e.ctrlKey || e.metaKey) && !e.shiftKey){
+      // Ctrl/Cmd+K → 触发搜索按钮
+      e.preventDefault();
+      document.getElementById("chat-search").click();
+    } else if (e.key === "e" && (e.ctrlKey || e.metaKey) && !e.shiftKey){
+      // Ctrl/Cmd+E → 触发导出按钮
+      e.preventDefault();
+      document.getElementById("chat-export").click();
+    } else if (e.key === "l" && (e.ctrlKey || e.metaKey) && !e.shiftKey){
+      // Ctrl/Cmd+L → 清屏
+      e.preventDefault();
+      document.getElementById("chat-clear").click();
+    }
   };
   document.querySelectorAll("#quickbar .q").forEach(el => {
     el.onclick = () => {
