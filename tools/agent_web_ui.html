@@ -137,6 +137,7 @@ img{max-width:100%;height:auto;display:block}
     <div class="center-tabs">
       <div class="tab active" data-tab="overview">总览</div>
       <div class="tab" data-tab="views">可视化</div>
+      <div class="tab" data-tab="graph">版本</div>
       <div class="tab" data-tab="log">日志</div>
       <div class="tab" data-tab="ops">操作</div>
     </div>
@@ -264,6 +265,8 @@ img{max-width:100%;height:auto;display:block}
   }
 
   function renderState(j){
+    if (CURRENT_TAB === "graph") return renderGraph(j);
+    if (CURRENT_TAB === "log") return renderLog(j);
     const body = document.getElementById("center-body");
     if (CURRENT_TAB !== "overview") return;
     body.innerHTML = "";
@@ -353,6 +356,77 @@ img{max-width:100%;height:auto;display:block}
         card.appendChild(grid);
       }
       body.appendChild(card);
+    }
+  }
+
+  function renderGraph(j){
+    const body = document.getElementById("center-body");
+    if (CURRENT_TAB !== "graph") return;
+    body.innerHTML = "";
+    const vg = (j && j.version_graph) || {nodes: [], edges: [], issues: []};
+    if (!vg.nodes || vg.nodes.length === 0){
+      body.innerHTML = `<div class="empty">本案例无版本图数据。先在 manifest.json 里登记 artifacts + provenance。</div>`;
+      return;
+    }
+    // 概览：节点数 / 边数 / 问题分类
+    const issues = vg.issues || [];
+    const counts = {};
+    for (const i of issues) counts[i.code || "?"] = (counts[i.code || "?"] || 0) + 1;
+    let sum = "节点 " + vg.nodes.length + " · 边 " + vg.edges.length + " · 问题 " + issues.length;
+    if (Object.keys(counts).length){
+      sum += "  (" + Object.entries(counts).map(([k,v]) => k + "=" + v).join(" · ") + ")";
+    }
+    body.appendChild(makeCard("版本关系图概览", `<div class="activity">${esc(sum)}</div>`));
+
+    // 按 stage 分组列节点
+    const byStage = {};
+    for (const n of vg.nodes){
+      const s = n.stage || "?";
+      (byStage[s] = byStage[s] || []).push(n);
+    }
+    for (const stage of Object.keys(byStage).sort()){
+      const ns = byStage[stage];
+      const card = makeCard("阶段 " + esc(stage) + "  (" + ns.length + " 节点)", "");
+      const grid = document.createElement("div");
+      grid.className = "view-grid";
+      for (const n of ns){
+        const tile = document.createElement("div");
+        const warns = (n.warnings || []).length;
+        tile.className = "view-tile";
+        const ver = n.version || "unversioned";
+        const issues = (n.issues || []).map(i => i.code).join(", ");
+        const lbl = n.label || (stage + " / " + ver);
+        const arts = n.artifacts || [];
+        let artsList = "无登记产物";
+        if (arts.length){
+          artsList = arts.slice(0, 3).map(a => a.path || "?").join("\n");
+          if (arts.length > 3) artsList += "\n（还有 " + (arts.length - 3) + " 个）";
+        }
+        tile.innerHTML = `<div class="vt">${esc(lbl)}${warns ? " <span style='color:#d29922'>⚠" + warns + "</span>" : ""}</div>
+          <div class="vn">${esc(issues || "OK")}</div>
+          <div class="log-tail" style="margin:6px 6px 8px;max-height:120px">${esc(artsList)}</div>`;
+        grid.appendChild(tile);
+      }
+      card.appendChild(grid);
+      body.appendChild(card);
+    }
+
+    // 边表
+    if (vg.edges && vg.edges.length){
+      const lines = vg.edges.map(e => {
+        const ev = e.evidence || {};
+        const sf = ev.expected_sha256 ? ev.expected_sha256.slice(0, 12) : "?";
+        const st = e.status || "?";
+        return `${e.source} -> ${e.target}  [${st}]  sha=${sf}…`;
+      }).join("\n");
+      body.appendChild(makeCard("已登记引用（" + vg.edges.length + " 条）",
+        `<div class="log-tail">${esc(lines)}</div>`));
+    }
+
+    if (issues && issues.length){
+      const lines = issues.slice(0, 50).map(i => `[${esc(i.code || "?")}]  ${esc(i.message || "")}`).join("\n");
+      body.appendChild(makeCard("问题清单（最多 50 条）",
+        `<div class="log-tail">${esc(lines)}</div>`));
     }
   }
 
@@ -448,6 +522,7 @@ img{max-width:100%;height:auto;display:block}
       CURRENT_TAB = t.dataset.tab;
       if (CURRENT_TAB === "overview") loadState();
       if (CURRENT_TAB === "views") renderViews();
+      if (CURRENT_TAB === "graph") loadState();
       if (CURRENT_TAB === "log") loadState();
       if (CURRENT_TAB === "ops") renderOps();
     });
@@ -543,6 +618,8 @@ img{max-width:100%;height:auto;display:block}
   });
 
   // ── WebSocket ─────────────────────────────────────────────────
+  let WS_RETRY = 0;     // 重连退避秒数（1 → 2 → 4 → 上限 30）
+  let WS_RETRYING = false;
   function connectWS(caseId){
     if (WS) try { WS.close(); } catch(e){}
     const proto = location.protocol === "https:" ? "wss:" : "ws:";
@@ -564,9 +641,28 @@ img{max-width:100%;height:auto;display:block}
       if (ev && ev.code === 1008){
         // 令牌错；通常不会发生，因为 token 是页面注入的
         console.warn("WS 关闭：令牌不匹配", ev);
+        return;
+      }
+      if (ev && ev.code === 1013){
+        console.warn("WS 关闭：服务器忙，稍后重试");
+      }
+      // 自动重连（指数退避）
+      if (CURRENT_CASE === caseId && !WS_RETRYING){
+        WS_RETRYING = true;
+        const wait = Math.min(30, Math.pow(2, WS_RETRY));
+        WS_RETRY = Math.min(WS_RETRY + 1, 5);
+        console.info("WS 重连倒计时", wait, "秒");
+        setTimeout(() => {
+          WS_RETRYING = false;
+          if (CURRENT_CASE) connectWS(CURRENT_CASE);
+        }, wait * 1000);
       }
     };
+    WS.onerror = (ev) => {
+      console.warn("WS 错误", ev);
+    };
     WS.onopen = () => {
+      WS_RETRY = 0;     // 连上就重置退避
       document.getElementById("dot").classList.remove("dead");
       document.getElementById("dot").classList.add("live");
     };
