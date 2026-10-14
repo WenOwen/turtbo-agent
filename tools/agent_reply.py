@@ -37,6 +37,10 @@ COMMANDS = {
     "audit":     "run",
     "replay":    "run",
     "gate":      "run",
+    "design":    "design",
+    "manifest":  "manifest",
+    "log":       "log",
+    "summary":   "summary",
 }
 
 
@@ -79,6 +83,67 @@ def cmd_status(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
     return {"kind": "info", "text": line, "state": s}
 
 
+def cmd_design(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
+    """调 design_summary.py 读 方案/设计值对照；优先用它的结果（与中间面板同源）。"""
+    try:
+        import design_summary  # type: ignore
+    except Exception as exc:
+        return {"kind": "error", "text": "design_summary 加载失败：" + repr(exc)}
+    try:
+        ds = design_summary.build_design_summary(case_dir)
+        lines = ["设计摘要（来自 design_summary）："]
+        target = ds.get("target_kgf")
+        peak = ds.get("peak") or {}
+        peak_kgf = peak.get("thrust_kgf") if peak else None
+        gap = (peak_kgf - target) if (target and peak_kgf) else None
+        lines.append("  目标推力  " + (f"{target:.2f} kgf" if target else "—") + "（" + (f"{ds.get('target_n'):.0f} N" if ds.get("target_n") else "—") + "）")
+        lines.append("  实测最大  " + (f"{peak_kgf:.2f} kgf" if peak_kgf else "—") + "（" + (f"{peak.get('thrust_n'):.0f} N" if peak and peak.get("thrust_n") else "—") + "）")
+        if gap is not None:
+            lines.append("  差距      " + f"{gap:+.3f} kgf")
+        lines.append("  实测点数  " + str(sum(1 for r in (ds.get("results") or []) if r.get("state") in ("analyzed", "converged", "accepted"))))
+        latest = ds.get("latest_scheme") or {}
+        if latest:
+            lines.append("  最近方案  " + str(latest.get("version")) + "　·　status=" + str(latest.get("status", "—")))
+        return {"kind": "info", "text": "\n".join(lines), "summary": ds}
+    except Exception as exc:
+        return {"kind": "error", "text": "design_summary 计算失败：" + repr(exc)}
+
+
+def cmd_manifest(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
+    m = _read_json_safe(case_dir / "manifest.json") or {}
+    if not m:
+        return {"kind": "info", "text": "（无 manifest.json）"}
+    keys = ("id", "title", "current_stage", "revision", "requirement",
+            "engine_model", "duct_inner_mm", "rpm_peak")
+    lines = ["manifest.json："]
+    for k in keys:
+        if k in m:
+            v = m[k]
+            if isinstance(v, (dict, list)):
+                v = json.dumps(v, ensure_ascii=False)[:120]
+            lines.append("  " + k + ": " + str(v))
+    return {"kind": "info", "text": "\n".join(lines)}
+
+
+def cmd_log(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    n = 20
+    if args and args[0].isdigit():
+        n = max(1, min(200, int(args[0])))
+    log = case_dir / "LOG.md"
+    if not log.is_file():
+        return {"kind": "info", "text": "（无 LOG.md）"}
+    text = log.read_text(encoding="utf-8", errors="replace")
+    lines = text.splitlines()
+    tail = lines[-n:] if len(lines) > n else lines
+    return {"kind": "info", "text": "LOG.md 尾 " + str(len(tail)) + " 行：\n" + "\n".join(tail)}
+
+
+def cmd_summary(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
+    """一句话：把 status + 目标差距 + 最近文件合并到一条信息。"""
+    parts = [cmd_status(case_dir, []), cmd_design(case_dir, []), cmd_list(case_dir, [])]
+    return {"kind": "info", "text": "\n\n".join(p["text"] for p in parts)}
+
+
 def cmd_help(_case_dir: Path, _args: List[str]) -> Dict[str, Any]:
     lines = [
         "可用命令：",
@@ -91,6 +156,10 @@ def cmd_help(_case_dir: Path, _args: List[str]) -> Dict[str, Any]:
         "  run audit                规矩自检",
         "  run replay               v7 黄金基准回放",
         "  status                   看当前案例阶段、产物、阻塞",
+        "  design                   目标推力 / 实测最大 / 差距（design_summary 同源）",
+        "  manifest                 关键字段（id/要求/电机/包络/转速）",
+        "  log [N]                  LOG.md 尾 N 行（默认 20，最多 200）",
+        "  summary                  status+design+list 的合并视图",
         "  refresh                  强制刷新中间面板",
         "  help                     显示本帮助",
         "无前缀或未知命令 → 视为 status。",
@@ -218,13 +287,17 @@ def reply(case_dir: Path, text: str) -> Dict[str, Any]:
     """主入口：返回一条 agent 消息（含 kind / switch / open / info / error / run / refresh）。"""
     cmd, args = parse_command(text)
     handler = {
-        "status":  cmd_status,
-        "help":    cmd_help,
-        "switch":  cmd_switch,
-        "open":    cmd_open,
-        "list":    cmd_list,
-        "where":   cmd_where,
-        "refresh": cmd_refresh,
-        "run":     cmd_run,
+        "status":   cmd_status,
+        "help":     cmd_help,
+        "switch":   cmd_switch,
+        "open":     cmd_open,
+        "list":     cmd_list,
+        "where":    cmd_where,
+        "refresh":  cmd_refresh,
+        "run":      cmd_run,
+        "design":   cmd_design,
+        "manifest": cmd_manifest,
+        "log":      cmd_log,
+        "summary":  cmd_summary,
     }.get(cmd, cmd_status)
     return handler(case_dir, args)
