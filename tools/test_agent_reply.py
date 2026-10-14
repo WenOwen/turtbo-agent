@@ -151,11 +151,11 @@ class TestReply:
         r = ar.reply(case_dir, "refresh")
         assert r["kind"] == "refresh"
 
-    def test_unknown_falls_back_to_status(self, case_dir):
+    def test_unknown_falls_back_to_suggest(self, case_dir):
         r = ar.reply(case_dir, "foobarbaz")
         assert r["kind"] == "info"
-        # 未识别命令 → status 文案
-        assert "当前阶段" in r["text"]
+        # 未识别命令 → _suggest 文案（或 LLM）
+        assert "没识别" in r["text"] or "help" in r["text"]
 
     def test_pending_returns_log_summary(self, case_dir):
         r = ar.reply(case_dir, "pending")
@@ -252,3 +252,108 @@ def test_all_commands_have_handlers():
                "pending", "get", "find", "note", "tree", "next", "plan"}
     for cmd, action in ar.COMMANDS.items():
         assert action in handlers, f"COMMANDS['{cmd}']='{action}' 找不到 dispatcher"
+
+
+# ── suggest / LLM 兜底 ────────────────────────────────────────
+class TestSuggestAndLLM:
+    """未知命令走 _suggest（或 LLM）。"""
+
+    def test_unknown_falls_through_to_suggest(self, case_dir):
+        """没有 LLM key 时，未知命令走 _suggest，命中关键词时返回提示。"""
+        r = ar.reply(case_dir, "我下一步干嘛")
+        assert r["kind"] == "info"
+        # "下一步" 应该映射到 "next" 命令
+        assert "next" in r["text"].lower()
+
+    def test_unknown_thrust_suggests_design(self, case_dir):
+        r = ar.reply(case_dir, "推力差 5kg 怎么改？")
+        assert r["kind"] == "info"
+        assert "design" in r["text"].lower()
+
+    def test_unknown_help_suggests_help(self, case_dir):
+        r = ar.reply(case_dir, "有命令清单吗？")
+        assert r["kind"] == "info"
+        assert "help" in r["text"].lower()
+
+    def test_unknown_what_should_i_do(self, case_dir):
+        r = ar.reply(case_dir, "what's next")
+        assert r["kind"] == "info"
+        assert "next" in r["text"].lower()
+
+    def test_known_status_does_not_trigger_suggest(self, case_dir):
+        """已知命令如 status，应直接走 dispatcher，不走 _suggest。"""
+        r = ar.reply(case_dir, "status")
+        assert r["kind"] == "info"
+        # status 命令的输出里应该没有"猜你想跑"
+        assert "猜你想跑" not in r["text"]
+
+    def test_suggest_with_no_keyword_match(self, case_dir):
+        r = ar.reply(case_dir, "天气怎么样？")
+        assert r["kind"] == "info"
+        assert "没识别" in r["text"] or "help" in r["text"]
+
+    def test_try_llm_returns_none_without_key(self, case_dir, monkeypatch):
+        """无 API key 时 _try_llm 返回 None（让 _suggest 接住）。"""
+        monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+        assert ar._try_llm(case_dir, "anything") is None
+
+    def test_try_llm_falls_back_on_import_error(self, case_dir, monkeypatch):
+        """有 key 但 anthropic 库没装好时回退到 fallback dict。"""
+        monkeypatch.setenv("ANTHROPIC_API_KEY", "fake-key")
+        # 模拟 anthropic.Anthropic 抛错
+        import builtins
+        orig_import = builtins.__import__
+        def fake_import(name, *args, **kwargs):
+            if name == "anthropic":
+                raise ImportError("simulated missing")
+            return orig_import(name, *args, **kwargs)
+        monkeypatch.setattr(builtins, "__import__", fake_import)
+        r = ar._try_llm(case_dir, "x")
+        # 失败回退 → fallback dict 或 None（取决于 except 分支）
+        # ImportError 走 except → fallback dict
+        assert r is None or r.get("kind") == "info"
+
+    def test_try_llm_calls_anthropic_when_key_set(self, case_dir, monkeypatch):
+        """有 key 且 anthropic 装好时，调真 API（用 fake 模拟）。"""
+        class _FakeBlock:
+            type = "text"
+            text = "下个阶段用 G3 重出几何。"
+        class _FakeMsg:
+            content = [_FakeBlock()]
+        class _FakeMessages:
+            def create(self, **kw):
+                return _FakeMsg()
+        class _FakeAnthropic:
+            def __init__(self, api_key=None):
+                self.messages = _FakeMessages()
+        import sys, types
+        monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+        monkeypatch.setenv("ANTHROPIC_MODEL", "claude-test")
+        mod = types.ModuleType("anthropic")
+        mod.Anthropic = _FakeAnthropic
+        monkeypatch.setitem(sys.modules, "anthropic", mod)
+        r = ar._try_llm(case_dir, "现在能干吗？")
+        assert r is not None
+        assert r["kind"] == "info"
+        assert "G3" in r["text"] or "几何" in r["text"]
+        assert r.get("llm") == "anthropic"
+
+    def test_try_llm_api_call_failure_returns_fallback(self, case_dir, monkeypatch):
+        """API 抛错时回退到 fallback（而不是 None）让用户看到原因。"""
+        class _BadMessages:
+            def create(self, **kw):
+                raise RuntimeError("api down")
+        class _BadAnthropic:
+            def __init__(self, api_key=None):
+                self.messages = _BadMessages()
+        import sys, types
+        monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+        mod = types.ModuleType("anthropic")
+        mod.Anthropic = _BadAnthropic
+        monkeypatch.setitem(sys.modules, "anthropic", mod)
+        r = ar._try_llm(case_dir, "x")
+        assert r is not None
+        assert r["kind"] == "info"
+        assert r.get("llm") == "fallback"
+        assert "LLM 失败" in r["text"]

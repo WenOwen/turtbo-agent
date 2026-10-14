@@ -514,29 +514,118 @@ def _run_subprocess(cmd: List[str], cwd: Path, label: str) -> Dict[str, Any]:
         return {"kind": "error", "text": label + "：失败 " + repr(exc)}
 
 
+def _try_llm(case_dir: Path, text: str) -> Optional[Dict[str, Any]]:
+    """如设置了 ANTHROPIC_API_KEY（且安装了 anthropic），调真模型；否则返回 None。
+    任何 LLM 错误都回退到 None，让 stub 接住。
+    """
+    api_key = os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        return None
+    try:
+        if os.environ.get("ANTHROPIC_API_KEY"):
+            import anthropic  # type: ignore
+            client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+            ctx = cmd_summary(case_dir, [])["text"][:2000]
+            prompt = (f"你是一个 CDA / 涵道风扇 / 涡轮机械 agent 助手。"
+                      f"当前案例状态摘要：\n{ctx}\n\n用户输入：{text}\n\n"
+                      f"请给一句简短的中文回复（<200 字），并提示下一步该用哪个命令（status/design/next/plan 等）。"
+                      f"只输出回复文本，不要 markdown 标题。")
+            msg = client.messages.create(
+                model=os.environ.get("ANTHROPIC_MODEL", "claude-haiku-4-5"),
+                max_tokens=400,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            text_out = ""
+            for block in msg.content:
+                if getattr(block, "type", "") == "text":
+                    text_out += block.text
+            return {"kind": "info", "text": text_out.strip() or "（空回复）",
+                    "llm": "anthropic"}
+        elif os.environ.get("OPENAI_API_KEY"):
+            # 留空：openai 库虽装好，但调用模式不同，且容易让用户多花 token；先不接
+            return None
+    except Exception as exc:
+        return {"kind": "info", "text": "[LLM 失败，回退到 stub] " + repr(exc)[:200],
+                "llm": "fallback"}
+    return None
+
+
 def reply(case_dir: Path, text: str) -> Dict[str, Any]:
-    """主入口：返回一条 agent 消息（含 kind / switch / open / info / error / run / refresh）。"""
-    cmd, args = parse_command(text)
-    handler = {
-        "status":   cmd_status,
-        "help":     cmd_help,
-        "switch":   cmd_switch,
-        "open":     cmd_open,
-        "list":     cmd_list,
-        "ls":       cmd_ls,
-        "where":    cmd_where,
-        "refresh":  cmd_refresh,
-        "run":      cmd_run,
-        "design":   cmd_design,
-        "manifest": cmd_manifest,
-        "log":      cmd_log,
-        "summary":  cmd_summary,
-        "pending":  cmd_pending,
-        "get":      cmd_get,
-        "find":     cmd_find,
-        "note":     cmd_note,
-        "tree":     cmd_tree,
-        "next":     cmd_next,
-        "plan":     cmd_plan,
-    }.get(cmd, cmd_status)
-    return handler(case_dir, args)
+    """主入口：返回一条 agent 消息。
+    顺序：1) 已知命令 → 直发  2) 未知 → LLM 接管（如 env 设了 key）
+    3) LLM 没接住 → 模糊匹配  4) 都没命中 → status。
+    """
+    text_s = (text or "").strip()
+    if not text_s:
+        return cmd_status(case_dir, [])
+    # 已知命令：按 head 词查 COMMANDS 表，命中就分发
+    head = text_s.split()[0].lower()
+    cmd = COMMANDS.get(head)
+    if cmd in {"status", "help", "switch", "open", "list", "ls", "where",
+               "refresh", "run", "design", "manifest", "log", "summary",
+               "pending", "get", "find", "note", "tree", "next", "plan"}:
+        handler = {
+            "status":   cmd_status,
+            "help":     cmd_help,
+            "switch":   cmd_switch,
+            "open":     cmd_open,
+            "list":     cmd_list,
+            "ls":       cmd_ls,
+            "where":    cmd_where,
+            "refresh":  cmd_refresh,
+            "run":      cmd_run,
+            "design":   cmd_design,
+            "manifest": cmd_manifest,
+            "log":      cmd_log,
+            "summary":  cmd_summary,
+            "pending":  cmd_pending,
+            "get":      cmd_get,
+            "find":     cmd_find,
+            "note":     cmd_note,
+            "tree":     cmd_tree,
+            "next":     cmd_next,
+            "plan":     cmd_plan,
+        }.get(cmd, cmd_status)
+        # 用原始 split 切 args（保持原样大小写）
+        args = text_s.split()[1:] if len(text_s.split()) > 1 else []
+        return handler(case_dir, args)
+    # 未知命令 → 先 LLM（如有），再模糊提示
+    llm = _try_llm(case_dir, text_s)
+    if llm is not None:
+        return llm
+    return _suggest(case_dir, text_s)
+
+
+def _suggest(case_dir: Path, text: str) -> Dict[str, Any]:
+    """模糊匹配：把'我下一步干嘛'、'怎么改叶型'这类问题映射到已可执行的命令。"""
+    t = text.lower()
+    KEYWORDS = [
+        (("状态", "现在", "进行到哪", "进度", "how is", "where are we"),
+         "status", "看当前阶段 / 产物 / 阻塞"),
+        (("推力", "设计", "差距", "目标", "thrust", "design"),
+         "design", "目标推力 / 实测最大 / 差距"),
+        (("清单", "字段", "要求", "requirement", "manifest"),
+         "manifest", "manifest.json 关键字段"),
+        (("待办", "未通过", "warn", "fail", "pending"),
+         "pending", "LOG.md 末尾的 WARN/FAIL"),
+        (("目录", "文件", "tree", "ls"),
+         "tree", "列目录树 / 阶段文件"),
+        (("下一步", "建议", "接着干嘛", "next", "what's next"),
+         "next", "基于当前阶段给下一步建议"),
+        (("全部", "总览", "整体", "summary", "overview"),
+         "plan", "现状+下一步+待办三段叙事"),
+        (("找", "搜", "在哪", "find", "where is"),
+         "find", "在案例目录里搜文本片段"),
+        (("看", "读", "打开", "open", "show", "read"),
+         "open", "open <path> —— 读文件并回灌首 200 字"),
+        (("记", "备注", "写一行", "note"),
+         "note", "note <text> —— 把一行手记写进 LOG.md"),
+    ]
+    for kws, cmd_name, hint in KEYWORDS:
+        for kw in kws:
+            if kw in t:
+                return {"kind": "info",
+                        "text": f"这句我猜你想跑 **{cmd_name}**。{hint}。\n直接发 `{cmd_name}` 试试，或 `help` 看全部命令。"}
+    return {"kind": "info",
+            "text": "没识别这句。试试 `help`、`status`、`next`、`plan`。\n"
+                    "或设 ANTHROPIC_API_KEY 让我用 Claude 答（不设就走 stub）。"}
