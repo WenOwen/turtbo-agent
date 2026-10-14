@@ -546,7 +546,7 @@ img{max-width:100%;height:auto;display:block}
   function connectWS(caseId){
     if (WS) try { WS.close(); } catch(e){}
     const proto = location.protocol === "https:" ? "wss:" : "ws:";
-    WS = new WebSocket(proto + "//" + location.host + "/ws?case=" + encodeURIComponent(caseId));
+    WS = new WebSocket(proto + "//" + location.host + "/ws?case=" + encodeURIComponent(caseId) + "&token=" + encodeURIComponent(TOKEN));
     WS.onmessage = (ev) => {
       try {
         const j = JSON.parse(ev.data);
@@ -558,9 +558,13 @@ img{max-width:100%;height:auto;display:block}
         }
       } catch(e){}
     };
-    WS.onclose = () => {
+    WS.onclose = (ev) => {
       document.getElementById("dot").classList.remove("live");
       document.getElementById("dot").classList.add("dead");
+      if (ev && ev.code === 1008){
+        // 令牌错；通常不会发生，因为 token 是页面注入的
+        console.warn("WS 关闭：令牌不匹配", ev);
+      }
     };
     WS.onopen = () => {
       document.getElementById("dot").classList.remove("dead");

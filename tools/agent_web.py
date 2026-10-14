@@ -55,10 +55,59 @@ import agent_reply as ar  # type: ignore
 
 UI = HERE / "agent_web_ui.html"
 
-# 聊天历史只放在实例内存（不持久化）。这是产品决策：
-# 重启服务等于清空；落盘到下个 sessions 会让 agent 误以为前面的对话也是事实。
+# 聊天历史 = 内存 + 落盘（cases/<id>/_watch/chat.jsonl）。
+# 落盘为了让重启后能续读；旧的对话仍会由"案例"归档而不是全局共享。
 CHAT_LOG: Dict[str, List[Dict[str, Any]]] = {}
 CHAT_LOCK = threading.Lock()
+CHAT_PERSIST_VERSION = 1  # 写盘格式版本，将来字段迁移时改这个
+
+
+def _chat_path(case_dir: Path) -> Path:
+    return Path(case_dir) / "_watch" / "chat.jsonl"
+
+
+def _load_chat_for(case_id: str, case_dir: Optional[Path]) -> List[Dict[str, Any]]:
+    """从 _watch/chat.jsonl 读已存的历史；存在就覆盖内存里的初值。"""
+    if case_dir is None:
+        return []
+    p = _chat_path(case_dir)
+    if not p.is_file():
+        return []
+    out: List[Dict[str, Any]] = []
+    try:
+        with p.open("r", encoding="utf-8", errors="replace") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    rec = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if rec.get("v") != CHAT_PERSIST_VERSION:
+                    continue
+                if rec.get("case") != case_id:
+                    continue
+                m = rec.get("msg") or {}
+                if isinstance(m, dict):
+                    out.append(m)
+    except OSError:
+        return []
+    return out[-200:]
+
+
+def _persist_chat_for(case_id: str, case_dir: Optional[Path], msg: Dict[str, Any]):
+    """把一条消息追加到 _watch/chat.jsonl，失败也不抛（chat 不应阻塞主流程）。"""
+    if case_dir is None:
+        return
+    p = _chat_path(case_dir)
+    try:
+        p.parent.mkdir(parents=True, exist_ok=True)
+        rec = {"v": CHAT_PERSIST_VERSION, "ts": now_iso(), "case": case_id, "msg": msg}
+        with p.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    except OSError:
+        pass
 
 
 def now_iso() -> str:
@@ -71,12 +120,17 @@ def chat_log(case_id: str) -> List[Dict[str, Any]]:
         return list(CHAT_LOG.get(case_id, []))
 
 
-def chat_append(case_id: str, msg: Dict[str, Any]) -> Dict[str, Any]:
+def chat_append(case_id: str, msg: Dict[str, Any], case_dir: Optional[Path] = None) -> Dict[str, Any]:
     msg.setdefault("ts", now_iso())
     with CHAT_LOCK:
-        CHAT_LOG.setdefault(case_id, []).append(msg)
-        if len(CHAT_LOG[case_id]) > 200:
-            del CHAT_LOG[case_id][:-200]
+        existing = CHAT_LOG.get(case_id)
+        if existing is None:
+            existing = _load_chat_for(case_id, case_dir)
+            CHAT_LOG[case_id] = existing
+        existing.append(msg)
+        if len(existing) > 200:
+            del existing[:-200]
+    _persist_chat_for(case_id, case_dir, msg)
     return msg
 
 
@@ -254,6 +308,10 @@ async def api_chat_get(case: Optional[str] = None):
     target = resolve_case(case)
     if target is None:
         return {"messages": []}
+    # 第一次读时回灌历史
+    with CHAT_LOCK:
+        if target.name not in CHAT_LOG:
+            CHAT_LOG[target.name] = _load_chat_for(target.name, target)
     return {"messages": chat_log(target.name)}
 
 
@@ -268,7 +326,7 @@ async def api_chat_post(request: Request):
 
     user_msg = chat_append(target.name, {
         "role": "user", "text": text, "ts": now_iso(),
-    })
+    }, target)
     reply = ar.reply(target, text)
     reply_msg = chat_append(target.name, {
         "role": "agent",
@@ -279,7 +337,7 @@ async def api_chat_post(request: Request):
         **({"ok": reply["ok"], "exit": reply["exit"],
             "command": reply["command"]} if reply.get("kind") == "run" else {}),
         **({"path": reply["path"], "bytes": reply["bytes"]} if "path" in reply else {}),
-    })
+    }, target)
     return {"user": user_msg, "reply": reply_msg}
 
 
@@ -305,7 +363,15 @@ async def api_ping():
 
 # ── WebSocket ────────────────────────────────────────────────────────────
 @app.websocket("/ws")
-async def ws_endpoint(ws: WebSocket, case: Optional[str] = None):
+async def ws_endpoint(ws: WebSocket, case: Optional[str] = None,
+                       token: Optional[str] = None):
+    """只允许带正确 token 的连接。token 通过 ?token=... 传；和 HTTP 头共用同一个 SESSION_TOKEN。
+
+    不带或错 token → 直接 close(1008)，不 accept，避免任何回显。
+    """
+    if not token or token != SESSION_TOKEN:
+        await ws.close(code=1008)
+        return
     await ws.accept()
     target = resolve_case(case)
     case_id = target.name if target else "unknown"
