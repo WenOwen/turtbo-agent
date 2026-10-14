@@ -91,6 +91,17 @@ img{max-width:100%;height:auto;display:block}
 .msg.agent.kind-run{border-color:#1f4f86;background:#131c2a}
 .msg.agent.kind-open{background:#1a1810;border-color:#5a5020}
 .msg.agent.kind-switch{background:#1f3322;border-color:#2f6f44}
+.msg-body{line-height:1.5;white-space:normal}
+.msg-body code.md-c{background:#0b1320;border:1px solid var(--line);
+  border-radius:3px;padding:0 4px;font-size:11px;color:#cbe1ff}
+.msg-body b{color:#f7c}
+.msg-body .md-h{font-size:13px;margin:6px 0 2px;color:#cbe1ff;font-weight:600}
+.msg-body .md-ul{margin:4px 0 4px 18px;padding:0}
+.msg-body .md-ul li{margin:2px 0;list-style:disc}
+.path-row{font-size:11px;color:var(--muted);margin-top:5px;padding-top:4px;
+  border-top:1px dashed var(--line)}
+.path-row a{color:var(--run);text-decoration:none;cursor:pointer}
+.path-row a:hover{text-decoration:underline}
 .msg .role{font-size:10.5px;letter-spacing:.05em;color:var(--dim);margin-bottom:4px;
   text-transform:uppercase;font-weight:600}
 .msg.user .role{color:var(--user)}
@@ -561,8 +572,27 @@ img{max-width:100%;height:auto;display:block}
     const role = m.user ? "user" : "agent kind-" + (m.kind || "info");
     div.className = "msg " + role;
     const roleLabel = m.role === "user" ? "你" : "Agent";
+    let body_html;
+    if (m.role === "user"){
+      body_html = esc(m.text || "");
+    } else {
+      // agent 走 mdLite 渲染
+      body_html = mdLite(m.text || "");
+    }
+    // 追加：path 字段（open 命令的产物）做可点击
+    let extra = "";
+    if (m.path){
+      extra = `<div class="path-row">📄 <a href="javascript:void(0)" onclick="quickOpen('${esc(m.path)}')">${esc(m.path)}</a>`
+        + (m.bytes != null ? `  (${m.bytes} 字节)` : "") + `</div>`;
+    }
+    if (m.command){
+      extra += `<div class="path-row">⌨  ${esc(m.command)}${m.exit != null ? "  · exit " + m.exit : ""}${m.ok != null ? "  · " + (m.ok ? "✓" : "✗") : ""}</div>`;
+    }
+    if (m.switch_to){
+      extra += `<div class="path-row">↪ 切换到 <a href="javascript:void(0)" onclick="quickSwitch('${esc(m.switch_to)}')">${esc(m.switch_to)}</a></div>`;
+    }
     div.innerHTML = `<div class="role">${roleLabel}<span class="ts">${esc(fmtTs(m.ts))}</span></div>
-      <div>${esc(m.text || "")}</div>`;
+      <div class="msg-body">${body_html}</div>${extra}`;
     body.appendChild(div);
     if (scroll) body.scrollTop = body.scrollHeight;
     return div;
@@ -616,6 +646,16 @@ img{max-width:100%;height:auto;display:block}
       sendChat();
     };
   });
+  // 链接式 inline 触发：open 路径 / 切到另一案例
+  window.quickOpen = (rel) => {
+    document.getElementById("chat-input").value = "open " + rel;
+    sendChat();
+  };
+  window.quickSwitch = (cid) => {
+    document.getElementById("chat-input").value = "case " + cid;
+    sendChat();
+    setTimeout(() => { selectCase(cid); }, 50);
+  };
 
   // ── WebSocket ─────────────────────────────────────────────────
   let WS_RETRY = 0;     // 重连退避秒数（1 → 2 → 4 → 上限 30）
@@ -677,6 +717,37 @@ img{max-width:100%;height:auto;display:block}
     if (sec < 3600) return Math.round(sec/60) + "分前";
     if (sec < 86400) return Math.round(sec/3600) + "时前";
     return Math.round(sec/86400) + "日前";
+  }
+  // 极简 markdown：只支持 **bold**、`code`、# 标题、- 列表、行内续行。
+  // 不替换已经被 esc 转义后的字符；所以先 esc 再做轻格式化。
+  function mdLite(s){
+    if (!s) return "";
+    let t = esc(s);
+    // 行级：先按行处理
+    const lines = t.split("\n");
+    const out = [];
+    let inList = false;
+    for (let line of lines){
+      // 已是 <pre> 包裹的不再处理（log-tail 风格）
+      if (/^#\s+/.test(line)){
+        if (inList) { out.push("</ul>"); inList = false; }
+        out.push("<h3 class=\"md-h\">" + line.replace(/^#\s+/, "") + "</h3>");
+        continue;
+      }
+      if (/^\s*-\s+/.test(line)){
+        if (!inList) { out.push("<ul class=\"md-ul\">"); inList = true; }
+        out.push("<li>" + line.replace(/^\s*-\s+/, "") + "</li>");
+        continue;
+      }
+      if (inList) { out.push("</ul>"); inList = false; }
+      // 行内：`**` 配对 → <b>；`` ` `` 配对 → <code>
+      line = line.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+      line = line.replace(/`([^`]+)`/g, "<code class=\"md-c\">$1</code>");
+      // 单独 \n 保留为换行
+      out.push(line);
+    }
+    if (inList) out.push("</ul>");
+    return out.join("\n").replace(/\n/g, "<br/>");
   }
   function fmtTs(s){
     if (!s) return "—";
