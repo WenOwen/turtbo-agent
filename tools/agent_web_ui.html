@@ -411,8 +411,29 @@ img{max-width:100%;height:auto;display:block}
     }
 
     if (j.processes && j.processes.length){
-      const lines = j.processes.map(p => p.name + " (pid " + p.pid + ")").join("\n");
-      body.appendChild(makeCard("正在运行的进程", `<div class="log-tail">${esc(lines)}</div>`));
+      const card = makeCard("正在运行的进程", `<div id="proc-list"></div>`);
+      body.appendChild(card);
+      const plist = card.querySelector("#proc-list");
+      for (const p of j.processes){
+        const row = document.createElement("div");
+        row.className = "left-file";
+        const stage = p.stage ? " " + p.stage : "";
+        row.innerHTML = `<span class="age">${esc(p.name)}</span><span class="path">pid ${esc(p.pid)}${esc(stage)}</span>`;
+        row.title = "点击跳到日志 " + (p.stage || "");
+        row.onclick = () => {
+          // 切到日志 tab 并滚到对应 stage
+          CURRENT_TAB = "log";
+          document.querySelectorAll(".tab").forEach(t => {
+            t.classList.toggle("active", t.dataset.tab === "log");
+          });
+          loadState().then(() => {
+            // 渲染日志后滚到对应 stage
+            const logEl = document.querySelector("#center-body .log-tail");
+            if (logEl) logEl.scrollTop = logEl.scrollHeight;
+          });
+        };
+        plist.appendChild(row);
+      }
     }
 
     if (j.recent_files && j.recent_files.length){

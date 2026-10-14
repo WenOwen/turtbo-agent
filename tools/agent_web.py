@@ -342,6 +342,18 @@ async def api_state(request: Request, case: Optional[str] = None):
         raise HTTPException(status_code=404, detail="案例不存在：" + str(case))
     agg = lv.Aggregator(target, getattr(lv.Handler, "extra_roots", []) or [])
     out = agg.build()
+    # 给 process 列表加 stage 提示（点击跳日志时用）
+    PROC_STAGE = {
+        "euranus": "G5", "finebatch": "G5", "finex86": "G5",
+        "autogrid": "G4", "iggx86": "G4", "cfview": "G6",
+        "mpiexec": "G5", "numeca": "G5",
+    }
+    for p in out.get("processes") or []:
+        n = str(p.get("name", "")).lower()
+        for k, stg in PROC_STAGE.items():
+            if k in n:
+                p["stage"] = stg
+                break
     out["file_tree"] = _build_file_tree(target, max_depth=3)
     return out
 
