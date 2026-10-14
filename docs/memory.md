@@ -71,14 +71,17 @@ b7e0438 feat(solve): G5 完成
 ### 验证证据
 
 - `python tools/start_agent_web.py` → http://127.0.0.1:9883 启动 OK
-- `pytest tools/test_agent_reply.py tools/test_agent_web.py -q` → **85 passed in 6.79s**
-- 真实截图 `docs/agent-web-screenshot.png` 43KB（3 个案例列表 + 现在面板）
+- `pytest tools/test_agent_reply.py tools/test_agent_web.py tools/test_smoke.py -q` → **90 passed in 17.28s**
+- 真实截图 `docs/agent-web-screenshot-v2.png` 44KB（3 案例 + 4 按钮 + 13 quickbar）
 - /api/state?case=DF90-001 → version_graph 32 nodes / 24 edges / 106 issues
 - /api/chat `pending` → 5 段 LOG 末尾带 [PASS]/[WARN]/[FAIL]
 - /api/chat `get requirement.thrust` → 90.0
 - /api/chat `find requirements.yaml` → 12 命中
 - /api/chat `note` → 写 LOG.md 成功
+- /api/chat/export?case=DF90-001&format=md → 45415 字节 markdown（Content-Disposition 触发下载）
+- /api/chat/search?case=DF90-001&q=案例 → 12 命中（index/ts/role/preview）
 - /api/cases 无 token → 403
+- WebSocket /ws?case=&token= → 后台线程每 3s 推 state（BC.broadcast）
 
 ## 决定与教训
 
