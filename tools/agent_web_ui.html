@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>turtbo-agent · 三栏对话界面</title>
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#05060a" />
+<style>
+:root{
+  --bg:#0b0e13; --panel:#131822; --panel2:#0f131b; --line:#222a36;
+  --fg:#e6edf3; --dim:#8b949e; --dim2:#6b7280;
+  --ok:#3fb950; --run:#58a6ff; --wait:#6b7280; --bad:#f85149; --warn:#d29922;
+  --accent:#7ee787; --user:#79c0ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--fg);
+  font:13px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+  overflow:hidden}
+.app{display:grid;grid-template-columns:240px 1fr 360px;height:100vh;width:100vw}
+.panel{height:100vh;overflow:hidden;display:flex;flex-direction:column;border-right:1px solid var(--line)}
+.panel:last-child{border-right:none;border-left:1px solid var(--line)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel2);
+  font-size:12px;letter-spacing:.05em;color:var(--dim);text-transform:uppercase}
+.panel-head .badge{font-size:10px;padding:2px 7px;border-radius:99px;background:#1b2430;color:var(--dim)}
+.panel-body{flex:1;overflow:auto;padding:10px 12px;background:var(--panel)}
+.search-input{
+  width:100%;background:#0a0d11;border:1px solid var(--line);color:var(--fg);
+  border-radius:6px;padding:6px 10px;font-size:12px;margin:6px 12px 8px;outline:none;
+}
+.search-input:focus{border-color:var(--run)}
+.case-list{list-style:none;margin:0;padding:0}
+.case-item{padding:9px 10px;border-radius:6px;cursor:pointer;margin-bottom:4px;border:1px solid transparent}
+.case-item:hover{background:#161c25;border-color:var(--line)}
+.case-item.active{background:#152437;border-color:#1f4f86}
+.case-item .id{font-weight:600;font-size:13px}
+.case-item .meta{font-size:11px;color:var(--dim);margin-top:3px;font-family:ui-monospace,Consolas,monospace}
+
+/* 中间面板 */
+.center-tabs{display:flex;gap:0;padding:0 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.tab{padding:9px 14px;font-size:12px;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent}
+.tab.active{color:var(--fg);border-bottom-color:var(--accent)}
+.center-body{flex:1;overflow:auto;padding:12px 14px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:11px 13px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:12px;letter-spacing:.04em;color:var(--dim);text-transform:uppercase}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:5px 14px;font-size:12px}
+.kv dt{color:var(--dim2)}
+.kv dd{margin:0;font-family:ui-monospace,Consolas,monospace;font-size:11.5px;word-break:break-all}
+.timeline{display:flex;gap:6px;flex-wrap:wrap}
+.tstep{flex:1 1 110px;border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:#0e131b;cursor:pointer}
+.tstep:hover{border-color:#2f4d63}
+.tstep .g{font-size:11px;color:var(--dim2);font-weight:700;letter-spacing:.04em}
+.tstep .n{font-size:12.5px;margin-top:3px}
+.tstep .s{display:inline-block;font-size:10px;padding:1px 7px;border-radius:99px;margin-top:6px;background:#20262e;color:var(--dim)}
+.tstep.done{border-color:#1f6f34}.tstep.done .s{background:#12331d;color:#4ac26b}
+.tstep.run{border-color:#1f4f86}.tstep.run .s{background:#12273f;color:#79c0ff}
+.tstep.blocked{border-color:#7d2b26}.tstep.blocked .s{background:#3a1614;color:#ff7b72}
+.view-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.view-tile{background:#0e131b;border:1px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer}
+.view-tile:hover{border-color:#2f4d63}
+.view-tile img{display:block;width:100%;height:auto;background:#101620}
+.view-tile .vt{padding:6px 8px;font-size:11.5px;border-top:1px solid var(--line);color:var(--fg)}
+.view-tile .vn{padding:4px 8px;font-size:10.5px;color:var(--dim);border-top:1px solid var(--line)}
+img{max-width:100%;height:auto;display:block}
+.log-tail{font-family:ui-monospace,Consolas,monospace;font-size:11px;
+  background:#0a0d11;border:1px solid var(--line);border-radius:6px;padding:9px 11px;
+  max-height:240px;overflow:auto;white-space:pre-wrap;color:#c9d1d9}
+.activity{font-weight:600;color:var(--fg)}
+.activity-sub{font-size:12px;color:var(--dim);margin-top:2px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:99px;margin-right:6px;vertical-align:1px}
+.dot.live{background:var(--ok);animation:pulse 1.6s infinite}
+.dot.dead{background:var(--bad)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.empty{color:var(--dim2);font-style:normal;font-size:12px;padding:12px}
+.toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.btn{background:#1a2230;border:1px solid var(--line);color:var(--fg);
+  padding:5px 11px;border-radius:6px;font-size:11.5px;cursor:pointer}
+.btn:hover{border-color:var(--run)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:#152437;border-color:#1f4f86;color:#cfe5ff}
+
+/* 右侧聊天 */
+.chat-body{flex:1;overflow:auto;padding:8px 12px;background:var(--panel)}
+.msg{margin-bottom:10px;padding:9px 11px;border-radius:7px;
+  border:1px solid var(--line);background:var(--panel2);font-size:12.5px;
+  word-wrap:break-word;white-space:pre-wrap}
+.msg.user{background:#152437;border-color:#1f4f86}
+.msg.agent.kind-info{background:var(--panel2);border-color:var(--line)}
+.msg.agent.kind-error{border-color:#7d2b26;background:#1c1416;color:#ffb3b3}
+.msg.agent.kind-run{border-color:#1f4f86;background:#131c2a}
+.msg.agent.kind-open{background:#1a1810;border-color:#5a5020}
+.msg.agent.kind-switch{background:#1f3322;border-color:#2f6f44}
+.msg .role{font-size:10.5px;letter-spacing:.05em;color:var(--dim);margin-bottom:4px;
+  text-transform:uppercase;font-weight:600}
+.msg.user .role{color:var(--user)}
+.msg.agent .role{color:var(--accent)}
+.msg .ts{font-size:10.5px;color:var(--dim2);float:right;font-weight:normal;
+  text-transform:none;letter-spacing:0}
+.chat-input{display:flex;gap:6px;padding:9px 12px;border-top:1px solid var(--line);background:var(--panel2)}
+.chat-input input{flex:1;background:#0a0d11;border:1px solid var(--line);
+  color:var(--fg);border-radius:6px;padding:7px 11px;font-size:13px;outline:none}
+.chat-input input:focus{border-color:var(--run)}
+.chat-input button{padding:7px 14px;border-radius:6px;border:1px solid #1f4f86;
+  background:#152437;color:#cfe5ff;cursor:pointer;font-size:12.5px}
+.chat-input button:disabled{opacity:.4;cursor:not-allowed}
+.quickbar{display:flex;gap:5px;padding:6px 12px;border-top:1px solid var(--line);
+  background:#0c1118;flex-wrap:wrap}
+.quickbar .q{font-size:11px;background:#1a2230;border:1px solid var(--line);
+  color:var(--dim);padding:3px 8px;border-radius:99px;cursor:pointer}
+.quickbar .q:hover{color:var(--fg);border-color:var(--run)}
+.inspector{padding:10px 12px;border-top:1px solid var(--line);background:var(--panel2)}
+.inspector h4{margin:0 0 6px;font-size:11px;color:var(--dim);text-transform:uppercase}
+.inspector pre{font-family:ui-monospace,Consolas,monospace;font-size:11px;
+  margin:0;padding:7px 9px;background:#0a0d11;border:1px solid var(--line);border-radius:5px;
+  max-height:140px;overflow:auto;white-space:pre-wrap;color:#c9d1d9}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 左侧：案例文件夹 -->
+  <aside class="panel" id="left">
+    <div class="panel-head"><span>案例文件夹</span><span class="badge" id="left-count">—</span></div>
+    <input class="search-input" id="case-search" placeholder="搜索案例…" />
+    <div class="panel-body" style="padding:6px 8px">
+      <ul class="case-list" id="case-list"></ul>
+    </div>
+  </aside>
+
+  <!-- 中间：可视化面板 -->
+  <main class="panel" id="center">
+    <div class="panel-head">
+      <span>可视化面板</span>
+      <span id="center-case" class="badge">—</span>
+    </div>
+    <div class="center-tabs">
+      <div class="tab active" data-tab="overview">总览</div>
+      <div class="tab" data-tab="views">可视化</div>
+      <div class="tab" data-tab="log">日志</div>
+      <div class="tab" data-tab="ops">操作</div>
+    </div>
+    <div class="center-body" id="center-body">
+      <div class="empty">请从左侧选择一个案例</div>
+    </div>
+  </main>
+
+  <!-- 右侧：聊天框 -->
+  <aside class="panel" id="right">
+    <div class="panel-head">
+      <span><span class="dot live" id="dot"></span>Agent 对话</span>
+      <span class="badge" id="right-case">—</span>
+    </div>
+    <div class="chat-body" id="chat-body">
+      <div class="msg agent kind-info">
+        <div class="role">Agent<span class="ts">—</span></div>
+        <div>欢迎。选择左侧的案例后即可开始对话。试试：<code>help</code>、<code>status</code>、<code>run preflight</code>。</div>
+      </div>
+    </div>
+    <div class="quickbar" id="quickbar">
+      <span class="q" data-q="status">status</span>
+      <span class="q" data-q="help">help</span>
+      <span class="q" data-q="list">list</span>
+      <span class="q" data-q="where">where</span>
+      <span class="q" data-q="run preflight">run preflight</span>
+      <span class="q" data-q="refresh">refresh</span>
+    </div>
+    <div class="chat-input">
+      <input id="chat-input" placeholder="输入消息…" />
+      <button id="chat-send">发送</button>
+    </div>
+    <div class="inspector" id="inspector" style="display:none">
+      <h4>观察</h4>
+      <pre id="inspector-pre">—</pre>
+    </div>
+  </aside>
+
+</div>
+
+<script>
+(function(){
+  const TOKEN = "__DSH_TOKEN__";
+  const HEADERS = {"Content-Type": "application/json", "X-DSH-Token": TOKEN};
+  const JHEAD = {"X-DSH-Token": TOKEN};
+  let CURRENT_CASE = null;
+  let CURRENT_TAB = "overview";
+  let VIEW_GROUPS = [];
+  let CASES = [];
+  let WS = null;
+
+  // ── 左栏：案例列表 ───────────────────────────────────────────
+  function renderCases(filter){
+    const ul = document.getElementById("case-list");
+    ul.innerHTML = "";
+    const f = (filter || "").trim().toLowerCase();
+    const filtered = f ? CASES.filter(c => c.id.toLowerCase().includes(f)) : CASES;
+    document.getElementById("left-count").textContent = filtered.length;
+    if (filtered.length === 0){
+      const li = document.createElement("li");
+      li.className = "empty";
+      li.textContent = "无匹配案例";
+      ul.appendChild(li);
+      return;
+    }
+    for (const c of filtered){
+      const li = document.createElement("li");
+      li.className = "case-item" + (c.id === CURRENT_CASE ? " active" : "");
+      li.dataset.id = c.id;
+      const stage = c.current_stage || "—";
+      const rev = c.revision ? "v" + c.revision : "";
+      li.innerHTML = `<div class="id">${esc(c.id)}</div>
+        <div class="meta">${esc(stage)} ${rev ? "· " + esc(rev) : ""} · ${c.artifact_count} 产物</div>`;
+      li.onclick = () => selectCase(c.id);
+      ul.appendChild(li);
+    }
+  }
+
+  async function loadCases(){
+    try {
+      const r = await fetch("/api/cases");
+      const j = await r.json();
+      CASES = j.cases || [];
+      renderCases(document.getElementById("case-search").value);
+    } catch (e) {
+      console.error("loadCases", e);
+    }
+  }
+
+  document.getElementById("case-search").addEventListener("input", e => renderCases(e.target.value));
+
+  // ── 中栏：状态 ────────────────────────────────────────────────
+  async function selectCase(id){
+    CURRENT_CASE = id;
+    document.getElementById("center-case").textContent = id;
+    document.getElementById("right-case").textContent = id;
+    renderCases(document.getElementById("case-search").value);
+    loadState();
+    loadViews();
+    loadChat();
+    connectWS(id);
+  }
+
+  async function loadState(){
+    if (!CURRENT_CASE) return;
+    try {
+      const r = await fetch("/api/state?case=" + encodeURIComponent(CURRENT_CASE));
+      const j = await r.json();
+      renderState(j);
+    } catch (e) {
+      console.error("loadState", e);
+    }
+  }
+
+  async function loadViews(){
+    if (!CURRENT_CASE) return;
+    try {
+      const r = await fetch("/api/views?case=" + encodeURIComponent(CURRENT_CASE));
+      const j = await r.json();
+      VIEW_GROUPS = j.groups || [];
+      if (CURRENT_TAB === "views") renderViews();
+    } catch (e) {
+      console.error("loadViews", e);
+    }
+  }
+
+  function renderState(j){
+    const body = document.getElementById("center-body");
+    if (CURRENT_TAB !== "overview") return;
+    body.innerHTML = "";
+
+    const stage = j.current_stage || "—";
+    const rev = j.revision ? "v" + j.revision : "—";
+    const ac = j.artifact_count || 0;
+
+    body.appendChild(makeCard("现在", `<div class="activity">${esc(j.activity || "—")}</div>
+      <div class="activity-sub">${esc(j.activity_detail || "")}</div>
+      <dl class="kv" style="margin-top:10px">
+        <dt>案例</dt><dd>${esc(j.case_id || "—")}</dd>
+        <dt>阶段</dt><dd>${esc(stage)}</dd>
+        <dt>版本</dt><dd>${esc(rev)}</dd>
+        <dt>产物</dt><dd>${ac}</dd>
+        <dt>需求</dt><dd>${esc(j.requirement_line || "—")}</dd>
+      </dl>`));
+
+    if (j.stages && Object.keys(j.stages).length){
+      const card = makeCard("阶段时间线（G0-G6）", "");
+      const tl = document.createElement("div");
+      tl.className = "timeline";
+      const order = ["G0","G1","G2","G3","G4","G5","G6"];
+      for (const gid of order){
+        const s = j.stages[gid] || {};
+        const div = document.createElement("div");
+        const status = s.status || "pending";
+        div.className = "tstep " + status;
+        div.innerHTML = `<div class="g">${esc(gid)}</div><div class="n">${esc(s.name || "")}</div>
+          <span class="s">${esc(status)}</span>`;
+        tl.appendChild(div);
+      }
+      card.appendChild(tl);
+      body.appendChild(card);
+    }
+
+    if (j.design){
+      const summary = j.design.summary || {};
+      const maxThrust = summary.max_thrust_kgf || "—";
+      const target = summary.target_thrust_kgf || "—";
+      const gap = summary.gap_kgf != null ? summary.gap_kgf.toFixed(2) : "—";
+      body.appendChild(makeCard("设计摘要",
+        `<dl class="kv">
+          <dt>目标推力</dt><dd>${esc(target)} kgf</dd>
+          <dt>实测最大</dt><dd>${esc(maxThrust)} kgf</dd>
+          <dt>差距</dt><dd>${esc(gap)} kgf</dd>
+          <dt>实测点</dt><dd>${esc(summary.measured_points || 0)}</dd>
+        </dl>`));
+    }
+
+    if (j.processes && j.processes.length){
+      const lines = j.processes.map(p => p.name + " (pid " + p.pid + ")").join("\n");
+      body.appendChild(makeCard("正在运行的进程", `<div class="log-tail">${esc(lines)}</div>`));
+    }
+
+    if (j.recent_files && j.recent_files.length){
+      const lines = j.recent_files.map(f => `${fmtAge(f.age_sec)}  ${f.path}`).join("\n");
+      body.appendChild(makeCard("最近改动的文件", `<div class="log-tail">${esc(lines)}</div>`));
+    }
+  }
+
+  function renderViews(){
+    const body = document.getElementById("center-body");
+    if (CURRENT_TAB !== "views") return;
+    body.innerHTML = "";
+    if (!VIEW_GROUPS || VIEW_GROUPS.length === 0){
+      body.innerHTML = `<div class="empty">无可视化数据。先完成方案、几何、网格或 CFD。</div>`;
+      return;
+    }
+    for (const g of VIEW_GROUPS){
+      const card = makeCard(`${esc(g.title)} · ${esc(g.hint || "")}`,
+        g.error ? `<div class="empty">${esc(g.error)}</div>`
+                : (g.views && g.views.length ? "" : `<div class="empty">本组暂无视图</div>`));
+      if (g.views && g.views.length){
+        const grid = document.createElement("div");
+        grid.className = "view-grid";
+        for (const v of g.views){
+          for (const img of (v.images || [])){
+            const tile = document.createElement("div");
+            tile.className = "view-tile";
+            tile.innerHTML = `<img src="/api/asset?path=${encodeURIComponent(img.path)}" loading="lazy" />
+              <div class="vt">${esc(img.title || "")}</div>
+              <div class="vn">${esc(img.note || "")}</div>`;
+            grid.appendChild(tile);
+          }
+        }
+        card.appendChild(grid);
+      }
+      body.appendChild(card);
+    }
+  }
+
+  function renderLog(j){
+    const body = document.getElementById("center-body");
+    if (CURRENT_TAB !== "log") return;
+    body.innerHTML = "";
+    body.appendChild(makeCard("工程日志尾部",
+      `<div class="log-tail">${esc(j.log_tail || "（无）")}</div>`));
+    if (j.watch_changes && j.watch_changes.length){
+      const lines = j.watch_changes.slice(-50).map(c =>
+        `${esc(c.ts || "")}  ${esc(c.kind || "")}  ${esc(c.path || "")}`
+      ).join("\n");
+      body.appendChild(makeCard("变更流（最多 50 条）",
+        `<div class="log-tail">${esc(lines)}</div>`));
+    }
+  }
+
+  function renderOps(){
+    const body = document.getElementById("center-body");
+    if (CURRENT_TAB !== "ops") return;
+    body.innerHTML = "";
+    const card = makeCard("工具动作", "");
+    const tb = document.createElement("div");
+    tb.className = "toolbar";
+    const acts = [
+      {id: "preflight", label: "环境预检"},
+      {id: "verify", label: "校验产物"},
+      {id: "audit", label: "规矩自检"},
+      {id: "replay", label: "v7 回放"},
+    ];
+    for (const a of acts){
+      const b = document.createElement("button");
+      b.className = "btn primary";
+      b.textContent = a.label;
+      b.onclick = () => runAction(a.id, {});
+      tb.appendChild(b);
+    }
+    card.appendChild(tb);
+    body.appendChild(card);
+
+    const gcard = makeCard("跑闸门检查", "");
+    const gtb = document.createElement("div");
+    gtb.className = "toolbar";
+    for (const g of ["G0","G1","G2","G3","G4","G5","G6"]){
+      const b = document.createElement("button");
+      b.className = "btn";
+      b.textContent = g;
+      b.onclick = () => runAction("gate", {gate: g});
+      gtb.appendChild(b);
+    }
+    gcard.appendChild(gtb);
+    body.appendChild(gcard);
+  }
+
+  async function runAction(action, params){
+    if (!CURRENT_CASE) return;
+    try {
+      const r = await fetch("/api/run", {method: "POST", headers: HEADERS,
+        body: JSON.stringify({case: CURRENT_CASE, action, params})});
+      const j = await r.json();
+      const pre = document.getElementById("inspector-pre");
+      const ins = document.getElementById("inspector");
+      ins.style.display = "block";
+      pre.textContent = `=== ${action} ${JSON.stringify(params)} ===\n` +
+        (j.stdout || "") +
+        (j.stderr ? "\n[stderr]\n" + j.stderr : "") +
+        `\n[exit=${j.exit} elapsed=${j.elapsed}s]`;
+    } catch (e) {
+      console.error("runAction", e);
+    }
+  }
+
+  function makeCard(title, body){
+    const c = document.createElement("div");
+    c.className = "card";
+    const h = document.createElement("h3");
+    h.textContent = title;
+    c.appendChild(h);
+    if (body){
+      const d = document.createElement("div");
+      d.innerHTML = body;
+      c.appendChild(d);
+    }
+    return c;
+  }
+
+  // ── 中栏 tabs ─────────────────────────────────────────────────
+  for (const t of document.querySelectorAll(".tab")){
+    t.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+      t.classList.add("active");
+      CURRENT_TAB = t.dataset.tab;
+      if (CURRENT_TAB === "overview") loadState();
+      if (CURRENT_TAB === "views") renderViews();
+      if (CURRENT_TAB === "log") loadState();
+      if (CURRENT_TAB === "ops") renderOps();
+    });
+  }
+
+  // ── 右栏：聊天 ────────────────────────────────────────────────
+  async function loadChat(){
+    if (!CURRENT_CASE) return;
+    try {
+      const r = await fetch("/api/chat?case=" + encodeURIComponent(CURRENT_CASE));
+      const j = await r.json();
+      renderChat(j.messages || []);
+    } catch (e) {
+      console.error("loadChat", e);
+    }
+  }
+
+  function renderChat(msgs){
+    const body = document.getElementById("chat-body");
+    body.innerHTML = "";
+    if (!msgs.length){
+      const m = document.createElement("div");
+      m.className = "msg agent kind-info";
+      m.innerHTML = `<div class="role">Agent<span class="ts">—</span></div>
+        <div>开始对话吧。试试 <code>help</code>。</div>`;
+      body.appendChild(m);
+      return;
+    }
+    for (const m of msgs) addMsg(m, false);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function addMsg(m, scroll){
+    const body = document.getElementById("chat-body");
+    const div = document.createElement("div");
+    const role = m.user ? "user" : "agent kind-" + (m.kind || "info");
+    div.className = "msg " + role;
+    const roleLabel = m.role === "user" ? "你" : "Agent";
+    div.innerHTML = `<div class="role">${roleLabel}<span class="ts">${esc(fmtTs(m.ts))}</span></div>
+      <div>${esc(m.text || "")}</div>`;
+    body.appendChild(div);
+    if (scroll) body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  async function sendChat(){
+    const input = document.getElementById("chat-input");
+    const btn = document.getElementById("chat-send");
+    const text = input.value.trim();
+    if (!text || !CURRENT_CASE) return;
+    btn.disabled = true;
+    input.disabled = true;
+    addMsg({role: "user", text, ts: new Date().toISOString()}, true);
+    input.value = "";
+    try {
+      const r = await fetch("/api/chat", {method: "POST", headers: HEADERS,
+        body: JSON.stringify({case: CURRENT_CASE, text})});
+      const j = await r.json();
+      if (j.reply) {
+        addMsg(j.reply, true);
+        if (j.reply.kind === "switch" && j.reply.switch_to){
+          selectCase(j.reply.switch_to);
+        }
+        if (j.reply.kind === "refresh") {
+          loadState();
+          loadViews();
+        }
+        if (j.reply.kind === "run"){
+          const pre = document.getElementById("inspector-pre");
+          const ins = document.getElementById("inspector");
+          ins.style.display = "block";
+          pre.textContent = (j.reply.text || "") + `\n[exit=${j.reply.exit}]`;
+        }
+      }
+    } catch (e) {
+      console.error("sendChat", e);
+    } finally {
+      btn.disabled = false;
+      input.disabled = false;
+      input.focus();
+    }
+  }
+
+  document.getElementById("chat-send").onclick = sendChat;
+  document.getElementById("chat-input").onkeydown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendChat(); }
+  };
+  document.querySelectorAll("#quickbar .q").forEach(el => {
+    el.onclick = () => {
+      document.getElementById("chat-input").value = el.dataset.q;
+      sendChat();
+    };
+  });
+
+  // ── WebSocket ─────────────────────────────────────────────────
+  function connectWS(caseId){
+    if (WS) try { WS.close(); } catch(e){}
+    const proto = location.protocol === "https:" ? "wss:" : "ws:";
+    WS = new WebSocket(proto + "//" + location.host + "/ws?case=" + encodeURIComponent(caseId));
+    WS.onmessage = (ev) => {
+      try {
+        const j = JSON.parse(ev.data);
+        if (j.kind === "state") renderState(j.payload);
+        if (j.kind === "chat") {
+          if (j.payload && j.payload.append) {
+            addMsg(j.payload.append, true);
+          }
+        }
+      } catch(e){}
+    };
+    WS.onclose = () => {
+      document.getElementById("dot").classList.remove("live");
+      document.getElementById("dot").classList.add("dead");
+    };
+    WS.onopen = () => {
+      document.getElementById("dot").classList.remove("dead");
+      document.getElementById("dot").classList.add("live");
+    };
+  }
+
+  // ── 工具 ──────────────────────────────────────────────────────
+  function esc(s){ return (s == null ? "" : String(s))
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function fmtAge(sec){
+    if (sec == null) return "—";
+    if (sec < 60) return Math.round(sec) + "秒前";
+    if (sec < 3600) return Math.round(sec/60) + "分前";
+    if (sec < 86400) return Math.round(sec/3600) + "时前";
+    return Math.round(sec/86400) + "日前";
+  }
+  function fmtTs(s){
+    if (!s) return "—";
+    try {
+      const d = new Date(s);
+      return d.toTimeString().slice(0,8);
+    } catch(e){ return s; }
+  }
+
+  // 启动
+  loadCases();
+  setInterval(() => { if (CURRENT_CASE) loadState(); }, 8000);
+})();
+</script>
+</body>
+</html>
