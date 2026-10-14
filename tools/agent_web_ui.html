@@ -158,6 +158,7 @@ img{max-width:100%;height:auto;display:block}
     <div class="center-tabs">
       <div class="tab active" data-tab="overview">总览</div>
       <div class="tab" data-tab="views">可视化</div>
+      <div class="tab" data-tab="files">文件</div>
       <div class="tab" data-tab="graph">版本</div>
       <div class="tab" data-tab="log">日志</div>
       <div class="tab" data-tab="ops">操作</div>
@@ -318,6 +319,7 @@ img{max-width:100%;height:auto;display:block}
   function renderState(j){
     if (CURRENT_TAB === "graph") return renderGraph(j);
     if (CURRENT_TAB === "log") return renderLog(j);
+    if (CURRENT_TAB === "files") return renderFiles(j);
     const body = document.getElementById("center-body");
     if (CURRENT_TAB !== "overview") return;
     body.innerHTML = "";
@@ -494,6 +496,80 @@ img{max-width:100%;height:auto;display:block}
       body.appendChild(makeCard("变更流（最多 50 条）",
         `<div class="log-tail">${esc(lines)}</div>`));
     }
+  }
+
+  function renderFiles(j){
+    const body = document.getElementById("center-body");
+    if (CURRENT_TAB !== "files") return;
+    body.innerHTML = "";
+    // 优先用 j.file_tree（liveview.Aggregator 给的）；fallback 用 recent_files 拉一份
+    const tree = (j && j.file_tree) || null;
+    if (tree && tree.children && tree.children.length){
+      const card = makeCard("目录树（深度 3）", "");
+      const root = document.createElement("div");
+      root.className = "log-tail";
+      root.style.maxHeight = "480px";
+      root.appendChild(renderTreeNode(tree, 0));
+      card.appendChild(root);
+      body.appendChild(card);
+    } else {
+      // 退化：列文件
+      const files = (j && j.recent_files) || [];
+      if (!files.length){
+        body.innerHTML = `<div class="empty">暂无文件清单</div>`;
+        return;
+      }
+      const card = makeCard("最近文件（最多 12 条）", "");
+      const list = document.createElement("div");
+      list.style.display = "flex";
+      list.style.flexDirection = "column";
+      list.style.gap = "4px";
+      for (const f of files.slice(0, 12)){
+        const row = document.createElement("div");
+        row.className = "left-file";
+        const age = f.age_human || (f.mtime ? new Date(f.mtime).toLocaleTimeString() : "—");
+        row.innerHTML = `<span class="age">${esc(age)}</span>
+          <span class="path">${esc(f.path || f.name || JSON.stringify(f))}</span>
+          <span style="font-size:10px;color:var(--dim)">${esc(f.size_human || "")}</span>`;
+        row.onclick = () => sendToChat("open " + (f.path || f.name));
+        list.appendChild(row);
+      }
+      card.appendChild(list);
+      body.appendChild(card);
+    }
+  }
+
+  function renderTreeNode(node, depth){
+    const wrap = document.createElement("div");
+    if (node.name){
+      const head = document.createElement("div");
+      head.className = "left-file";
+      const indent = "  ".repeat(depth);
+      const isDir = (node.children || []).length > 0;
+      head.innerHTML = `<span class="path" style="padding-left:${depth*10}px">
+        ${isDir ? "📁" : "📄"} ${esc(node.name)}
+        ${node.size != null ? "<span style='color:var(--dim);font-size:10px;margin-left:6px'>" + esc(humanSize(node.size)) + "</span>" : ""}
+        </span>`;
+      if (!isDir && node.path){
+        head.style.cursor = "pointer";
+        head.onclick = () => sendToChat("open " + node.path);
+      }
+      wrap.appendChild(head);
+    }
+    if (node.children){
+      for (const c of node.children){
+        wrap.appendChild(renderTreeNode(c, depth + 1));
+      }
+    }
+    return wrap;
+  }
+
+  function humanSize(n){
+    if (n == null) return "—";
+    if (n < 1024) return n + "B";
+    if (n < 1024*1024) return (n/1024).toFixed(1) + "K";
+    if (n < 1024*1024*1024) return (n/1024/1024).toFixed(1) + "M";
+    return (n/1024/1024/1024).toFixed(1) + "G";
   }
 
   function renderOps(){

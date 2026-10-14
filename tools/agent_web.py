@@ -258,6 +258,41 @@ async def api_cases(request: Request):
     return {"cases": lv.list_cases()}
 
 
+def _build_file_tree(case_dir: Path, max_depth: int = 3) -> Dict[str, Any]:
+    """给前端渲染'文件' tab 用的轻量目录树（不重 liveview 内部）。"""
+    skip = {"__pycache__", ".git", "node_modules", ".venv", ".pytest_cache",
+            ".ruff_cache", ".playwright-cli", ".turbo-flow", "_watch",
+            "xmt", "abm", "history"}
+
+    def _walk(p: Path, depth: int) -> Optional[Dict[str, Any]]:
+        if depth > max_depth:
+            return None
+        try:
+            st = p.stat()
+        except OSError:
+            return None
+        node: Dict[str, Any] = {"name": p.name, "size": st.st_size}
+        if p.is_dir():
+            node["type"] = "dir"
+            node["children"] = []
+            try:
+                for child in sorted(p.iterdir(), key=lambda x: (x.is_file(), x.name.lower())):
+                    if child.name in skip:
+                        continue
+                    sub = _walk(child, depth + 1)
+                    if sub is not None:
+                        node["children"].append(sub)
+            except OSError:
+                pass
+        else:
+            node["type"] = "file"
+            node["path"] = str(p.relative_to(case_dir)).replace("\\", "/")
+        return node
+
+    root = _walk(case_dir, 0)
+    return root or {"name": case_dir.name, "children": []}
+
+
 @app.get("/api/state")
 async def api_state(request: Request, case: Optional[str] = None):
     _token_required(request)
@@ -265,7 +300,9 @@ async def api_state(request: Request, case: Optional[str] = None):
     if target is None:
         raise HTTPException(status_code=404, detail="案例不存在：" + str(case))
     agg = lv.Aggregator(target, getattr(lv.Handler, "extra_roots", []) or [])
-    return agg.build()
+    out = agg.build()
+    out["file_tree"] = _build_file_tree(target, max_depth=3)
+    return out
 
 
 @app.get("/api/views")

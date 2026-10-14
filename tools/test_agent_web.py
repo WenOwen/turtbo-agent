@@ -87,6 +87,13 @@ async def test_state_for_case(client, token):
     assert j["case_id"] == "DF90-001"
     assert "design" in j
     assert "stages" in j
+    # 必须带 file_tree（中间面板"文件" tab 用）
+    assert "file_tree" in j
+    ft = j["file_tree"]
+    assert ft.get("name") == "DF90-001"
+    assert len(ft.get("children", [])) > 0
+    names = [c.get("name") for c in ft.get("children", [])]
+    assert "00-brief" in names
     assert "version_graph" in j
 
 
