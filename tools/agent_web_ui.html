@@ -147,6 +147,8 @@ img{max-width:100%;height:auto;display:block}
     </div>
     <div class="panel-head" style="font-size:11px;padding:6px 10px"><span>当前案例文件（点击发到聊天）</span></div>
     <div class="panel-body" id="left-recent" style="padding:4px 8px;max-height:30vh;overflow:auto"></div>
+    <div class="panel-head" style="font-size:11px;padding:6px 10px"><span>后台任务（点击查结果）</span></div>
+    <div class="panel-body" id="left-jobs" style="padding:4px 8px;max-height:24vh;overflow:auto"></div>
   </aside>
 
   <!-- 中间：可视化面板 -->
@@ -190,6 +192,9 @@ img{max-width:100%;height:auto;display:block}
       <span class="q" data-q="run gate G2">run G2</span>
       <span class="q" data-q="run gate G3">run G3</span>
       <span class="q" data-q="run verify">verify</span>
+      <span class="q" data-q="run_async preflight">预检</span>
+      <span class="q" data-q="jobs">jobs</span>
+      <span class="q" data-q="next">next</span>
       <span class="q" data-q="refresh">refresh</span>
     </div>
     <div class="chat-input">
@@ -279,6 +284,8 @@ img{max-width:100%;height:auto;display:block}
     } catch (e) {
       console.error("loadState", e);
     }
+    // 后台任务独立拉（不依赖 state）
+    loadJobs();
   }
   function renderLeftRecent(j){
     const box = document.getElementById("left-recent");
@@ -298,6 +305,39 @@ img{max-width:100%;height:auto;display:block}
       div.innerHTML = `<span class="age">${esc(age)}</span><span class="path">${esc(short)}</span>`;
       div.onclick = () => {
         document.getElementById("chat-input").value = "open " + f.path;
+        sendChat();
+      };
+      box.appendChild(div);
+    }
+  }
+
+  async function loadJobs(){
+    try {
+      const r = await fetch("/api/jobs?case=" + encodeURIComponent(CURRENT_CASE || ""));
+      if (!r.ok) return;
+      const j = await r.json();
+      renderLeftJobs(j.jobs || []);
+    } catch (e) { console.error("loadJobs", e); }
+  }
+  function renderLeftJobs(jobs){
+    const box = document.getElementById("left-jobs");
+    if (!box) return;
+    if (!jobs.length){
+      box.innerHTML = '<div class="empty" style="font-size:11px;padding:6px">（无后台任务）</div>';
+      return;
+    }
+    box.innerHTML = "";
+    const ICON = { running: "⏳", done: "✓", timeout: "⏱", error: "✗" };
+    for (const jb of jobs.slice(0, 8)){
+      const div = document.createElement("div");
+      div.className = "left-file";
+      div.title = jb.label + " · " + jb.command;
+      const st = jb.status || "running";
+      const icon = ICON[st] || "?";
+      const st_cls = st === "running" ? "age" : "age done";
+      div.innerHTML = `<span class="${st_cls}">${icon} ${esc(st)}</span><span class="path">${esc((jb.label || "").slice(0, 24))}</span>`;
+      div.onclick = () => {
+        document.getElementById("chat-input").value = "job " + (jb.job_id || "");
         sendChat();
       };
       box.appendChild(div);
