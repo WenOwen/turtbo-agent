@@ -115,6 +115,8 @@ img{max-width:100%;height:auto;display:block}
 .chat-input button{padding:7px 14px;border-radius:6px;border:1px solid #1f4f86;
   background:#152437;color:#cfe5ff;cursor:pointer;font-size:12.5px}
 .chat-input button:disabled{opacity:.4;cursor:not-allowed}
+.chat-status{font-size:11px;color:var(--run);align-self:center;min-width:60px;font-weight:600}
+#chat-clear{padding:7px 11px;font-size:11px}
 .quickbar{display:flex;gap:5px;padding:6px 12px;border-top:1px solid var(--line);
   background:#0c1118;flex-wrap:wrap}
 .quickbar .q{font-size:11px;background:#1a2230;border:1px solid var(--line);
@@ -171,15 +173,21 @@ img{max-width:100%;height:auto;display:block}
     </div>
     <div class="quickbar" id="quickbar">
       <span class="q" data-q="status">status</span>
-      <span class="q" data-q="help">help</span>
-      <span class="q" data-q="list">list</span>
-      <span class="q" data-q="where">where</span>
-      <span class="q" data-q="run preflight">run preflight</span>
+      <span class="q" data-q="summary">summary</span>
+      <span class="q" data-q="design">design</span>
+      <span class="q" data-q="pending">pending</span>
+      <span class="q" data-q="manifest">manifest</span>
+      <span class="q" data-q="find requirements.yaml">find req</span>
+      <span class="q" data-q="run gate G2">run G2</span>
+      <span class="q" data-q="run gate G3">run G3</span>
+      <span class="q" data-q="run verify">verify</span>
       <span class="q" data-q="refresh">refresh</span>
     </div>
     <div class="chat-input">
       <input id="chat-input" placeholder="输入消息…" />
       <button id="chat-send">发送</button>
+      <span class="chat-status" id="chat-status"></span>
+      <button id="chat-clear" title="清屏（只清当前面板，不删 jsonl）" style="background:#3a1c1c;border-color:#5a2a2a">清</button>
     </div>
     <div class="inspector" id="inspector" style="display:none">
       <h4>观察</h4>
@@ -601,12 +609,15 @@ img{max-width:100%;height:auto;display:block}
   async function sendChat(){
     const input = document.getElementById("chat-input");
     const btn = document.getElementById("chat-send");
+    const status = document.getElementById("chat-status");
     const text = input.value.trim();
     if (!text || !CURRENT_CASE) return;
     btn.disabled = true;
     input.disabled = true;
+    status.textContent = "发送中…";
     addMsg({role: "user", text, ts: new Date().toISOString()}, true);
     input.value = "";
+    const t0 = Date.now();
     try {
       const r = await fetch("/api/chat", {method: "POST", headers: HEADERS,
         body: JSON.stringify({case: CURRENT_CASE, text})});
@@ -629,12 +640,24 @@ img{max-width:100%;height:auto;display:block}
       }
     } catch (e) {
       console.error("sendChat", e);
+      addMsg({role: "agent", kind: "error", text: "请求失败：" + String(e),
+              ts: new Date().toISOString()}, true);
     } finally {
+      const dt = Date.now() - t0;
+      status.textContent = dt > 600 ? dt + "ms" : "";
       btn.disabled = false;
       input.disabled = false;
       input.focus();
     }
   }
+  document.getElementById("chat-clear").onclick = () => {
+    const body = document.getElementById("chat-body");
+    body.innerHTML = "";
+    // 不删 jsonl，只清屏
+    addMsg({role: "agent", kind: "info",
+            text: "（屏幕已清。聊天历史仍在 cases/" + CURRENT_CASE + "/_watch/chat.jsonl，重启后或切换案例回来时会再次回灌。）",
+            ts: new Date().toISOString()}, true);
+  };
 
   document.getElementById("chat-send").onclick = sendChat;
   document.getElementById("chat-input").onkeydown = (e) => {
