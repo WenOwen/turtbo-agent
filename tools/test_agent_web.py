@@ -280,6 +280,52 @@ async def test_actions_list(client, token):
 
 
 @pytest.mark.asyncio
+async def test_jobs_list_empty(client, token):
+    """新进程 /api/jobs 可能是空。"""
+    async with client as c:
+        r = await c.get("/api/jobs", headers={"X-DSH-Token": token})
+    assert r.status_code == 200
+    j = r.json()
+    assert "jobs" in j
+    assert isinstance(j["jobs"], list)
+
+
+@pytest.mark.asyncio
+async def test_jobs_get_unknown_404(client, token):
+    async with client as c:
+        r = await c.get("/api/jobs/notexist1234", headers={"X-DSH-Token": token})
+    assert r.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_jobs_require_token(client):
+    async with client as c:
+        r = await c.get("/api/jobs")
+    assert r.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_chat_run_async_starts_job(client, token):
+    """POST /api/chat with 'run_async preflight' 应起一个 job 并返回 job_id。"""
+    async with client as c:
+        r = await c.post("/api/chat",
+                         headers={"X-DSH-Token": token},
+                         json={"case": "DF90-001", "text": "run_async preflight"})
+        assert r.status_code == 200
+        j = r.json()
+        reply = j.get("reply", {})
+        jid = reply.get("job_id")
+        assert jid, "reply 应含 job_id"
+        # 查 job 状态
+        r2 = await c.get("/api/jobs/" + jid, headers={"X-DSH-Token": token})
+    assert r2.status_code == 200
+    rec = r2.json()
+    assert rec.get("job_id") == jid
+    # 状态应是 running / done / timeout / error 之一
+    assert rec.get("status") in {"running", "done", "timeout", "error"}
+
+
+@pytest.mark.asyncio
 async def test_views_returns_groups(client, token):
     async with client as c:
         r = await c.get("/api/views?case=DF90-001",

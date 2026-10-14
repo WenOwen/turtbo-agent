@@ -249,9 +249,52 @@ def test_all_commands_have_handlers():
     """确保 COMMANDS 表里的每个动作都进了 dispatch dict。"""
     handlers = {"status", "help", "switch", "open", "list", "ls", "where",
                "refresh", "run", "design", "manifest", "log", "summary",
-               "pending", "get", "find", "note", "tree", "next", "plan"}
+               "pending", "get", "find", "note", "tree", "next", "plan",
+               "jobs", "job"}
     for cmd, action in ar.COMMANDS.items():
         assert action in handlers, f"COMMANDS['{cmd}']='{action}' 找不到 dispatcher"
+
+
+# ── jobs / job 命令 ──────────────────────────────────────────
+class TestJobsAndJob:
+    def test_jobs_empty(self, case_dir, monkeypatch):
+        """无任务时返回提示。"""
+        import job_state
+        monkeypatch.setattr(job_state, "_JOBS", {})
+        r = ar.reply(case_dir, "jobs")
+        assert r["kind"] == "info"
+        assert "暂无" in r["text"] or "jobs" in r["text"].lower()
+
+    def test_jobs_lists_existing(self, case_dir, monkeypatch):
+        import job_state
+        # 注入一个 done 任务
+        jid = job_state.start_job("DF90-001", "环境预检", "preflight all")
+        job_state.update_job(jid, status="done", exit=0, ok=True, finished=job_state.now_iso())
+        r = ar.reply(case_dir, "jobs")
+        assert jid in r["text"]
+        assert "环境预检" in r["text"]
+        assert r["kind"] == "info"
+
+    def test_job_no_args(self, case_dir):
+        r = ar.reply(case_dir, "job")
+        assert r["kind"] == "info"
+        assert "用法" in r["text"]
+
+    def test_job_not_found(self, case_dir, monkeypatch):
+        import job_state
+        monkeypatch.setattr(job_state, "_JOBS", {})
+        r = ar.reply(case_dir, "job notexist9999")
+        assert "找不到" in r["text"] or "不存在" in r["text"]
+
+    def test_job_returns_full_record(self, case_dir, monkeypatch):
+        import job_state
+        jid = job_state.start_job("DF90-001", "G3 闸门", "gate_check geometry")
+        job_state.update_job(jid, status="done", exit=0, ok=True,
+                              stdout_tail="✓ G3 通过", finished=job_state.now_iso())
+        r = ar.reply(case_dir, "job " + jid)
+        assert "G3" in r["text"]
+        assert "stdout" in r["text"]
+        assert "通过" in r["text"]
 
 
 # ── suggest / LLM 兜底 ────────────────────────────────────────

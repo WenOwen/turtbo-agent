@@ -51,6 +51,8 @@ COMMANDS = {
     "tree":      "tree",
     "next":      "next",
     "plan":      "plan",
+    "jobs":      "jobs",
+    "job":       "job",
 }
 
 
@@ -459,6 +461,54 @@ def cmd_where(case_dir: Path, _args: List[str]) -> Dict[str, Any]:
     return {"kind": "info", "text": "案例目录：" + str(case_dir.relative_to(ROOT))}
 
 
+def cmd_jobs(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    """列最近 10 个后台任务（跨案例）。如传 run_id 限本案例。"""
+    try:
+        import job_state  # type: ignore
+    except ImportError:
+        return {"kind": "info", "text": "job_state 模块不可用（需要 agent_web 启动后才会有后台任务）"}
+    only = args[0] if args else None
+    rows = job_state.list_jobs(case=only, limit=10)
+    if not rows:
+        return {"kind": "info", "text": "暂无后台任务。可发 `run_async preflight` 起一个。"}
+    lines = ["最近 10 个后台任务："]
+    for r in rows:
+        st = r.get("status", "?")
+        icon = {"running": "⏳", "done": "✓", "timeout": "⏱", "error": "✗"}.get(st, "?")
+        ex = r.get("exit")
+        ex_s = (" exit=" + str(ex)) if ex is not None else ""
+        lines.append(f"{icon} `{r.get('job_id', '?')}` {r.get('label', '?')}  "
+                     f"({r.get('case', '?')}, {st}{ex_s})")
+    lines.append("\n查某个：发 `job <id>`")
+    return {"kind": "info", "text": "\n".join(lines), "jobs": rows}
+
+
+def cmd_job(case_dir: Path, args: List[str]) -> Dict[str, Any]:
+    """查单个后台任务的状态。"""
+    if not args:
+        return {"kind": "info", "text": "用法：`job <job_id>`"}
+    job_id = args[0]
+    try:
+        import job_state  # type: ignore
+    except ImportError:
+        return {"kind": "info", "text": "job_state 模块不可用"}
+    rec = job_state.get_job(job_id)
+    if rec is None:
+        return {"kind": "info", "text": "找不到 job " + job_id}
+    st = rec.get("status")
+    icon = {"running": "⏳", "done": "✓", "timeout": "⏱", "error": "✗"}.get(st, "?")
+    text = (f"{icon} `{rec.get('job_id')}` {rec.get('label')}  "
+            f"({rec.get('case')}, {st})\n"
+            f"起：{rec.get('started')}　止：{rec.get('finished') or '—'}"
+            f"{('　exit=' + str(rec.get('exit'))) if rec.get('exit') is not None else ''}\n"
+            f"命令：`{rec.get('command')}`")
+    if rec.get("stdout_tail"):
+        text += "\n── stdout ──\n" + (rec.get("stdout_tail") or "").rstrip()
+    if rec.get("stderr_tail"):
+        text += "\n── stderr ──\n" + (rec.get("stderr_tail") or "").rstrip()
+    return {"kind": "info", "text": text, "job": rec}
+
+
 def cmd_run(case_dir: Path, args: List[str]) -> Dict[str, Any]:
     if not args:
         return {"kind": "info", "text": "用法：run preflight|gate G3|verify|audit|replay"}
@@ -563,7 +613,8 @@ def reply(case_dir: Path, text: str) -> Dict[str, Any]:
     cmd = COMMANDS.get(head)
     if cmd in {"status", "help", "switch", "open", "list", "ls", "where",
                "refresh", "run", "design", "manifest", "log", "summary",
-               "pending", "get", "find", "note", "tree", "next", "plan"}:
+               "pending", "get", "find", "note", "tree", "next", "plan",
+               "jobs", "job"}:
         handler = {
             "status":   cmd_status,
             "help":     cmd_help,
@@ -585,6 +636,8 @@ def reply(case_dir: Path, text: str) -> Dict[str, Any]:
             "tree":     cmd_tree,
             "next":     cmd_next,
             "plan":     cmd_plan,
+            "jobs":     cmd_jobs,
+            "job":      cmd_job,
         }.get(cmd, cmd_status)
         # 用原始 split 切 args（保持原样大小写）
         args = text_s.split()[1:] if len(text_s.split()) > 1 else []

@@ -32,6 +32,7 @@ import json
 import os
 import secrets
 import socket
+import subprocess
 import sys
 import threading
 import time
@@ -358,6 +359,62 @@ async def api_chat_get(request: Request, case: Optional[str] = None):
     return {"messages": chat_log(target.name)}
 
 
+# ── 后台任务（preflight / gate G3 等慢任务） ──────────────────────────
+import job_state  # type: ignore
+
+JOB_THREADS: Dict[str, threading.Thread] = {}
+
+
+def _job_start(case_dir: Path, label: str, cmd: List[str], cwd: Path) -> str:
+    """起一个后台线程跑子进程，返回 job_id。状态走 job_state。"""
+    job_id = job_state.start_job(
+        case_dir.name, label,
+        " ".join(cmd[1:]) if len(cmd) > 1 else " ".join(cmd))
+
+    def runner():
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True,
+                                  encoding="utf-8", errors="replace",
+                                  timeout=900, cwd=str(cwd))
+            job_state.update_job(
+                job_id,
+                exit=proc.returncode,
+                ok=(proc.returncode == 0),
+                stdout_tail=(proc.stdout or "")[-1500:],
+                stderr_tail=(proc.stderr or "")[-800:],
+                status="done",
+                finished=job_state.now_iso(),
+            )
+        except subprocess.TimeoutExpired:
+            job_state.update_job(
+                job_id, status="timeout",
+                stderr_tail="超时（900 秒）", finished=job_state.now_iso())
+        except Exception as exc:
+            job_state.update_job(
+                job_id, status="error",
+                stderr_tail=repr(exc), finished=job_state.now_iso())
+
+    t = threading.Thread(target=runner, daemon=True, name="job-" + job_id)
+    JOB_THREADS[job_id] = t
+    t.start()
+    return job_id
+
+
+@app.get("/api/jobs")
+async def api_jobs(request: Request, case: Optional[str] = None):
+    _token_required(request)
+    return {"jobs": job_state.list_jobs(case=case, limit=30)}
+
+
+@app.get("/api/jobs/{job_id}")
+async def api_job_get(request: Request, job_id: str):
+    _token_required(request)
+    rec = job_state.get_job(job_id)
+    if rec is None:
+        raise HTTPException(status_code=404, detail="job 不存在：" + job_id)
+    return rec
+
+
 @app.post("/api/chat")
 async def api_chat_post(request: Request):
     _token_required(request)
@@ -371,7 +428,18 @@ async def api_chat_post(request: Request):
     user_msg = chat_append(target.name, {
         "role": "user", "text": text, "ts": now_iso(),
     }, target)
-    reply = ar.reply(target, text)
+    # 特殊语法："run_async preflight" → 起后台任务；其它走同步 reply
+    head = (text or "").strip().lower()
+    if head.startswith("run_async"):
+        args = text.strip().split()[1:]
+        jid = _submit_job_from_text(target, args)
+        if jid is None:
+            reply = {"kind": "error", "text": "run_async 语法：run_async preflight|gate G3|verify|audit|replay"}
+        else:
+            reply = {"kind": "info", "text": "后台任务已起：`" + jid + "`。\n等几分钟，发 `job " + jid + "` 看结果。",
+                     "job_id": jid, "async": True}
+    else:
+        reply = ar.reply(target, text)
     reply_msg = chat_append(target.name, {
         "role": "agent",
         "kind": reply.get("kind", "info"),
@@ -382,8 +450,42 @@ async def api_chat_post(request: Request):
             "command": reply["command"]} if reply.get("kind") == "run" else {}),
         **({"path": reply["path"], "bytes": reply["bytes"]} if "path" in reply else {}),
         **({"next_stage": reply["next_stage"]} if "next_stage" in reply else {}),
+        **({"job_id": reply["job_id"]} if "job_id" in reply else {}),
     }, target)
     return {"user": user_msg, "reply": reply_msg}
+
+
+def _submit_job_from_text(case_dir: Path, args: List[str]) -> Optional[str]:
+    """把 run_async 参数翻译成子进程命令并起任务。"""
+    if not args:
+        return None
+    head = args[0].lower()
+    if head == "preflight":
+        cmd = [str(HERE / "preflight.py"), "all"]
+        return _job_start(case_dir, "环境预检", cmd, ROOT)
+    if head == "gate":
+        gate = (args[1] if len(args) > 1 else "G2").upper()
+        GATE_MAP = {"G0": "requirements", "G1": "brief", "G2": "scheme", "G3": "geometry",
+                    "G4": "mesh", "G5": "solve", "G6": "post"}
+        if gate not in GATE_MAP:
+            return None
+        cmd = [str(HERE / "gate_check.py"),
+               GATE_MAP[gate], "--case", str(case_dir), "--no-log"]
+        return _job_start(case_dir, "G" + GATE_MAP[gate][0] + " 闸门检查", cmd, ROOT)
+    if head == "verify":
+        cmd = [str(HERE / "case_ledger.py"), "verify", "--case", str(case_dir)]
+        return _job_start(case_dir, "产物与哈希校验", cmd, ROOT)
+    if head == "audit":
+        cmd = [str(HERE / "gate_check.py"), "audit", "--case", str(case_dir)]
+        return _job_start(case_dir, "规矩自检", cmd, ROOT)
+    if head == "replay":
+        baseline = ROOT.parent / "Ducted-Fan" / "run" / "90kg-duct-fan-v7" / "fine" / "v7-optimized"
+        if not baseline.is_dir():
+            return None
+        cmd = [str(HERE / "replay_audit.py"),
+               "--baseline", str(baseline), "--case", str(case_dir), "--label", "v7"]
+        return _job_start(case_dir, "v7 黄金基准回放", cmd, ROOT)
+    return None
 
 
 # ── 动作路由 ─────────────────────────────────────────────────────────────
